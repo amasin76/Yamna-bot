@@ -1,2 +1,0 @@
-# yamna
-General Discord Bot 
