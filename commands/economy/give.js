@@ -1,22 +1,43 @@
 const profileModel = require("../../models/profileSchema");
+const { BOT_OWNER } = process.env;
 
 exports.run = async (client, message, args, profileData) => {
-    const randomNumber = Math.floor(Math.random() * 500) + 1;
-    const response = await profileModel.findOneAndUpdate(
-        {
-            userID: message.author.id,
-        },
-        {
-            $inc: {
-                coins: randomNumber,
+    if (message.author.id !== BOT_OWNER) return message.channel.send(`Sorry only <@${BOT_OWNER}> can run this command`);
+    if (!args.length) return message.channel.send("You need to mention a player to give them coins");
+    const amount = args[1];
+    const target = message.mentions.users.first();
+    if (!target) return message.channel.send("That user does not exist");
+
+    if (amount % 1 != 0 || amount <= 0) return message.channel.send("Deposit amount must be a whole number");
+
+    try {
+        const targetData = await profileModel.findOne({ userID: target.id });
+        if (!targetData) return message.channel.send(`This user doens't exist in the db`);
+
+        await profileModel.findOneAndUpdate(
+            {
+                userID: target.id,
             },
-        }
-    );
-    return message.channel.send(`${message.author.username}, you begged and received ${randomNumber} **coins**`);
+            {
+                $inc: {
+                    coins: amount,
+                },
+            }
+        );
+
+        return message.channel.send(`${target} has been given \`${amount}\` 💰`);
+    } catch (err) {
+        console.log(err);
+    }
 };
 exports.help = {
-    name: 'give'
+    name: "give",
+    description: "beg for coins.",
+    usage: "<prefix>give",
+    example: "=give"
 }
+
 exports.conf = {
-    aliases: ["beg"]
+    aliases: ["beg"],
+    cooldown: 5
 }

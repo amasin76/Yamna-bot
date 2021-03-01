@@ -1,5 +1,5 @@
 exports.run = async (client, message, args, profileData) => {
-    message.channel.send(`Your wallet bal is ${profileData.coins}, you banks bal is ${profileData.bank}`);
+    message.channel.send(`**💰 Your wallet :** \`${profileData.coins}\`\n**🏛 Your Banks :** \`${profileData.bank}\``);
 };
 exports.help = {
     name: 'balance'
