@@ -35,4 +35,3 @@ require("./logger")(client);
 
 //client.login(process.env.SECRET)
 client.login(process.env.SECRET).catch(console.error);
-//test
