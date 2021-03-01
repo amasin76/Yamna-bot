@@ -1,6 +1,6 @@
 const { MessageEmbed } = require("discord.js");
 const config = require("../../config.json");
-// user = message.member
+// user = message.member test
 exports.run = async (client, message, args) => {
     const text = args.join(" ")
     try {
