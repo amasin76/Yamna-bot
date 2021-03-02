@@ -1,7 +1,7 @@
 const { MessageEmbed } = require("discord.js");
 const config = require("../../config.json");
-const { getTracks, getPreview } = require("spotify-url-info")
-// user = message.member
+const { delay } = require("../../handlers/functions")
+
 exports.run = async (client, message, args) => {
     try {
         const text = args.join(" ")
@@ -12,6 +12,13 @@ exports.run = async (client, message, args) => {
                 .setFooter(config.footertext, config.footericon)
                 .setTitle(`❌ ERROR | Please join a Channel first`)
             );
+        if (!client.distube.getQueue(message))
+            return message.channel.send(new MessageEmbed()
+                .setColor(config.wrongcolor)
+                .setFooter(config.footertext, config.footericon)
+                .setTitle(`❌ ERROR | I am not playing Something`)
+                .setDescription(`The Queue is empty`)
+            );
         if (client.distube.getQueue(message) && channel.id !== message.guild.me.voice.channel.id)
             return message.channel.send(new MessageEmbed()
                 .setColor(config.wrongcolor)
@@ -19,34 +26,25 @@ exports.run = async (client, message, args) => {
                 .setTitle(`❌ ERROR | Please join **my** Channel first`)
                 .setDescription(`Channelname: \`${message.guild.me.voice.channel.name}\``)
             );
-        if (!args[0])
+        if (client.distube.isPlaying(message))
             return message.channel.send(new MessageEmbed()
                 .setColor(config.wrongcolor)
                 .setFooter(config.footertext, config.footericon)
-                .setTitle(`❌ ERROR | You didn't provided a Searchterm`)
-                .setDescription(`Usage: \`${prefix}play <URL / TITLE>\``)
+                .setTitle(`❌ ERROR | Cannot resume the Song`)
+                .setDescription(`It's not paused, so I cant!`)
             );
         message.channel.send(new MessageEmbed()
             .setColor(config.color)
             .setFooter(config.footertext, config.footericon)
-            .setTitle("Searching Song")
-            .setDescription(`\`\`\`fix\n${text}\n\`\`\``)
-        ).then(msg => msg.delete({ timeout: 3000 }).catch(e => console.log(e.message)))
-        //https://open.spotify.com/track/5nTtCOCds6I0PHMNtqelas
-        if (args.join(" ").toLowerCase().includes("spotify") && args.join(" ").toLowerCase().includes("track")) {
-            getPreview(args.join(" ")).then(result => {
-                client.distube.play(message, result.title);
-            })
-        }
-        else if (args.join(" ").toLowerCase().includes("spotify") && args.join(" ").toLowerCase().includes("playlist")) {
-            getTracks(args.join(" ")).then(result => {
-                for (const song of result)
-                    client.distube.play(message, song.name);
-            })
-        }
-        else {
-            client.distube.play(message, text);
-        }
+            .setTitle("▶ Resumed the Song")
+        ).then(msg => msg.delete({ timeout: 4000 }).catch(e => console.log(e.message)))
+
+        client.distube.resume(message);
+        //those 4 lines with the delay, fixes the bug that it doesnt resume by repausing and reresuming ;)
+        await delay(100);
+        client.distube.pause(message);
+        await delay(100);
+        client.distube.resume(message);
     } catch (e) {
         console.log(String(e.stack).bgRed)
         return message.channel.send(new MessageEmbed()
@@ -58,12 +56,12 @@ exports.run = async (client, message, args) => {
     }
 }
 exports.help = {
-    name: "play",
-    description: "PLays a track from youtube",
-    usage: "<prefix>play <URL / TITLE>",
-    example: "~p sound effect"
+    name: "resume",
+    description: "Resumes the track",
+    usage: "<prefix>resume",
+    example: "~resume"
 }
 exports.conf = {
-    aliases: ["p"],
+    aliases: ["r", "back"],
     cooldown: 5
 }

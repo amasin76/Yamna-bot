@@ -1,7 +1,6 @@
 const { MessageEmbed } = require("discord.js");
 const config = require("../../config.json");
-const { getTracks, getPreview } = require("spotify-url-info")
-// user = message.member
+
 exports.run = async (client, message, args) => {
     try {
         const text = args.join(" ")
@@ -11,6 +10,13 @@ exports.run = async (client, message, args) => {
                 .setColor(config.wrongcolor)
                 .setFooter(config.footertext, config.footericon)
                 .setTitle(`❌ ERROR | Please join a Channel first`)
+            );
+        if (!client.distube.getQueue(message))
+            return message.channel.send(new MessageEmbed()
+                .setColor(config.wrongcolor)
+                .setFooter(config.footertext, config.footericon)
+                .setTitle(`❌ ERROR | I am not playing Something`)
+                .setDescription(`The Queue is empty`)
             );
         if (client.distube.getQueue(message) && channel.id !== message.guild.me.voice.channel.id)
             return message.channel.send(new MessageEmbed()
@@ -23,30 +29,24 @@ exports.run = async (client, message, args) => {
             return message.channel.send(new MessageEmbed()
                 .setColor(config.wrongcolor)
                 .setFooter(config.footertext, config.footericon)
-                .setTitle(`❌ ERROR | You didn't provided a Searchterm`)
-                .setDescription(`Usage: \`${prefix}play <URL / TITLE>\``)
+                .setTitle(`❌ ERROR | You didn't provided a Loop method`)
+                .setDescription(`Current Volume: \`${client.distube.getQueue(message).volume}%\`\nUsage: \`${config.prefix}volume <0-150>\``)
             );
-        message.channel.send(new MessageEmbed()
+
+        if (!(0 <= Number(args[0]) && Number(args[0]) <= 500))
+            return message.channel.send(new MessageEmbed()
+                .setColor(config.wrongcolor)
+                .setFooter(config.footertext, config.footericon)
+                .setTitle(`❌ ERROR | Volume out of Range`)
+                .setDescription(`Usage: \`${config.prefix}volume <0-150>\``)
+            );
+
+        client.distube.setVolume(message, Number(args[0]));
+        return message.channel.send(new MessageEmbed()
             .setColor(config.color)
             .setFooter(config.footertext, config.footericon)
-            .setTitle("Searching Song")
-            .setDescription(`\`\`\`fix\n${text}\n\`\`\``)
-        ).then(msg => msg.delete({ timeout: 3000 }).catch(e => console.log(e.message)))
-        //https://open.spotify.com/track/5nTtCOCds6I0PHMNtqelas
-        if (args.join(" ").toLowerCase().includes("spotify") && args.join(" ").toLowerCase().includes("track")) {
-            getPreview(args.join(" ")).then(result => {
-                client.distube.play(message, result.title);
-            })
-        }
-        else if (args.join(" ").toLowerCase().includes("spotify") && args.join(" ").toLowerCase().includes("playlist")) {
-            getTracks(args.join(" ")).then(result => {
-                for (const song of result)
-                    client.distube.play(message, song.name);
-            })
-        }
-        else {
-            client.distube.play(message, text);
-        }
+            .setTitle(`🔊 Changed the Volume to: \`${args[0]}%\``)
+        );
     } catch (e) {
         console.log(String(e.stack).bgRed)
         return message.channel.send(new MessageEmbed()
@@ -57,13 +57,14 @@ exports.run = async (client, message, args) => {
         );
     }
 }
+
 exports.help = {
-    name: "play",
-    description: "PLays a track from youtube",
-    usage: "<prefix>play <URL / TITLE>",
-    example: "~p sound effect"
+    name: "volume",
+    description: "Changes volume of the BOT",
+    usage: "<prefix>vol",
+    example: "~vol"
 }
 exports.conf = {
-    aliases: ["p"],
+    aliases: ["vol"],
     cooldown: 5
-}
+}  

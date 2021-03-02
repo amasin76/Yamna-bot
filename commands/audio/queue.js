@@ -1,7 +1,6 @@
 const { MessageEmbed } = require("discord.js");
 const config = require("../../config.json");
-const { getTracks, getPreview } = require("spotify-url-info")
-// user = message.member
+
 exports.run = async (client, message, args) => {
     try {
         const text = args.join(" ")
@@ -12,6 +11,13 @@ exports.run = async (client, message, args) => {
                 .setFooter(config.footertext, config.footericon)
                 .setTitle(`❌ ERROR | Please join a Channel first`)
             );
+        if (!client.distube.getQueue(message))
+            return message.channel.send(new MessageEmbed()
+                .setColor(config.wrongcolor)
+                .setFooter(config.footertext, config.footericon)
+                .setTitle(`❌ ERROR | I am not playing Something`)
+                .setDescription(`The Queue is empty`)
+            );
         if (client.distube.getQueue(message) && channel.id !== message.guild.me.voice.channel.id)
             return message.channel.send(new MessageEmbed()
                 .setColor(config.wrongcolor)
@@ -19,34 +25,29 @@ exports.run = async (client, message, args) => {
                 .setTitle(`❌ ERROR | Please join **my** Channel first`)
                 .setDescription(`Channelname: \`${message.guild.me.voice.channel.name}\``)
             );
-        if (!args[0])
+        let queue = client.distube.getQueue(message);
+        if (!queue)
             return message.channel.send(new MessageEmbed()
                 .setColor(config.wrongcolor)
                 .setFooter(config.footertext, config.footericon)
-                .setTitle(`❌ ERROR | You didn't provided a Searchterm`)
-                .setDescription(`Usage: \`${prefix}play <URL / TITLE>\``)
+                .setTitle(`❌ ERROR | I am not playing Something`)
+                .setDescription(`The Queue is empty`)
             );
-        message.channel.send(new MessageEmbed()
+
+        let embed = new MessageEmbed()
             .setColor(config.color)
             .setFooter(config.footertext, config.footericon)
-            .setTitle("Searching Song")
-            .setDescription(`\`\`\`fix\n${text}\n\`\`\``)
-        ).then(msg => msg.delete({ timeout: 3000 }).catch(e => console.log(e.message)))
-        //https://open.spotify.com/track/5nTtCOCds6I0PHMNtqelas
-        if (args.join(" ").toLowerCase().includes("spotify") && args.join(" ").toLowerCase().includes("track")) {
-            getPreview(args.join(" ")).then(result => {
-                client.distube.play(message, result.title);
-            })
+            .setTitle(`Queue for: ${message.guild.name}`)
+
+        let counter = 0;
+        for (let i = 0; i < queue.songs.length; i += 20) {
+            if (counter >= 10) break;
+            let k = queue.songs;
+            let songs = k.slice(i, i + 20);
+            message.channel.send(embed.setDescription(songs.map((song, index) => `**${index + 1 + counter * 20}** [${song.name}](${song.url}) - ${song.formattedDuration}`)))
+            counter++;
         }
-        else if (args.join(" ").toLowerCase().includes("spotify") && args.join(" ").toLowerCase().includes("playlist")) {
-            getTracks(args.join(" ")).then(result => {
-                for (const song of result)
-                    client.distube.play(message, song.name);
-            })
-        }
-        else {
-            client.distube.play(message, text);
-        }
+
     } catch (e) {
         console.log(String(e.stack).bgRed)
         return message.channel.send(new MessageEmbed()
@@ -57,13 +58,14 @@ exports.run = async (client, message, args) => {
         );
     }
 }
+
 exports.help = {
-    name: "play",
-    description: "PLays a track from youtube",
-    usage: "<prefix>play <URL / TITLE>",
-    example: "~p sound effect"
+    name: "queue",
+    description: "Shows the current queue",
+    usage: "<prefix>queue",
+    example: "~queue"
 }
 exports.conf = {
-    aliases: ["p"],
+    aliases: ["playlist"],
     cooldown: 5
 }
