@@ -1,5 +1,5 @@
 const Discord = require('discord.js');
-const YamnaBot = require("./handler/ClientBuilder.js");
+const YamnaBot = require("./handlers/ClientBuilder.js");
 const client = new YamnaBot();
 const fs = require('fs');
 //const ytdl = require('ytdl-core');
@@ -22,8 +22,12 @@ mongoose.connect(process.env.MONGODB, {
 });
 
 let prefix = "~";
-require("./handler/module.js")(client);
-require("./handler/Event.js")(client);
+/*require("./handler/module.js")(client);
+require("./handler/Event.js")(client);*/
+//Handler
+["module", "Event", "distube"].forEach(handler => {
+    require(`./handlers/${handler}`)(client);
+});
 
 client.package = require("./package.json");
 client.on("warn", console.warn); // This will warn you via logs if there was something wrong with your bot.

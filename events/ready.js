@@ -1,5 +1,4 @@
 const { CHANNEL, SERVER, LIVE } = require("../config.json");
-const ytdl = require('ytdl-core');
 
 module.exports = async client => {
     console.log(`${client.user.username} im ready`)
@@ -22,21 +21,4 @@ module.exports = async client => {
         client.user.setActivity(status, { type: "WATCHING" });
 
     }, 300000)
-
-    /*let channel = client.channels.cache.get(CHANNEL) || await client.channels.fetch(CHANNEL)
-
-    if (!channel) return;
-    const connection = await channel.join();
-    connection.play(ytdl(LIVE))
-
-    setInterval(async function () {
-        if (!client.voice.connections.get(SERVER)) {
-            let channel = client.channels.cache.get(CHANNEL) || await client.channels.fetch(CHANNEL)
-            if (!channel) return;
-
-            const connection = await channel.join()
-            connection.play(ytdl(LIVE))
-        }
-    }, 20000)*/
-
 }

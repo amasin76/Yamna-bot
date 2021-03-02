@@ -1,0 +1,19 @@
+{
+    "CHANNEL": "714233807473213541",
+    "SERVER": "712767517847846942",
+    "LIVE": "https://www.youtube.com/watch?v=vqir9leSdLM",
+    "owners": [
+        "484524591696576523",
+        "463040289431486474"
+    ],
+    "prefix": "~",
+    "loggerChannelID": "713966125964198009",
+    "webhook": {
+        "id": "813790045205954570",
+        "token": "ydDy4iUZllOYx_NzTF4gX0B2Jo2ZoJJg016mVHt5p_W9obnNpJTa9GVYdHVvV60xOACt"
+    },
+    "color": "#3498db",
+    "wrongcolor": "#e01e01",
+    "footertext": "Yamna | powered by @Bio",
+    "footericon": "https://img.icons8.com/color/452/discord-logo.png"
+}
