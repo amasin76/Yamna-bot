@@ -8,7 +8,6 @@ module.exports = async (client, message) => {
 
     //let prefix = client.config.prefix;
     let prefix = await getprefix(message.guild.id);
-    console.log(prefix);
 
     //Mention
     botMentioned = message.content === "<@!807868627302350868>" || message.content === "<@807868627302350868>";
