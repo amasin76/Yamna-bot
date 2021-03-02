@@ -111,7 +111,7 @@ module.exports = (client) => {
         .on("initQueue", queue => {
             queue.autoplay = false;
             queue.volume = 100;
-            queue.filter = "bassboost";
+            queue.filter = "clear";
         }
         )
 

@@ -11,13 +11,6 @@ exports.run = async (client, message, args) => {
                 .setFooter(config.footertext, config.footericon)
                 .setTitle(`❌ ERROR | Please join a Channel first`)
             );
-        if (!client.distube.getQueue(message))
-            return message.channel.send(new MessageEmbed()
-                .setColor(config.wrongcolor)
-                .setFooter(config.footertext, config.footericon)
-                .setTitle(`❌ ERROR | I am not playing Something`)
-                .setDescription(`The Queue is empty`)
-            );
         if (client.distube.getQueue(message) && channel.id !== message.guild.me.voice.channel.id)
             return message.channel.send(new MessageEmbed()
                 .setColor(config.wrongcolor)
@@ -25,6 +18,7 @@ exports.run = async (client, message, args) => {
                 .setTitle(`❌ ERROR | Please join **my** Channel first`)
                 .setDescription(`Channelname: \`${message.guild.me.voice.channel.name}\``)
             );
+
         let mode = client.distube.toggleAutoplay(message);
         message.channel.send(new MessageEmbed()
             .setColor(config.color)
