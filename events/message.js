@@ -8,6 +8,7 @@ module.exports = async (client, message) => {
 
     //let prefix = client.config.prefix;
     let prefix = await getprefix(message.guild.id);
+    console.log(prefix);
 
     //Mention
     botMentioned = message.content === "<@!807868627302350868>" || message.content === "<@807868627302350868>";
@@ -102,6 +103,7 @@ module.exports = async (client, message) => {
             message.channel.send('You are blacklisted!')
         }
     });*/
+    if (!message.content.startsWith(prefix)) return;
     let args = message.content.slice(prefix.length).trim().split(/ +/g);
     let msg = message.content.toLowerCase();
     let cmd = args.shift().toLowerCase();
