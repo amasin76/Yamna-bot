@@ -10,10 +10,11 @@ module.exports = async (client, message) => {
     let prefix = await getprefix(message.guild.id);
 
     //Mention
-    if (message.mentions.has(client.user) && message.author.id == process.env.BOT_OWNER) return message.channel.send("**💖 سمعـــــا و طاعـــــة 💖**");
-    if (message.mentions.has(client.user)) {
+    botMentioned = message.content === "<@!807868627302350868>" || message.content === "<@807868627302350868>";
+    if (botMentioned && message.author.id == process.env.BOT_OWNER) return message.channel.send("**💖 سمعـــــا و طاعـــــة 💖**");
+    if (botMentioned) {
         message.reply(`\` My Custom Prefix: 【 ${prefix} 】 || Default: 【 ~ 】\`\n`)
-    }
+    }//(message.mentions.has(client.user)
 
     let inviteLink = ["discord.gg/", "discord.com/invite", "discordapp.com/invite"];
 
