@@ -6,13 +6,19 @@
         "484524591696576523",
         "463040289431486474"
     ],
+    "prefix": "~",
     "loggerChannelID": "713966125964198009",
     "webhook": {
         "id": "813795112391933972",
         "token": "C8adbALxKYpWtY0t7wbmH0hI7d6e4F9CK8p7A2jon14rGE40wh_xeQ0zenicP2hphvQN"
     },
+    "_comment#1": "player embed",
     "color": "#3498db",
     "wrongcolor": "#e01e01",
     "footertext": "Yamna | powered by @Bio",
-    "footericon": "https://img.icons8.com/color/452/discord-logo.png"
+    "footericon": "https://img.icons8.com/color/452/discord-logo.png",
+    "_comment#2": "welcome image & msg",
+    "unicolor": "#8015EA",
+    "imageLink": "https://cdn.discordapp.com/attachments/754486041494159440/776295051210129408/photo-1523821741446-edb2b68bb7a0.png",
+    "channel": "712767517847846945"
 }

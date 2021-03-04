@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "@discordjs/opus": "^0.4.0",
+    "discord-canvas": "^1.4.1",
     "discord.js": "^12.5.1",
     "distube": "^2.8.10",
     "dotenv": "^8.2.0",

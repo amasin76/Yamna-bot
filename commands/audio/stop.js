@@ -51,6 +51,6 @@ exports.help = {
     example: "~stop"
 }
 exports.conf = {
-    aliases: ["s"],
+    aliases: ["s", "leave", "dc", "disconnect"],
     cooldown: 5
 }
