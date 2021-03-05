@@ -1,7 +1,7 @@
 const Discord = require("discord.js");
 const fs = require("fs")
 module.exports = (c) => {
-    console.log("Loaded Logger Module".green);
+    console.log("Loaded Logger Module");
     try {
         c.on("channelCreate", function (channel) {
             send_log(c,
