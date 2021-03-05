@@ -20,7 +20,7 @@ mongoose.connect(process.env.MONGODB, {
     console.log(err);
 });
 
-let prefix = "~";
+let prefix = "=";
 /*require("./handler/module.js")(client);
 require("./handler/Event.js")(client);*/
 //Handler
