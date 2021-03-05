@@ -103,5 +103,5 @@ dist
 # TernJS port file
 .tern-port
 recorded-484524591696576523.pcm
-config.json
 package-lock.json
+config.json
