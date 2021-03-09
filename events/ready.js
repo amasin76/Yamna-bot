@@ -5,12 +5,12 @@ module.exports = async client => {
     // bot.user.setActivity("Hello", {type: "STREAMING", url:"https://twitch.tv/Strandable"});
     let statuses = [
         //`${client.guilds.size} servers!`,
-        "8help",
+        "=help",
         "💖THE EPICS💖",
         "صلوا على شفيع الأمة",
         `💖${client.users.cache.size} 𝙐𝙎𝙀𝙍𝙎💖`,
         "Javascript",
-        "V1.0",
+        "V2.0",
         "By | 7ANKALISS✨",
         `💖${client.users.cache.size} 𝙐𝙎𝙀𝙍𝙎💖`,
     ]
