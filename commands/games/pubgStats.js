@@ -154,12 +154,12 @@ exports.run = async (client, message, args) => {
 };
 exports.help = {
     name: "pubg",
-    description: "Ponged!",
-    usage: "/ping",
-    example: "/ping"
+    description: "Get pubg life-time stats",
+    usage: "<prefix>pubg <player name><mode>",
+    example: "=pubg cubevilly squad-fpp"
 };
 
 exports.conf = {
-    aliases: ["beep"],
+    aliases: ["ps"],
     cooldown: 5
 }
