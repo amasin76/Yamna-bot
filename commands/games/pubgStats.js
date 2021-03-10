@@ -34,7 +34,7 @@ exports.run = async (client, message, args) => {
                 })
                 .then((resp) => {
                     let status = resp.status
-                    console.log(status)
+                    //console.log(status)
                     let lifeStats = resp.data.data[0].attributes.gameModeStats[`${mode}`]
                     return message.channel.send(new MessageEmbed()
                         .setColor('#fcbe03')
