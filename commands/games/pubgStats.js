@@ -29,20 +29,20 @@ exports.run = async (client, message, args) => {
 
                         }
                     })
-                    console.log(resp);
+                    //console.log(resp);
                     return resp;
                 })
                 .then((resp) => {
-                    lifeStats = resp.data.data[0].attributes.gameModeStats[`${mode}`]
-                    //console.log(lifeStats)
-                    return lifeStats
-                })
-                .then((LifeStats) => {
-                    //console.log(lifeStats)
+                    let status = resp.status
+                    console.log(status)
+                    let lifeStats = resp.data.data[0].attributes.gameModeStats[`${mode}`]
                     return message.channel.send(new MessageEmbed()
-                        .setColor(config.wrongcolor)
+                        .setColor('#fcbe03')
                         .setFooter(config.footertext, config.footericon)
-                        .setTitle(` PUBG | LIFE-TIME STATS | Mode : \`${mode}\``)
+                        .setThumbnail('https://pngimg.com/uploads/pubg/pubg_PNG8.png')
+                        .setAuthor('PUBG STATS / LIFE-TIME', 'https://www.logolynx.com/images/logolynx/c3/c3ffc8726b01df955af0b9dadb1f7f13.png', 'https://discord.gg/CyH8avz')
+                        //.setTitle(`LIFE-TIME STATS IN GAME`)
+                        .setDescription(`\`\`\` Player Name : ${name} || Mode : ${mode} \`\`\``)
                         .addFields(
                             {
                                 name: "🏁Rounds Played: ",
@@ -101,15 +101,48 @@ exports.run = async (client, message, args) => {
                             }
                         )
                     )
-                    // .setField(`Longest Kill: \`${Math.round(lifeStats.longestKill)}\``)
-                    // .setField(`Road Kills: \`${Math.round(lifeStats.roadKills)}\``))
-                    //.setField("Suicides", `\`${Math.round(lifeStats.suicides)}\``, true)
-                    //.setField("Kills", `\`${Math.round(lifeStats.kills)}\``, true)
-                    //.setField("Rounds Played", `\`${Math.round(lifeStats.roundsPlayed)}\``, true)
-                    //.setField("wins", `\`${Math.round(lifeStats.wins)}\``, true)
                 })
                 .catch((error) => {
-                    console.error(error)
+                    let statusErr = error.response.status
+                    //console.error(statusErr)
+
+                    if (statusErr == 401) {
+                        return message.channel.send(new MessageEmbed()
+                            .setColor(config.wrongcolor)
+                            .setFooter(config.footertext, config.footericon)
+                            .setDescription(`❌ **ERROR ${statusErr}** : 	
+                            API key invalid or missing`))
+                    } else if (statusErr == 404) {
+                        return message.channel.send(new MessageEmbed()
+                            .setColor(config.wrongcolor)
+                            .setFooter(config.footertext, config.footericon)
+                            .setDescription(`❌ **ERROR ${statusErr}** : 	
+                            The specified resource was not found, The inputs not valid (username,mode..)`))
+                    } else if (statusErr == 415) {
+                        return message.channel.send(new MessageEmbed()
+                            .setColor(config.wrongcolor)
+                            .setFooter(config.footertext, config.footericon)
+                            .setDescription(`❌ **ERROR ${statusErr}** : 	
+                            Content type incorrect or not specified`))
+                    } else if (statusErr == 415) {
+                        return message.channel.send(new MessageEmbed()
+                            .setColor(config.wrongcolor)
+                            .setFooter(config.footertext, config.footericon)
+                            .setDescription(`❌ **ERROR ${statusErr}** : 	
+                            Content type incorrect or not specified`))
+                    } else if (statusErr == 429) {
+                        return message.channel.send(new MessageEmbed()
+                            .setColor(config.wrongcolor)
+                            .setFooter(config.footertext, config.footericon)
+                            .setDescription(`❌ **ERROR ${statusErr}** : 	
+                            Too many requests`))
+                    } else {
+                        return message.channel.send(new MessageEmbed()
+                            .setColor(config.wrongcolor)
+                            .setFooter(config.footertext, config.footericon)
+                            .setDescription(`❌ ERROR | Unexpected response status`))
+                    }
+
                 })
 
             //return lifeStats = resp.data.data[0].attributes.gameModeStats.mode
