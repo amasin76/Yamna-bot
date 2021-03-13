@@ -5,7 +5,7 @@ const { access_api } = process.env;
 
 exports.run = async (client, message, args) => {
     try {
-        if (!args[0] || !args[1]) return message.channel.send('Specify Player-name and Season\n \`Syntax: <prefix>pubg-rank <player-name> <season>\` \n \`Exemple: =pubg-rank best_noob 10\`').then(msg => msg.delete({ timeout: 4000 }))
+        if (!args[0] || !args[1]) return message.channel.send('Specify Player-name and Season\n \`Syntax: <prefix>pubg-rank <player-name> <season>\` \n \`Exemple: =pubg-rank best_noob 10\`').then(msg => msg.delete({ timeout: 8000 }))
         let name = args[0];
         let season = parseInt(args[1]);
         //console.log(name, season)
