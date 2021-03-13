@@ -24,12 +24,12 @@ exports.run = async (client, message, args) => {
             .setTitle(`✅ ${clearamount} messages successfully deleted!`)
         ).then(msg => msg.delete({ timeout: 5000 }));
     } catch (e) {
-        console.log(String(e.stack).red);
+        console.log(e.stock);
         return message.channel.send(new MessageEmbed()
             .setColor(config.wrongcolor)
             .setFooter(config.footertext, config.footericon)
             .setTitle(`❌ ERROR | An error occurred`)
-            .setDescription(`\`\`\`${e.stack}\`\`\``)
+            .setDescription(`\`\`\`${e.stock}\`\`\``)
         );
     }
 }
