@@ -97,36 +97,42 @@ exports.run = async (client, message, args) => {
                             .setFooter(config.footertext, config.footericon)
                             .setDescription(`❌ **ERROR ${statusErr}** : 	
                         API key invalid or missing`))
+                            .then(msg => msg.delete({ timeout: 8000 }))
                     } else if (statusErr == 404) {
                         return message.channel.send(new MessageEmbed()
                             .setColor(config.wrongcolor)
                             .setFooter(config.footertext, config.footericon)
                             .setDescription(`❌ **ERROR ${statusErr}** : 	
                         The specified resource was not found, The inputs not valid (username,mode..)`))
+                            .then(msg => msg.delete({ timeout: 8000 }))
                     } else if (statusErr == 415) {
                         return message.channel.send(new MessageEmbed()
                             .setColor(config.wrongcolor)
                             .setFooter(config.footertext, config.footericon)
                             .setDescription(`❌ **ERROR ${statusErr}** : 	
                         Content type incorrect or not specified`))
+                            .then(msg => msg.delete({ timeout: 8000 }))
                     } else if (statusErr == 415) {
                         return message.channel.send(new MessageEmbed()
                             .setColor(config.wrongcolor)
                             .setFooter(config.footertext, config.footericon)
                             .setDescription(`❌ **ERROR ${statusErr}** : 	
                         Content type incorrect or not specified`))
+                            .then(msg => msg.delete({ timeout: 8000 }))
                     } else if (statusErr == 429) {
                         return message.channel.send(new MessageEmbed()
                             .setColor(config.wrongcolor)
                             .setFooter(config.footertext, config.footericon)
                             .setDescription(`❌ **ERROR ${statusErr}** : 	
                         Too many requests`))
+                            .then(msg => msg.delete({ timeout: 8000 }))
                     } else {
                         return message.channel.send(new MessageEmbed()
                             .setColor(config.wrongcolor)
                             .setFooter(config.footertext, config.footericon)
-                            .setTitle(`❌ ERROR | Unexpected response status`))
-                            .setDescription(`\`\`\`${error.stack}\`\`\``)
+                            .setTitle(`❌ ERROR | Unexpected response status`)
+                            .setDescription(`\`\`\`${error.stack}\`\`\``))
+                            .then(msg => msg.delete({ timeout: 8000 }))
                     }
 
                 })
