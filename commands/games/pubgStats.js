@@ -5,6 +5,7 @@ const { access_api } = process.env;
 
 exports.run = async (client, message, args) => {
     try {
+        if (!args[0] || !args[1]) return message.channel.send('Specify Player-name and Season\n \`Syntax: <prefix>pubg-rank <player-name> <season>\` \n \`Exemple: =pubg-rank best_noob 10\`')
         let name = args[0];
         let mode = args[1];
         console.log(name, mode)

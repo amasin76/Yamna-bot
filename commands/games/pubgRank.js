@@ -5,9 +5,10 @@ const { access_api } = process.env;
 
 exports.run = async (client, message, args) => {
     try {
+        if (!args[0] || !args[1]) return message.channel.send('Specify Player-name and Season\n \`Syntax: <prefix>pubg-rank <player-name> <season>\` \n \`Exemple: =pubg-rank best_noob 10\`').then(msg => msg.delete({ timeout: 4000 }))
         let name = args[0];
         let season = parseInt(args[1]);
-        console.log(name, season)
+        //console.log(name, season)
         const getId = (name, season) => {
             axios.get(`https://api.pubg.com/shards/steam/players?filter[playerNames]=${name}`, {
                 headers: {
@@ -39,38 +40,38 @@ exports.run = async (client, message, args) => {
                         .setColor('#fcbe03')
                         .setFooter(config.footertext, config.footericon)
                         .setThumbnail('https://pngimg.com/uploads/pubg/pubg_PNG8.png')
-                        .setAuthor('PUBG STATS / Season', 'https://www.logolynx.com/images/logolynx/c3/c3ffc8726b01df955af0b9dadb1f7f13.png', 'https://discord.gg/CyH8avz')
+                        .setAuthor('PUBG STATS / Ranked', 'https://www.logolynx.com/images/logolynx/c3/c3ffc8726b01df955af0b9dadb1f7f13.png', 'https://discord.gg/CyH8avz')
                         //.setTitle(`LIFE-TIME STATS IN GAME`)
                         .setDescription(`\`\`\` Player Name : ${name} || Season : ${season} \`\`\``)
                         .addFields(
                             {
-                                name: "🔺Rounds Played ",
+                                name: "🏁Rounds Played ",
                                 value: ` ${lifeStats.roundsPlayed}`,
                                 inline: true
                             },
                             {
-                                name: "🏁Current Tier: ",
+                                name: "🏆Current Tier: ",
                                 value: ` __${lifeStats.currentTier.tier} ${Math.round(lifeStats.currentTier.subTier)}__`,
                                 inline: true
                             },
                             {
-                                name: "📆Current Rank Point: ",
+                                name: "🎫Current Rank Point: ",
                                 value: ` ${lifeStats.currentRankPoint}`,
                                 inline: true
                             },
                             {
-                                name: "💀Best Tier: ",
+                                name: "🏁Wins: ",
+                                value: ` ${lifeStats.wins}`,
+                                inline: true
+                            },
+                            {
+                                name: "🏆Best Tier: ",
                                 value: ` ${lifeStats.bestTier.tier} ${lifeStats.bestTier.subTier}`,
                                 inline: true
                             },
                             {
-                                name: "💀Best Rank Point: ",
+                                name: "🎫Best Rank Point: ",
                                 value: ` ${lifeStats.bestRankPoint}`,
-                                inline: true
-                            },
-                            {
-                                name: "🎯Wins: ",
-                                value: ` ${lifeStats.wins}`,
                                 inline: true
                             },
                             {
@@ -79,7 +80,7 @@ exports.run = async (client, message, args) => {
                                 inline: true
                             },
                             {
-                                name: "💔K/D: ",
+                                name: "🚨K/D: ",
                                 value: ` ${lifeStats.kda.toFixed(3)}`,
                                 inline: true
                             }
@@ -124,7 +125,8 @@ exports.run = async (client, message, args) => {
                         return message.channel.send(new MessageEmbed()
                             .setColor(config.wrongcolor)
                             .setFooter(config.footertext, config.footericon)
-                            .setDescription(`❌ ERROR | Unexpected response status`))
+                            .setTitle(`❌ ERROR | Unexpected response status`))
+                            .setDescription(`\`\`\`${error.stack}\`\`\``)
                     }
 
                 })
