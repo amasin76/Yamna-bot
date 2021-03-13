@@ -41,7 +41,7 @@ exports.run = async (client, message, args) => {
                         .setThumbnail('https://pngimg.com/uploads/pubg/pubg_PNG8.png')
                         .setAuthor('PUBG STATS / Season', 'https://www.logolynx.com/images/logolynx/c3/c3ffc8726b01df955af0b9dadb1f7f13.png', 'https://discord.gg/CyH8avz')
                         //.setTitle(`LIFE-TIME STATS IN GAME`)
-                        .setDescription(`\`\`\` Player Name : ${name} || Mode : ${season} \`\`\``)
+                        .setDescription(`\`\`\` Player Name : ${name} || Season : ${season} \`\`\``)
                         .addFields(
                             {
                                 name: "🔺Rounds Played ",
@@ -65,7 +65,7 @@ exports.run = async (client, message, args) => {
                             },
                             {
                                 name: "💀Best Rank Point: ",
-                                value: ` ${lifeStats.bestRankPoint} ${lifeStats.bestRankPoint}`,
+                                value: ` ${lifeStats.bestRankPoint}`,
                                 inline: true
                             },
                             {
