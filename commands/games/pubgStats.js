@@ -45,47 +45,47 @@ exports.run = async (client, message, args) => {
                         .setDescription(`\`\`\` Player Name : ${name} || Mode : ${mode} \`\`\``)
                         .addFields(
                             {
-                                name: "🏁Rounds Played: ",
+                                name: "🏁Rounds Played ",
                                 value: ` ${Math.round(lifeStats.roundsPlayed)}`,
                                 inline: true
                             },
                             {
-                                name: "📆Days Played: ",
+                                name: "📆Days Played ",
                                 value: ` ${Math.round(lifeStats.days)}`,
                                 inline: true
                             },
                             {
-                                name: "💀Kills: ",
+                                name: "💀Kills ",
                                 value: ` ${Math.round(lifeStats.kills)}`,
                                 inline: true
                             },
                             {
-                                name: "🔺Most Kills: ",
+                                name: "🔺Most Kills ",
                                 value: ` ${Math.round(lifeStats.roundMostKills)}`,
                                 inline: true
                             },
                             {
-                                name: "🎯Longest Kill: ",
-                                value: ` ${Math.round(lifeStats.longestKill)}`,
+                                name: "🎯Longest Kill ",
+                                value: ` ${Math.round(lifeStats.longestKill)} m`,
                                 inline: true
                             },
                             {
-                                name: "🚦Road Kills: ",
+                                name: "🚦Road Kills ",
                                 value: ` ${Math.round(lifeStats.roadKills)}`,
                                 inline: true
                             },
                             {
-                                name: "💔Team Kill: ",
+                                name: "💔Team Kill ",
                                 value: ` ${Math.round(lifeStats.teamKills)}`,
                                 inline: true
                             },
                             {
-                                name: "💣Suicides: ",
+                                name: "💣Suicides ",
                                 value: ` ${Math.round(lifeStats.suicides)}`,
                                 inline: true
                             },
                             {
-                                name: "💥Vehicle Destroys: ",
+                                name: "💥Vehicle Destroys ",
                                 value: ` ${Math.round(lifeStats.vehicleDestroys)}`,
                                 inline: true
                             },
@@ -112,35 +112,41 @@ exports.run = async (client, message, args) => {
                             .setFooter(config.footertext, config.footericon)
                             .setDescription(`❌ **ERROR ${statusErr}** : 	
                             API key invalid or missing`))
+                            .then(msg => msg.delete({ timeout: 8000 }))
                     } else if (statusErr == 404) {
                         return message.channel.send(new MessageEmbed()
                             .setColor(config.wrongcolor)
                             .setFooter(config.footertext, config.footericon)
                             .setDescription(`❌ **ERROR ${statusErr}** : 	
                             The specified resource was not found, The inputs not valid (username,mode..)`))
+                            .then(msg => msg.delete({ timeout: 8000 }))
                     } else if (statusErr == 415) {
                         return message.channel.send(new MessageEmbed()
                             .setColor(config.wrongcolor)
                             .setFooter(config.footertext, config.footericon)
                             .setDescription(`❌ **ERROR ${statusErr}** : 	
                             Content type incorrect or not specified`))
+                            .then(msg => msg.delete({ timeout: 8000 }))
                     } else if (statusErr == 415) {
                         return message.channel.send(new MessageEmbed()
                             .setColor(config.wrongcolor)
                             .setFooter(config.footertext, config.footericon)
                             .setDescription(`❌ **ERROR ${statusErr}** : 	
                             Content type incorrect or not specified`))
+                            .then(msg => msg.delete({ timeout: 8000 }))
                     } else if (statusErr == 429) {
                         return message.channel.send(new MessageEmbed()
                             .setColor(config.wrongcolor)
                             .setFooter(config.footertext, config.footericon)
                             .setDescription(`❌ **ERROR ${statusErr}** : 	
                             Too many requests`))
+                            .then(msg => msg.delete({ timeout: 8000 }))
                     } else {
                         return message.channel.send(new MessageEmbed()
                             .setColor(config.wrongcolor)
                             .setFooter(config.footertext, config.footericon)
-                            .setDescription(`❌ ERROR | Unexpected response status`))
+                            .setDescription(`\`\`\`${error.stack}\`\`\``))
+                            .then(msg => msg.delete({ timeout: 8000 }))
                     }
 
                 })
