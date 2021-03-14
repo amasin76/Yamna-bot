@@ -5,7 +5,7 @@ const { access_api } = process.env;
 
 exports.run = async (client, message, args) => {
     try {
-        if (!args[0] || !args[1]) return message.channel.send('Specify Player-name and Season\n \`Syntax: <prefix>pubg-rank <player-name> <season>\` \n \`Exemple: =pubg-rank best_noob 10\`').then(msg => msg.delete({ timeout: 8000 }))
+        if (!args[0] || !args[1]) return message.channel.send('Specify Player-name and Season\n \`Syntax: <prefix>pubg-rank <player-name> <season>\` \n \`Exemple: =pubg-rank best_noob 10\`').then(msg => msg.delete({ timeout: 15000 }))
         let name = args[0];
         let season = parseInt(args[1]);
         //console.log(name, season)
@@ -55,12 +55,12 @@ exports.run = async (client, message, args) => {
                                 inline: true
                             },
                             {
-                                name: "🎫Current Rank Point: ",
+                                name: "🎫Current Rank Point ",
                                 value: ` ${lifeStats.currentRankPoint}`,
                                 inline: true
                             },
                             {
-                                name: "🏁Wins: ",
+                                name: "🏁Wins ",
                                 value: ` ${lifeStats.wins}`,
                                 inline: true
                             },
@@ -70,17 +70,17 @@ exports.run = async (client, message, args) => {
                                 inline: true
                             },
                             {
-                                name: "🎫Best Rank Point: ",
+                                name: "🎫Best Rank Point ",
                                 value: ` ${lifeStats.bestRankPoint}`,
                                 inline: true
                             },
                             {
-                                name: "🚨winRatio: ",
+                                name: "🚨winRatio ",
                                 value: ` ${lifeStats.winRatio.toFixed(3)}`,
                                 inline: true
                             },
                             {
-                                name: "🚨K/D: ",
+                                name: "🚨K/D ",
                                 value: ` ${lifeStats.kda.toFixed(3)}`,
                                 inline: true
                             }
