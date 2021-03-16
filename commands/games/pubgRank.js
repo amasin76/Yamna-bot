@@ -152,6 +152,6 @@ exports.help = {
 };
 
 exports.conf = {
-    aliases: ["ps"],
+    aliases: ["pr"],
     cooldown: 5
 }

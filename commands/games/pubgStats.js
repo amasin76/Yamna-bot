@@ -40,7 +40,7 @@ exports.run = async (client, message, args) => {
                         .setColor('#fcbe03')
                         .setFooter(config.footertext, config.footericon)
                         .setThumbnail('https://pngimg.com/uploads/pubg/pubg_PNG8.png')
-                        .setAuthor('PUBG STATS / LIFE-TIME', 'https://www.logolynx.com/images/logolynx/c3/c3ffc8726b01df955af0b9dadb1f7f13.png', 'https://discord.gg/CyH8avz')
+                        .setAuthor('PUBG STATS / LIFE-TIME', 'https://www.logolynx.com/images/logolynx/c3/c3ffc8726b01df955af0b9dadb1f7f13.png', 'https://discord.com/api/oauth2/authorize?client_id=807868627302350868&permissions=8&scope=bot')
                         //.setTitle(`LIFE-TIME STATS IN GAME`)
                         .setDescription(`\`\`\` Player Name : ${name} || Mode : ${mode} \`\`\``)
                         .addFields(
