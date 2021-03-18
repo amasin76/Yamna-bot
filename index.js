@@ -24,7 +24,7 @@ let prefix = "=";
 /*require("./handler/module.js")(client);
 require("./handler/Event.js")(client);*/
 //Handler
-["module", "Event"/*, "welcome", "distube"*/].forEach(handler => {
+["module", "Event", "distube"/*, "welcome"*/].forEach(handler => {
     require(`./handlers/${handler}`)(client);
 });
 //client=-=-=-=-=-=-=-=-=-=-=-=-=
