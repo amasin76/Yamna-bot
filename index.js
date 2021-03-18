@@ -24,7 +24,7 @@ let prefix = "=";
 /*require("./handler/module.js")(client);
 require("./handler/Event.js")(client);*/
 //Handler
-["module", "Event", "welcome", "distube"].forEach(handler => {
+["module", "Event"/*, "welcome", "distube"*/].forEach(handler => {
     require(`./handlers/${handler}`)(client);
 });
 //client=-=-=-=-=-=-=-=-=-=-=-=-=
@@ -34,5 +34,17 @@ client.on("error", console.error); // This will send you an error message via lo
 client.login(process.env.SECRET).catch(console.error); // This token will leads to the .env file. It's safe in there.
 //Logger=-=-=-=-=-=-=-=-=-=-=-=-=
 require("./logger.js")(client);
+//leave = ban =-=-=-=-=-=-=-=-=-=
+client.on("guildMemberRemove", async function (member) {
+    //console.log(member.user)
+    user = member
+    try {
+        await user.ban({
+            reason: "Rule #0: Leave => Ban"
+        })
+    } catch (err) {
+        console.log(err)
+    }
+});
 //client.login(process.env.SECRET)
 client.login(process.env.SECRET).catch(console.error);
