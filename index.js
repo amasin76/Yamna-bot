@@ -36,12 +36,13 @@ client.login(process.env.SECRET).catch(console.error); // This token will leads 
 require("./logger.js")(client);
 //leave = ban =-=-=-=-=-=-=-=-=-=
 client.on("guildMemberRemove", async function (member) {
-    //console.log(member.user)
+    //console.log(member)
     user = member
     try {
         await user.ban({
+            days: 0,
             reason: "Rule #0: Leave => Ban"
-        })
+        }).catch(err => console.log(err));
     } catch (err) {
         console.log(err)
     }
