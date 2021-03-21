@@ -76,7 +76,7 @@ exports.run = async (client, message, args) => {
                             },
                             {
                                 name: "🚨winRatio ",
-                                value: ` ${lifeStats.winRatio.toFixed(3)}`,
+                                value: ` ${(lifeStats.winRatio.toFixed(3)) * 100} %`,
                                 inline: true
                             },
                             {
