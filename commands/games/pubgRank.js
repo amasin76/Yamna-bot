@@ -40,7 +40,7 @@ exports.run = async (client, message, args) => {
                         .setColor('#fcbe03')
                         .setFooter(config.footertext, config.footericon)
                         .setThumbnail('https://pngimg.com/uploads/pubg/pubg_PNG8.png')
-                        .setAuthor('PUBG STATS / Ranked', 'https://www.logolynx.com/images/logolynx/c3/c3ffc8726b01df955af0b9dadb1f7f13.png', 'https://discord.gg/CyH8avz')
+                        .setAuthor('PUBG STATS / RANKED', 'https://www.logolynx.com/images/logolynx/c3/c3ffc8726b01df955af0b9dadb1f7f13.png', 'https://discord.com/api/oauth2/authorize?client_id=807868627302350868&permissions=8&scope=bot')
                         //.setTitle(`LIFE-TIME STATS IN GAME`)
                         .setDescription(`\`\`\` Player Name : ${name} || Season : ${season} \`\`\``)
                         .addFields(
@@ -55,7 +55,7 @@ exports.run = async (client, message, args) => {
                                 inline: true
                             },
                             {
-                                name: "🎫Current Rank Point ",
+                                name: "🎫Current Points ",
                                 value: ` ${lifeStats.currentRankPoint}`,
                                 inline: true
                             },
@@ -70,12 +70,12 @@ exports.run = async (client, message, args) => {
                                 inline: true
                             },
                             {
-                                name: "🎫Best Rank Point ",
+                                name: "🎫Best Points ",
                                 value: ` ${lifeStats.bestRankPoint}`,
                                 inline: true
                             },
                             {
-                                name: "🚨winRatio ",
+                                name: "🚨Win Ratio ",
                                 value: ` ${(lifeStats.winRatio.toFixed(3)) * 100} %`,
                                 inline: true
                             },
