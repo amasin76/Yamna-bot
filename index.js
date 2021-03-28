@@ -35,7 +35,7 @@ client.login(process.env.SECRET).catch(console.error); // This token will leads 
 //Logger=-=-=-=-=-=-=-=-=-=-=-=-=
 require("./logger.js")(client);
 //leave = ban =-=-=-=-=-=-=-=-=-=
-client.on("guildMemberRemove", async function (member) {
+/*client.on("guildMemberRemove", async function (member) {
     //console.log(member)
     user = member
     try {
@@ -46,6 +46,6 @@ client.on("guildMemberRemove", async function (member) {
     } catch (err) {
         console.log(err)
     }
-});
-//client.login(process.env.SECRET)
+});*/
+//client.login(process.env.SECRET)=
 client.login(process.env.SECRET).catch(console.error);
