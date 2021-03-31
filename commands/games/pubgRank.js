@@ -35,6 +35,7 @@ exports.run = async (client, message, args) => {
                 .then((resp) => {
                     //let status = resp.status
                     let lifeStats = resp.data.data.attributes.rankedGameModeStats['squad-fpp']//.data[0].attributes.gameModeStats[`${mode}`]
+                    //console.log((lifeStats.winRatio * 100).toFixed(3))
                     //console.log(lifeStats)
                     return message.channel.send(new MessageEmbed()
                         .setColor('#fcbe03')
@@ -76,12 +77,12 @@ exports.run = async (client, message, args) => {
                             },
                             {
                                 name: "🚨Win Ratio ",
-                                value: ` ${(lifeStats.winRatio.toFixed(3)) * 100} %`,
+                                value: ` ${(lifeStats.winRatio * 100).toFixed(2)} %`,
                                 inline: true
                             },
                             {
                                 name: "🚨K/D ",
-                                value: ` ${lifeStats.kda.toFixed(3)}`,
+                                value: ` ${lifeStats.kda.toFixed(2)}`,
                                 inline: true
                             }
                         )
