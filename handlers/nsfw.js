@@ -51,7 +51,7 @@ module.exports = client => {
                 }
                 valueDrawing = Object.values(predictions.find(isDrawing))
 
-                if (valueHentai[1] >= 0.2) {
+                if (valueHentai[1] >= 0.35) {
                     await message.delete()
                     message.channel.send(new MessageEmbed()
                         .setColor(config.wrongcolor)
@@ -59,9 +59,9 @@ module.exports = client => {
                         .setTitle("⛔ NSFW Detected")
                         .setThumbnail(message.author.displayAvatarURL({ format: 'png', dynamic: false }))
                         .setDescription(`➖ **Hentai** = \`${(valueHentai[1] * 100).toFixed(2)}\`% \n\n (If it is a misunderstanding, please report it to the Admins)`))
-                        .then(msg => msg.delete({ timeout: 60 * 1000 }))
+                        .then(msg => msg.delete({ timeout: 20 * 1000 }))
                 }
-                else if (valuePorn[1] >= 0.2) {
+                else if (valuePorn[1] >= 0.35) {
                     await message.delete()
                     message.channel.send(new MessageEmbed()
                         .setColor(config.wrongcolor)
@@ -69,9 +69,9 @@ module.exports = client => {
                         .setTitle("⛔ NSFW Detected")
                         .setThumbnail(message.author.displayAvatarURL({ format: 'png', dynamic: false }))
                         .setDescription(`➖ **Porn** = \`${(valuePorn[1] * 100).toFixed(2)}\`% \n\n (If it is a misunderstanding, please report it to the Admins)`))
-                        .then(msg => msg.delete({ timeout: 60 * 1000 }))
+                        .then(msg => msg.delete({ timeout: 20 * 1000 }))
                 }
-                else if (valueSexy[1] >= 0.6) {
+                else if (valueSexy[1] >= 0.7) {
                     await message.delete()
                     message.channel.send(new MessageEmbed()
                         .setColor(config.wrongcolor)
@@ -79,7 +79,7 @@ module.exports = client => {
                         .setTitle("⛔ NSFW Detected")
                         .setThumbnail(message.author.displayAvatarURL({ format: 'png', dynamic: false }))
                         .setDescription(`➖ **Sexy** = \`${(valueSexy[1] * 100).toFixed(2)}\`% \n\n (If it is a misunderstanding, please report it to the Admins)`))
-                        .then(msg => msg.delete({ timeout: 60 * 1000 }))
+                        .then(msg => msg.delete({ timeout: 20 * 1000 }))
                 }
                 else {
                     message.channel.send(new MessageEmbed()
