@@ -3,6 +3,7 @@ const config = require("../../config.json");
 const { delay } = require("../../handlers/functions")
 
 exports.run = async (client, message, args) => {
+    if (!message.member.hasPermission('MANAGE_GUILD')) return message.channel.send('You do not have permissions to use this command');
     try {
         const text = args.join(" ")
         clearamount = Number(args[0]);

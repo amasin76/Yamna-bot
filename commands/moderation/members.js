@@ -42,7 +42,7 @@ exports.run = async (client, message, args) => {
 
         } else if (message.guild.iconURL() !== null) {
 
-            var { body: guildIcon } = await get(message.guild.iconURL({ format: 'png', dynamic: false, size: 128 }))
+            var { body: guildIcon } = await get(message.guild.iconURL({ format: 'png', dynamic: false, size: 256 }))
 
         }
         var { body: backGround } = await get(mathBackGround)

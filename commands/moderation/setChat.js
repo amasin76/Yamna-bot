@@ -2,6 +2,7 @@ const { MessageEmbed } = require("discord.js");
 const config = require("../../config.json");
 
 exports.run = async (client, message, args) => {
+    if (!message.member.hasPermission('MANAGE_GUILD')) return message.channel.send('You do not have permissions to use this command');
     try {
         if (!args[0])
             return message.channel.send(new MessageEmbed()
