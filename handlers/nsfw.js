@@ -11,8 +11,9 @@ module.exports = client => {
     client.on("message", message => {
         if (message.author.bot) return;
         if (!message.content.match(/^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/m) && message.attachments.map(x => x.proxyURL).length == 0) return;
-        ///(https?:\/\/.*\.(?:png|jpg))/
         try {
+            ///(https?:\/\/.*\.(?:png|jpg))/
+
             let URL = message.attachments.map(x => x.proxyURL)
             if (message.attachments.map(x => x.proxyURL) == 0) {
                 let stringURL = message.content.match(/^(http: \/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/m)[0]
@@ -51,7 +52,7 @@ module.exports = client => {
                 }
                 valueDrawing = Object.values(predictions.find(isDrawing))
 
-                if (valueHentai[1] >= 0.35) {
+                if (valueHentai[1] >= 0.10) {
                     await message.delete().catch(console.error)
                     await message.channel.send(new MessageEmbed()
                         .setColor(config.wrongcolor)
@@ -61,7 +62,7 @@ module.exports = client => {
                         .setDescription(`➖ **Hentai** = \`${(valueHentai[1] * 100).toFixed(2)}\`% \n\n (If it is a misunderstanding, please report it to the Admins)`))
                         .then(msg => msg.delete({ timeout: 20 * 1000 }))
                 }
-                else if (valuePorn[1] >= 0.35) {
+                else if (valuePorn[1] >= 0.55) {
                     await message.delete().catch(console.error)
                     await message.channel.send(new MessageEmbed()
                         .setColor(config.wrongcolor)
