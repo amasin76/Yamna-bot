@@ -1,6 +1,8 @@
 const Discord = require("discord.js"), cooldowns = new Discord.Collection() //db = require("quick.db");
 // cooldowns will store the user when they are still in the cooldown mode.
+const { MessageEmbed } = require('discord.js');
 const getprefix = require("../util/getprefix");
+const config = require("../config.json");
 
 module.exports = async (client, message) => {
     // Prevent any chit-chats with other bots, or by himself.
@@ -21,7 +23,23 @@ module.exports = async (client, message) => {
     if (inviteLink.some(word => message.content.toLowerCase().includes(word))) {
         await message.delete();
         return message.channel.send("Bro, you can't promote your server here!")
-            .then(m => m.delete({ timeout: 10000 })) // Add this if you want the message automatically deleted.
+            .then(m => m.delete({ timeout: 30 * 1000 }))
+    }
+
+    let shareLinks = ["twitch.tv/", "youtube.com/"]
+    try {
+        if (message.author.bot) return;
+        if (message.channel.id !== '746777186714779770' && shareLinks.some(word => message.content.toLowerCase().includes(word))) {
+            await message.delete();
+            return await message.channel.send(new MessageEmbed()
+                .setColor(config.wrongcolor)
+                .setFooter(config.footertext, message.author.displayAvatarURL({ format: 'png', dynamic: false }))
+                .setTitle("⛔ Violation of Rules")
+                .setDescription(`__Channels Category__ (check <#714787304862122104>) \n\n \`Please use the correct channel for the topic you are posting about\` \n\n You can post Links in <#746777186714779770> or Clips in <#749584245457944577>`))
+                .then(msg => msg.delete({ timeout: 30 * 1000 }))
+        }
+    } catch (err) {
+        console.log(err)
     }
 
     // Verification Site
@@ -39,10 +57,10 @@ module.exports = async (client, message) => {
                 return message.reply("Your DM is still locked. Unlock your DM first.")
                     .then(i => i.delete({ timeout: 10000 }));
             })
-
+ 
             return message.reply("Check your DM.").then(i => i.delete({ timeout: 10000 }));
         }
-
+ 
         // Verify System
         if (!client.config.owners.includes(message.author.id)) { // The owner of the bot cannot get any verification codes.
             if (!message.author.bot) { // If the user was a robot, well return it.
@@ -53,7 +71,7 @@ module.exports = async (client, message) => {
                     message.delete()
                     return message.reply("Are you sure that is the code that you typing it?").then(i => i.delete({ timeout: 10000 }));
                 }
-
+ 
                 if (verify === code) {
                     message.delete();
                     db.delete(`verification.${message.author.id}`);
