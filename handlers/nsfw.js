@@ -52,7 +52,7 @@ module.exports = client => {
                 valueDrawing = Object.values(predictions.find(isDrawing))
 
                 if (valueHentai[1] >= 0.35) {
-                    message.delete().catch(console.error)
+                    await message.delete().catch(console.error)
                     await message.channel.send(new MessageEmbed()
                         .setColor(config.wrongcolor)
                         .setFooter(config.footertext, config.footericon)
@@ -62,7 +62,7 @@ module.exports = client => {
                         .then(msg => msg.delete({ timeout: 20 * 1000 }))
                 }
                 else if (valuePorn[1] >= 0.35) {
-                    message.delete().catch(console.error)
+                    await message.delete().catch(console.error)
                     await message.channel.send(new MessageEmbed()
                         .setColor(config.wrongcolor)
                         .setFooter(config.footertext, config.footericon)
@@ -72,7 +72,7 @@ module.exports = client => {
                         .then(msg => msg.delete({ timeout: 20 * 1000 }))
                 }
                 else if (valueSexy[1] >= 0.7) {
-                    message.delete().catch(console.error)
+                    await message.delete().catch(console.error)
                     await message.channel.send(new MessageEmbed()
                         .setColor(config.wrongcolor)
                         .setFooter(config.footertext, config.footericon)
