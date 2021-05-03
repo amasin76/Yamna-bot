@@ -52,8 +52,8 @@ module.exports = client => {
                 valueDrawing = Object.values(predictions.find(isDrawing))
 
                 if (valueHentai[1] >= 0.35) {
-                    await message.delete()
-                    message.channel.send(new MessageEmbed()
+                    message.delete().catch(console.error)
+                    await message.channel.send(new MessageEmbed()
                         .setColor(config.wrongcolor)
                         .setFooter(config.footertext, config.footericon)
                         .setTitle("⛔ NSFW Detected")
@@ -62,8 +62,8 @@ module.exports = client => {
                         .then(msg => msg.delete({ timeout: 20 * 1000 }))
                 }
                 else if (valuePorn[1] >= 0.35) {
-                    await message.delete()
-                    message.channel.send(new MessageEmbed()
+                    message.delete().catch(console.error)
+                    await message.channel.send(new MessageEmbed()
                         .setColor(config.wrongcolor)
                         .setFooter(config.footertext, config.footericon)
                         .setTitle("⛔ NSFW Detected")
@@ -72,8 +72,8 @@ module.exports = client => {
                         .then(msg => msg.delete({ timeout: 20 * 1000 }))
                 }
                 else if (valueSexy[1] >= 0.7) {
-                    await message.delete()
-                    message.channel.send(new MessageEmbed()
+                    message.delete().catch(console.error)
+                    await message.channel.send(new MessageEmbed()
                         .setColor(config.wrongcolor)
                         .setFooter(config.footertext, config.footericon)
                         .setTitle("⛔ NSFW Detected")
@@ -82,7 +82,7 @@ module.exports = client => {
                         .then(msg => msg.delete({ timeout: 20 * 1000 }))
                 }
                 else {
-                    message.channel.send(new MessageEmbed()
+                    await message.channel.send(new MessageEmbed()
                         .setColor('#00EB2B')
                         .setFooter(config.footertext, config.footericon)
                         .setTitle("✅ Safe Content")
