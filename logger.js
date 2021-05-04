@@ -28,11 +28,14 @@ module.exports = (c) => {
                 , "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/samsung/265/pushpin_1f4cc.png"
             )
         })
-        c.on("channelUpdate", function (oldChannel, newChannel) {
+        c.on("channelUpdate", async function (oldChannel, newChannel) {
             let newCat = newChannel.parent ? newChannel.parent.name : "NO PARENT";
             let guildChannel = newChannel.guild;
             if (!guildChannel || !guildChannel.available) return;
-
+            let oldPosition = await oldChannel.position
+            let newPosition = await newChannel.position
+            console.log(`Old ${oldPosition}`)
+            console.log(`New ${newPosition}`)
             let types = {
                 text: "Text Channel",
                 voice: "Voice Channel",
@@ -42,13 +45,30 @@ module.exports = (c) => {
                 category: "Category",
             }
 
-            if (oldChannel.name != newChannel.name) {
+            if (oldChannel.position == newChannel.position || oldChannel.position != newChannel.position) {
+                oldChannel.guild.fetchAuditLogs().then(logs => {
+                    let userID = logs.entries.first().executor.id;
+                    let userAvatar = logs.entries.first().executor.avatarURL;
+                    //console.log(userID)
+                    //console.log(userAvatar)
+                    send_log(c,
+                        oldChannel.guild,
+                        "YELLOW",
+                        "Channel UPDATED - NAME",
+                        `ChannelNAME: \`${oldChannel.name}\`\nChannel Position: \`${oldChannel.position}\`\n\n` +
+                        `ChannelNAME: \`${newChannel.name}\`\nChannel Position: \`${newChannel.position}\` \n\n By <@${userID}>`
+                    )
+                })
+
+            }
+            else if (oldChannel.name != newChannel.name) {
                 send_log(c,
                     oldChannel.guild,
                     "YELLOW",
                     "Channel UPDATED - NAME",
                     `ChannelNAME: \`${oldChannel.name}\`\nChannelID: \`${oldChannel.id}\`\n\n` +
-                    `ChannelNAME: \`${newChannel.name}\`\nChannelID: \`${newChannel.id}\``
+                    `ChannelNAME: \`${newChannel.name}\`\nChannelID: \`${newChannel.id}\``,
+                    //userAvatar
                 )
             }
             else if (oldChannel.type != newChannel.type) {
