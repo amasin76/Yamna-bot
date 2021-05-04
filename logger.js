@@ -49,7 +49,7 @@ module.exports = (c) => {
                 oldChannel.guild.fetchAuditLogs().then(logs => {
                     let userID = logs.entries.first().executor.id;
                     let userAvatar = logs.entries.first().executor.avatarURL;
-                    //console.log(userID)
+                    console.log(userID)
                     //console.log(userAvatar)
                     send_log(c,
                         oldChannel.guild,
