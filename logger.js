@@ -32,10 +32,6 @@ module.exports = (c) => {
             let newCat = newChannel.parent ? newChannel.parent.name : "NO PARENT";
             let guildChannel = newChannel.guild;
             if (!guildChannel || !guildChannel.available) return;
-            let oldPosition = await oldChannel.position
-            let newPosition = await newChannel.position
-            console.log(`Old ${oldPosition}`)
-            console.log(`New ${newPosition}`)
             let types = {
                 text: "Text Channel",
                 voice: "Voice Channel",
@@ -45,23 +41,7 @@ module.exports = (c) => {
                 category: "Category",
             }
 
-            if (oldChannel.position == newChannel.position || oldChannel.position != newChannel.position) {
-                oldChannel.guild.fetchAuditLogs().then(logs => {
-                    let userID = logs.entries.first().executor.id;
-                    let userAvatar = logs.entries.first().executor.avatarURL;
-                    console.log(userID)
-                    //console.log(userAvatar)
-                    send_log(c,
-                        oldChannel.guild,
-                        "YELLOW",
-                        "Channel UPDATED - NAME",
-                        `ChannelNAME: \`${oldChannel.name}\`\nChannel Position: \`${oldChannel.position}\`\n\n` +
-                        `ChannelNAME: \`${newChannel.name}\`\nChannel Position: \`${newChannel.position}\` \n\n By <@${userID}>`
-                    )
-                })
-
-            }
-            else if (oldChannel.name != newChannel.name) {
+            if (oldChannel.name != newChannel.name) {
                 send_log(c,
                     oldChannel.guild,
                     "YELLOW",
