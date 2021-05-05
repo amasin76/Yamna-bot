@@ -15,8 +15,7 @@ exports.run = async (client, message, args) => {
             General: '📕',
             Moderation: '💼',
             Muslim: '🕋',
-            Record: '📼',
-            Utility: '🧪'
+            Record: '📼'
         }
 
         // This will hide a folder from display that includes "hide: true" in their module.json
