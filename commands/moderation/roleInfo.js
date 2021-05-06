@@ -1,36 +1,28 @@
 const { DiscordAPIError } = require("discord.js");
 
 exports.run = async (client, message, args) => {
-    if (!message.member.hasPermission('MANAGE_GUILD')) return message.channel.send('You do not have permissions to use this command');
-    let role;
+    try {
+        var r = message.mentions.roles.first() || message.guild.roles.cache.get(args[0]);
+        console.log(message.mentions.roles)
+        if (!r) return message.channel.send(`**Mention A Role |OR| Provide A Role ID**`)
 
-    if (!args[0]) return message.reply('you need to provide a `Role`')
-    if (args[0] && isNaN(args[0]) && message.mentions.roles.first()) role = message.mentions.roles.first()
-    if (args[0] && isNaN(args[0]) && message.mentions.roles.first()) {
-        role = message.guild.roles.cache.find(e => e.name.toLowerCase().trim() == args.slice(0).join(" ").toLowerCase().trim())
-        console.log(role)
-        if (!message.guild.roles.cache.find(e => e.name.toLowerCase().trim() == args.slice(0).join(" ").toLowerCase().trim())) return message.reply("Role not found")
+
+        var embed = new Discord.MessageEmbed()
+            .setThumbnail(message.author.displayAvatarURL({ dynamic: true, size: 1024 }))
+            .setTimestamp()
+            .setTitle(`${r.name} Info`)
+            .setColor(r.hexColor)
+            .setFooter(message.guild.name, message.guild.iconURL())
+            .addField('Server Name : ', message.guild.name)
+            .addField('Role Name : ', r.name)
+            .addField('Role Id : ', r.id)
+            .addField('Role Created At : ', r.createdAt)
+            .addField('Role Members : ', r.members.array().length)
+            .addField('Role Color : ', r.hexColor)
+        message.channel.send(embed)
+    } catch (err) {
+        console.log(err)
     }
-    if (args[0] && !isNaN(args[0])) {
-        role = message.guild.roles.cache.find(e => e.id == args[0])
-        console.log(role)
-        if (!message.guild.roles.cache.has(args[0])) return message.reply("Role not found")
-    }
-    if (!role) return message.reply("You must mention `Role` or give `ID` or `Name`")
-
-    let withRole;
-    if (role.members.size > 5) withRole = role.members.map(e => `<@${e.id}`).slice(0, 5).join(", ") + ` and ${role.members.size = 5} more members...`
-    if (role.members.size > 5) withRole = role.members.map(e => `<@${e.id}`).join(", ")
-
-    let embed = new Discord.MessageEmbed()
-        .setColor(role.color)
-        .setAuthor(message.guild.name, message.guild.iconURL())
-        .setDescription(`**Role Name:** ${role.name}, (<@&${role.id}>)
-    **Role ID:** **\`${role.id}\`**
-    **Role Mentionable:** ${role.mentionable.toString().replace("true", "Yes").replace("false", "No")}
-    **Role Members Size:** ${role.members.size || 0}`)
-        .setField("Role Members", withRole ? withRole : "No one have the role")
-    message.channel.send(embed)
 }
 exports.help = {
     name: "roleInfo",
