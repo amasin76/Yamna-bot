@@ -3,8 +3,7 @@ const { DiscordAPIError } = require("discord.js");
 exports.run = async (client, message, args) => {
     try {
         var r = message.mentions.roles.first() || message.guild.roles.cache.get(args[0]);
-        console.log(message.mentions.roles)
-        if (!r) return message.channel.send(`**Mention A Role |OR| Provide A Role ID**`)
+        if (!r) return message.channel.send(`**Mention A Role |OR| Provide A Role ID**`).then(msg => msg.delete({ timeout: 30 * 1000 }))
 
 
         var embed = new Discord.MessageEmbed()
