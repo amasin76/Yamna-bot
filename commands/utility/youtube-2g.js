@@ -2,16 +2,16 @@ const fetch = require("node-fetch");
 const config = require("../../config.json");
 
 exports.run = async (client, message, args) => {
-    const channel = message.mentions.channels.first() || message.guild.channels.cache.get(args[0]);
+    const channel = message.mentions.channels.first() || message.guild.channels.cache.get(args[0]) || message.member.voice.channel;
     if (!channel || channel.type !== "voice") {
         return await message.channel.send(new Discord.MessageEmbed()
             .setColor(config.wrongcolor)
             .setFooter(config.footertext, config.footericon)
-            .setTitle("❌ | Invalid channel specified")
-            .setDescription(`\`\`\`Provide Name or ID or Mention voice channel\`\`\`\nYou can reach id by:\n1-\`Settigns >Advanced >Devloper mode = ON\`\n2-\`Right click on channel >copy ID\``))
+            .setTitle("❌ | Invalid channel")
+            .setDescription(`\`\`\`Join voice channel OR Provide (Name/ID/Mention)\`\`\``))//\nYou can reach id by:\n1-\`Settigns >Advanced >Devloper mode = ON\`\n2-\`Right click on channel >copy ID\`
             .then(msg => msg.delete({ timeout: 20000 }))
             .then(message.delete({ timeout: 30000 }))
-    } //message.channel.send("❌ | Invalid channel specified! \n -Mention vioce chnnel OR Provide ID\nID:(activate visibilty ID by go Settigns>Advanced>Devloper mode = ON)");
+    }
     if (!channel.permissionsFor(message.guild.me).has("CREATE_INSTANT_INVITE")) return message.channel.send("❌ | I need `CREATE_INSTANT_INVITE` permission");
     try {
         fetch(`https://discord.com/api/v8/channels/${channel.id}/invites`, {

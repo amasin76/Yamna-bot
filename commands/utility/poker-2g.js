@@ -2,13 +2,13 @@ const fetch = require("node-fetch");
 const config = require("../../config.json");
 
 exports.run = async (client, message, args) => {
-    const channel = message.mentions.channels.first() || message.guild.channels.cache.get(args[0]);
+    const channel = message.mentions.channels.first() || message.guild.channels.cache.get(args[0]) || message.member.voice.channel;
     if (!channel || channel.type !== "voice") {
         return await message.channel.send(new Discord.MessageEmbed()
             .setColor(config.wrongcolor)
             .setFooter(config.footertext, config.footericon)
-            .setTitle("❌ | Invalid channel specified")
-            .setDescription(`\`\`\`Provide Name or ID or Mention voice channel\`\`\`\nYou can reach id by:\n1-\`Settigns >Advanced >Devloper mode = ON\`\n2-\`Right click on channel >copy ID\``))
+            .setTitle("❌ | Invalid channel")
+            .setDescription(`\`\`\`Join voice channel OR Provide (Name/ID/Mention)\`\`\``))
             .then(msg => msg.delete({ timeout: 20000 }))
             .then(message.delete({ timeout: 30000 }))
     } //message.channel.send("❌ | Invalid channel specified! \n -Mention vioce chnnel OR Provide ID\nID:(activate visibilty ID by go Settigns>Advanced>Devloper mode = ON)");
@@ -19,7 +19,7 @@ exports.run = async (client, message, args) => {
             body: JSON.stringify({
                 max_age: 21600,
                 max_uses: 0,
-                target_application_id: "755827207812677713", // youtube together
+                target_application_id: "755827207812677713", // poker night
                 target_type: 2,
                 temporary: false,
                 validate: null
