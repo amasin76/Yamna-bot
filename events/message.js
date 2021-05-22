@@ -27,10 +27,11 @@ module.exports = async (client, message) => {
     }
 
     let shareLinks = ["twitch.tv/", "youtube.com/", "youtu.be/"]
+    let whiteChannel = ["746777186714779770", "717058723692019772"]
     try {
         if (message.author.bot) return;
-        if (message.channel.id == '749584245457944577' && message.content.toLowerCase().includes('clips.twitch')) return;
-        if ((message.channel.id !== '746777186714779770') && shareLinks.some(word => message.content.toLowerCase().includes(word))) {
+        if (message.channel.id == '749584245457944577' && message.content.toLowerCase().includes('twitch')) return;
+        if (!whiteChannel.includes(message.channel.id) && shareLinks.some(word => message.content.toLowerCase().includes(word))) {
             await message.delete();
             return await message.channel.send(new MessageEmbed()
                 .setColor(config.wrongcolor)
