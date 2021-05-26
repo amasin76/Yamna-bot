@@ -19,7 +19,7 @@ exports.run = async (client, message, args) => {
             body: JSON.stringify({
                 max_age: 21600,
                 max_uses: 0,
-                target_application_id: "755827207812677713", // poker night
+                target_application_id: "773336526917861400", // Betrayal.io
                 target_type: 2,
                 temporary: false,
                 validate: null
@@ -47,12 +47,12 @@ exports.run = async (client, message, args) => {
     }
 }
 exports.help = {
-    name: "poker",
-    description: "Play Poker game together",
-    usage: "<prefix>poker",
-    example: "=poker"
+    name: "betrayal",
+    description: "Play Betrayal game together",
+    usage: "<prefix>bty",
+    example: "=bty"
 }
 exports.conf = {
-    aliases: [],
+    aliases: ["bty", "among-us", "among"],
     cooldown: 5
 }

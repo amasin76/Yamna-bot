@@ -8,7 +8,7 @@ exports.run = async (client, message, args) => {
             .setColor(config.wrongcolor)
             .setFooter(config.footertext, config.footericon)
             .setTitle("❌ | Invalid channel")
-            .setDescription(`\`\`\`Join voice channel OR Provide (Name/ID/Mention)\`\`\``))//\nYou can reach id by:\n1-\`Settigns >Advanced >Devloper mode = ON\`\n2-\`Right click on channel >copy ID\`
+            .setDescription(`\`\`\`Join voice channel OR Provide room (Name/ID/Mention)\`\`\``))//\nYou can reach id by:\n1-\`Settigns >Advanced >Devloper mode = ON\`\n2-\`Right click on channel >copy ID\`
             .then(msg => msg.delete({ timeout: 20000 }))
             .then(message.delete({ timeout: 30000 }))
     }
@@ -47,7 +47,7 @@ exports.run = async (client, message, args) => {
     }
 }
 exports.help = {
-    name: "YT-Together",
+    name: "youtube",
     description: "To watch youtube together",
     usage: "<prefix>yt",
     example: "=yt"
