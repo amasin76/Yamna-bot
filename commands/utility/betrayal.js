@@ -33,7 +33,7 @@ exports.run = async (client, message, args) => {
             .then(invite => {
                 if (invite.error || !invite.code) return message.channel.send("❌ | Could not start **YouTube Together**!");
                 message.channel.send(new Discord.MessageEmbed()
-                    .setAuthor("Poker Night", "https://cdn4.iconfinder.com/data/icons/casino-royale/512/cards_01-512.png", `https://discord.gg/${invite.code}`)
+                    .setAuthor("Betrayal (Similar to Among Us)", "https://static.wikia.nocookie.net/versus-compendium/images/5/5f/Impostor.png/revision/latest?cb=20200912190532", `https://discord.gg/${invite.code}`)
                     .setColor("BLACK")
                     .setURL(`https://discord.gg/${invite.code}`)
                     .setDescription(`Click Me : https://discord.gg/${invite.code}\nChannel : \`${channel.name}\`\nCreated by : \`${message.author.username}\``)
