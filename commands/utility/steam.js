@@ -27,7 +27,7 @@ exports.run = async (client, message, args) => {
                 let recent = body.response.games;
                 let copy = [];
                 if (!recent) {
-                    copy.push("Profile Invisible")
+                    copy.push("Invisible")
                 } else {
                     for (var i = 0; i < recent.length; i++) {
                         copy.push(`${recent[i].name}(${Math.round(recent[i].playtime_forever / 60)}h)🎮`)
@@ -46,7 +46,7 @@ exports.run = async (client, message, args) => {
                 **Status :** ${state[personastate]}
                 **Country :** :flag_${loccountrycode ? loccountrycode.toLowerCase() : "white"}:
                 **Account Created :** ${moment.unix(timecreated).format('DD/MM/YYYY')} (${moment.unix(timecreated).fromNow()})
-                **Bans:** Va c: ${NumberOfVACBans}, Game: ${NumberOfGameBans}
+                **Bans:** Vac: ${NumberOfVACBans}, Game: ${NumberOfGameBans}
                 **Recent Games :** \`${copy}\`
                 **Link :** [Profile](${profileurl})`)
                         .setTimestamp();
@@ -58,6 +58,7 @@ exports.run = async (client, message, args) => {
         })
     } catch (err) {
         console.log(err)
+        return message.channel.send(`Error : \`${err.message}\``);
     }
 }
 exports.help = {
