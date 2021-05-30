@@ -26,8 +26,12 @@ exports.run = async (client, message, args) => {
                 if (!body.response) return message.channel.send("I was unable to find a steam profile with that name");
                 let recent = body.response.games;
                 let copy = [];
-                for (var i = 0; i < recent.length; i++) {
-                    copy.push(`${recent[i].name}(${Math.round(recent[i].playtime_forever / 60)}h)🎮`)
+                if (!recent) {
+                    copy.push("Profile Invisible")
+                } else {
+                    for (var i = 0; i < recent.length; i++) {
+                        copy.push(`${recent[i].name}(${Math.round(recent[i].playtime_forever / 60)}h)🎮`)
+                    }
                 }
 
                 fetch(bans).then(res => res.json()).then(body => {
