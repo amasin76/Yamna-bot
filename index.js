@@ -33,6 +33,7 @@ client.on("warn", console.warn); // This will warn you via logs if there was som
 client.on("error", console.error); // This will send you an error message via logs if there was something missing with your coding.
 client.login(process.env.SECRET).catch(console.error); // This token will leads to the .env file. It's safe in there.
 //Logger=-=-=-=-=-=-=-=-=-=-=-=-=
+require('discord-buttons')(client)
 require("./logger.js")(client);
 //leave = ban =-=-=-=-=-=-=-=-=-=
 /*client.on("guildMemberRemove", async function (member) {

@@ -14,6 +14,7 @@
     "@tensorflow/tfjs-node": "^3.6.0",
     "axios": "^0.21.1",
     "canvas-constructor": "^4.1.0",
+    "discord-buttons": "^2.4.1",
     "discord-canvas": "^1.4.1",
     "discord.js": "^12.5.3",
     "discord.js-pagination": "^1.0.3",
