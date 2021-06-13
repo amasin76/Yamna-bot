@@ -26,23 +26,18 @@ exports.run = async (client, message, args) => {
                         headers: {
                             'Authorization': `Bearer ${access_api}`,
                             'Accept': 'application/vnd.api+json'
-
                         }
                     })
-                    //console.log(resp);
                     return resp;
                 })
                 .then((resp) => {
-                    //let status = resp.status
+                    //let status = resp.status | console.log(lifeStats)
                     let lifeStats = resp.data.data.attributes.rankedGameModeStats['squad-fpp']//.data[0].attributes.gameModeStats[`${mode}`]
-                    //console.log((lifeStats.winRatio * 100).toFixed(3))
-                    //console.log(lifeStats)
                     return message.channel.send(new MessageEmbed()
                         .setColor('#fcbe03')
                         .setFooter(config.footertext, config.footericon)
                         .setThumbnail('https://pngimg.com/uploads/pubg/pubg_PNG8.png')
                         .setAuthor('PUBG STATS / RANKED', 'https://www.logolynx.com/images/logolynx/c3/c3ffc8726b01df955af0b9dadb1f7f13.png', 'https://discord.com/api/oauth2/authorize?client_id=807868627302350868&permissions=8&scope=bot')
-                        //.setTitle(`LIFE-TIME STATS IN GAME`)
                         .setDescription(`\`\`\` Player Name : ${name} || Season : ${season} \`\`\``)
                         .addFields(
                             {
@@ -88,57 +83,16 @@ exports.run = async (client, message, args) => {
                         )
                     )
                 })
-                .catch((error) => {
-                    let statusErr = error.response.status
-                    //console.error(statusErr)
-
-                    if (statusErr == 401) {
-                        return message.channel.send(new MessageEmbed()
-                            .setColor(config.wrongcolor)
-                            .setFooter(config.footertext, config.footericon)
-                            .setDescription(`❌ **ERROR ${statusErr}** : 	
-                        API key invalid or missing`))
-                            .then(msg => msg.delete({ timeout: 8000 }))
-                    } else if (statusErr == 404) {
-                        return message.channel.send(new MessageEmbed()
-                            .setColor(config.wrongcolor)
-                            .setFooter(config.footertext, config.footericon)
-                            .setDescription(`❌ **ERROR ${statusErr}** : 	
-                        The specified resource was not found, The inputs not valid (username,mode..)`))
-                            .then(msg => msg.delete({ timeout: 8000 }))
-                    } else if (statusErr == 415) {
-                        return message.channel.send(new MessageEmbed()
-                            .setColor(config.wrongcolor)
-                            .setFooter(config.footertext, config.footericon)
-                            .setDescription(`❌ **ERROR ${statusErr}** : 	
-                        Content type incorrect or not specified`))
-                            .then(msg => msg.delete({ timeout: 8000 }))
-                    } else if (statusErr == 415) {
-                        return message.channel.send(new MessageEmbed()
-                            .setColor(config.wrongcolor)
-                            .setFooter(config.footertext, config.footericon)
-                            .setDescription(`❌ **ERROR ${statusErr}** : 	
-                        Content type incorrect or not specified`))
-                            .then(msg => msg.delete({ timeout: 8000 }))
-                    } else if (statusErr == 429) {
-                        return message.channel.send(new MessageEmbed()
-                            .setColor(config.wrongcolor)
-                            .setFooter(config.footertext, config.footericon)
-                            .setDescription(`❌ **ERROR ${statusErr}** : 	
-                        Too many requests`))
-                            .then(msg => msg.delete({ timeout: 8000 }))
-                    } else {
-                        return message.channel.send(new MessageEmbed()
-                            .setColor(config.wrongcolor)
-                            .setFooter(config.footertext, config.footericon)
-                            .setTitle(`❌ ERROR | Unexpected response status`)
-                            .setDescription(`\`\`\`${error.stack}\`\`\``))
-                            .then(msg => msg.delete({ timeout: 8000 }))
-                    }
-
+                .catch((err) => {
+                    let [statusErr, errors] = [+err.response.status, err.response.data.errors[0]]
+                    //return lifeStats = resp.data.data[0].attributes.gameModeStats.mode !errorCode.hasOwnProperty(statusErr)
+                    return message.channel.send(new MessageEmbed()
+                        .setColor(config.wrongcolor)
+                        .setFooter(config.footertext, config.footericon)
+                        .setTitle(`❌ Error : ${statusErr || "?"} ( ${errors.title || "Unknown error"} )`)
+                        .setDescription(`\`\`\`\n${statusErr || "?"} : ${errors.detail || "Unexpected error"}\`\`\``))
+                        .then(msg => msg.delete({ timeout: 20000 }))
                 })
-
-            //return lifeStats = resp.data.data[0].attributes.gameModeStats.mode
         }
         getId(name, season)
     } catch (err) {
