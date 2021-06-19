@@ -44,6 +44,18 @@ module.exports = async (client, message) => {
         console.log(err)
     }
 
+    try {
+        let isTextMatched = new RegExp('the first three who send a trade').test(message.content.toLowerCase())
+        let hasPermission = message.member.hasPermission('MOVE_MEMBERS')
+        if (isTextMatched && !hasPermission) {
+            let muteRole = await message.guild.roles.cache.find(role => role.name === "muted")
+            await message.member.roles.set([])
+            await message.member.roles.add(muteRole);
+        }
+    } catch (err) {
+        console.log(err)
+    }
+
     // Verification Site
     /*if (message.channel.id === "CHANNEL ID") { // Verification Text Channel
         // Re-send Code System
