@@ -1,6 +1,7 @@
 const fetch = require("node-fetch");
 
 exports.run = async (client, message, args) => {
+    if (!args[0]) return message.channel.send(`**Please provide IP Adresse**`).then(msg => msg.delete({ timeout: 15000 }));
     const whois = await fetch(`http://ip-api.com/json/${args[0]}?fields=status,message,continent,continentCode,country,countryCode,region,regionName,city,zip,timezone,currency,isp,org,as,mobile,proxy,hosting,query`).then(response => response.json());
     if (whois.status == 'fail') {
         const embed = new Discord.MessageEmbed()
@@ -18,7 +19,7 @@ exports.run = async (client, message, args) => {
         .setTimestamp()
         .setColor("GREEN")
         .addFields(
-            { name: 'IP', value: whois.query, inline: true },
+            { name: 'IP', value: `||${whois.query}||`, inline: true },
             { name: 'Country', value: `${whois.country || "None"} (${whois.countryCode || "None"})`, inline: true },
             { name: 'Region', value: `${whois.regionName || "None"} (${whois.region || "None"})`, inline: true },
             { name: 'City', value: `${whois.city || "None"}`, inline: true },

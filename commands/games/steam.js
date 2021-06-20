@@ -4,18 +4,17 @@ const { MessageEmbed } = require("discord.js");
 
 exports.run = async (client, message, args) => {
     try {
-        const token = "5661E4716C04A4A4AE01F44674DA790A"; //I reset mine.
         const id = args[0]
-        if (!args[0]) return message.channel.send("Please provide an account name!");
-        /*const url = `http://api.steampowered.com/ISteamUser/ResolveVanityURL/v0001/?key=${token}&vanityurl=${args[0]}`;
+        if (!args[0]) return message.channel.send("Please provide an account ID !").then(msg => msg.delete({ timeout: 15000 }));
+        /*const url = `http://api.steampowered.com/ISteamUser/ResolveVanityURL/v0001/?key=${process.env.STEAM_API}&vanityurl=${args[0]}`;
     
         fetch(url).then(res => res.json()).then(body => {
             if (body.response.success === 42) return message.channel.send("I was unable to find a steam profile with that name");
     
             const id = body.response.steamid;*/
-        const summaries = `http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=${token}&steamids=${id}`;
-        const bans = `http://api.steampowered.com/ISteamUser/GetPlayerBans/v1/?key=${token}&steamids=${id}`;
-        const recent = ` http://api.steampowered.com/IPlayerService/GetRecentlyPlayedGames/v0001/?key=${token}&steamid=${id}&format=json`
+        const summaries = `http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=${process.env.STEAM_API}&steamids=${id}`;
+        const bans = `http://api.steampowered.com/ISteamUser/GetPlayerBans/v1/?key=${process.env.STEAM_API}&steamids=${id}`;
+        const recent = ` http://api.steampowered.com/IPlayerService/GetRecentlyPlayedGames/v0001/?key=${process.env.STEAM_API}&steamid=${id}&format=json`
         const state = ["Offline", "Online", "Busy", "Away", "Snooze", "Looking to trade", "Looking to play"];
 
         fetch(summaries).then(res => res.json()).then(body => {

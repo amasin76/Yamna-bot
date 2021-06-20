@@ -11,6 +11,7 @@ exports.run = async (client, message, args) => {
             Audio: '🔊',
             Dev: '💻',
             Economy: '💰',
+            Football: '⚽',
             Games: '🎮',
             General: '📕',
             Moderation: '💼',
