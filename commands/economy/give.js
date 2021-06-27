@@ -1,10 +1,10 @@
 const profileModel = require("../../models/profileSchema");
 const { BOT_OWNER } = process.env;
 
-exports.run = async (client, message, args, profileData) => {
+exports.run = async (client, message, args) => {
     if (message.author.id !== BOT_OWNER) return message.channel.send(`Sorry only <@${BOT_OWNER}> can run this command`);
     if (!args.length) return message.channel.send("You need to mention a player to give them coins");
-    const amount = args[1];
+    const amount = args[0];
     const target = message.mentions.users.first();
     if (!target) return message.channel.send("That user does not exist");
 

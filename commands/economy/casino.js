@@ -1,12 +1,15 @@
+const profileData = require("../../util/eco-profile.js");
 const profileModel = require("../../models/profileSchema");
 
-exports.run = async (client, message, args, profileData) => {
+exports.run = async (client, message, args) => {
+    profile = await profileData(message.author.id, message.guild.id).catch(e => console.error(e.message))
+
     let slot1 = ['🍏', '🍑', '🍓'];
     let slots1 = `${slot1[Math.floor(Math.random() * slot1.length)]}`;
     let slots2 = `${slot1[Math.floor(Math.random() * slot1.length)]}`;
     let slots3 = `${slot1[Math.floor(Math.random() * slot1.length)]}`;
     let we;
-    if (10 > profileData.coins) return message.channel.send(`You don't have that amount of coins to gamble`);
+    if (profile?.coins < 10) return message.channel.send(`You don't have that amount of coins to gamble`);
     if (slots1 === slots2 && slots2 === slots3) {
         we = "✨ **Win!** "
         message.channel.send(`${slots1} | ${slots2} | ${slots3} - ${we}`)
