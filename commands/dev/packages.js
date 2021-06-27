@@ -16,8 +16,8 @@ exports.run = async (client, message, args) => {
 exports.help = {
     name: "packages",
     description: "Shows a list of all bots dependencie",
-    usage: "packages",
-    example: "~invite"
+    usage: "<prefix>packages",
+    example: "=packages"
 }
 
 exports.conf = {
