@@ -6,7 +6,9 @@ exports.run = async (client, message, args) => {
 
     if (!channel) return;
     const connection = await channel.join();
+    await connection.voice.setSelfDeaf(true)
     connection.play(ytdl(LIVE))
+
 
     setInterval(async () => {
         if (!client.voice.connections.get(SERVER)) {
