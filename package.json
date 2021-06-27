@@ -10,23 +10,24 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@discordjs/opus": "^0.4.0",
-    "@tensorflow/tfjs-node": "^3.6.0",
+    "@discordjs/opus": "^0.5.3",
+    "@tensorflow/tfjs-node": "^3.7.0",
     "axios": "^0.21.1",
-    "discord-buttons": "^2.4.1",
+    "cheerio": "*",
+    "discord-buttons": "^3.2.1",
     "discord-canvas": "^1.4.1",
     "discord.js": "^12.5.3",
     "discord.js-pagination": "^1.0.3",
-    "distube": "^2.8.13",
-    "dotenv": "^8.2.0",
-    "ffmpeg-static": "^4.3.0",
+    "distube": "^2.8.15",
+    "dotenv": "^10.0.0",
+    "ffmpeg-static": "^4.4.0",
     "fs": "0.0.1-security",
     "moment": "^2.29.1",
-    "mongoose": "^5.12.7",
+    "mongoose": "^5.12.14",
     "node-fetch": "^2.6.1",
     "nsfwjs": "^2.4.0",
     "puppeteer": "^10.0.0",
-    "ytdl-core": "^4.5.0"
+    "ytdl-core": "^4.8.2"
   },
   "engines": {
     "node": "14.x"

@@ -11,7 +11,7 @@ module.exports = async (client, message) => {
             .setThumbnail(`https://cdn.discordapp.com/icons/751562235415101523/a_5a094e44f5fc614002f3ac557287855b.gif?size=1024`)
             .setThumbnail(message.author.displayAvatarURL())
             .addField(`Message: `, `\n\n\`\`\`${message.content}\`\`\``)
-            .setFooter(`Pepe Bot`)
+            .setFooter(`@Bio`)
         client.users.cache.get("484524591696576523").send(yumz)
     }
 }
