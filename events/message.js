@@ -3,6 +3,7 @@ const Discord = require("discord.js"), cooldowns = new Discord.Collection() //db
 const { MessageEmbed } = require('discord.js');
 const getprefix = require("../util/getprefix");
 const config = require("../config.json");
+const premiumSchema = require("../models/premium")
 
 module.exports = async (client, message) => {
     // Prevent any chit-chats with other bots, or by himself.
@@ -13,9 +14,9 @@ module.exports = async (client, message) => {
 
     //Mention
     botMentioned = message.content.includes('<@!807868627302350868>') || message.content.includes('<@807868627302350868>');
-    if (botMentioned && message.author.id == process.env.BOT_OWNER) return message.channel.send("**💖 سمعـــــا و طاعـــــة 💖**");
-    if (botMentioned) {
-        message.reply(`\` My Custom Prefix: 【 ${prefix} 】 || Default: 【 ~ 】\`\n`)
+    if (botMentioned && message.author.id == process.env.BOT_OWNER) message.channel.send("**💖 سمعـــــا و طاعـــــة 💖**");
+    if (botMentioned && message.author.id != process.env.BOT_OWNER) {
+        message.reply(`\` My Custom Prefix: 【 ${prefix} 】 || Default: 【 = 】\`\n`)
     }//(message.mentions.has(client.user)
 
     let inviteLink = ["discord.gg/", "discord.com/invite", "discordapp.com/invite"];
@@ -98,25 +99,6 @@ module.exports = async (client, message) => {
             }
         }
     }*/
-    //DB
-    const profileModel = require("../models/profileSchema");
-
-    let profileData;
-    try {
-        profileData = await profileModel.findOne({ userID: message.author.id });
-        if (!profileData) {
-            let profile = await profileModel.create({
-                userID: message.author.id,
-                serverID: message.guild.id,
-                coins: 1000,
-                bank: 0,
-            });
-            profile.save();
-        }
-    } catch (err) {
-        console.log(err);
-    };
-
     client.emit('experience', message);
 
     // If the user doesn't doing any to the bot, return it.
@@ -160,6 +142,19 @@ module.exports = async (client, message) => {
     let commandFile = client.commands.get(cmd) || client.commands.get(client.aliases.get(cmd));
     if (!commandFile) return; // If the commands doesn't exist, ignore it. Don't send any warning on this.
 
+    if (!message.member.permissions.has(commandFile.conf.userPermissions || [])) return message.channel.send({
+        embed: {
+            "description": `⛔ You don't have required permission(s): \`${commandFile.conf.userPermissions.join(", ") || "N/A"}\``, "color": 0xff2050
+        }
+    }).then(msg => msg.delete({ timeout: 15000 }));
+    if (!message.guild.me.permissions.has(commandFile.conf.mePermissions || [])) return message.channel.send(`I don't have permission(s): \`${commandFile.conf.mePermissions.join(", ") || ""}\``)
+
+    if (commandFile.conf.premium) {
+        if (!(await premiumSchema.findOne({ User: message.author.id }))) {
+            return message.channel.send("💝 You need upgrade to premium tier for use this command")
+        }
+    }
+
     // This will set a cooldown to a user after typing a command.
     if (!cooldowns.has(commandFile.help.name)) cooldowns.set(commandFile.help.name, new Discord.Collection());
 
@@ -187,7 +182,7 @@ module.exports = async (client, message) => {
 
     try {
         if (!commandFile) return;
-        commandFile.run(client, message, args, profileData);
+        commandFile.run(client, message, args);
     } catch (error) {
         console.log(error.message);
     } finally {
