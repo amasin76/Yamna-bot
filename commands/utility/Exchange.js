@@ -78,5 +78,6 @@ exports.help = {
 }
 exports.conf = {
     aliases: ["ex", "currency"],
+    premium: true,
     cooldown: 5
 }

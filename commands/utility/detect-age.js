@@ -4,16 +4,20 @@ const FormData = require('form-data');
 exports.run = async (client, message, args) => {
     let startTime = new Date();
     try {
-        if (message?.attachments?.size === 0) return message.channel.send(`**Please upload the image**`).then(msg => msg.delete({ timeout: 15000 }));
-
-        let imageURL = message.attachments.map(x => x.proxyURL)?.[0]
+        //if (message?.attachments?.size === 0) return message.channel.send(`**Please upload the image**`).then(msg => msg.delete({ timeout: 15000 }));
+        let target = message.mentions.users.first() || message.author
+        let avatarImg = target?.displayAvatarURL({ format: 'png', dynamic: true }) || target.displayAvatarURL({ format: 'png', dynamic: true })
+        let imageURL = message?.attachments?.size === 0 ? avatarImg : message.attachments.map(x => x.proxyURL)?.[0]
         let size = message.attachments.map(x => x.size)?.[0]
         let width = message.attachments.map(x => x.width)?.[0]
         let height = message.attachments.map(x => x.height)?.[0]
 
         if (size > 3e6) return message.channel.send(`**❌ Max size supported : 3MB**`).then(msg => msg.delete({ timeout: 15000 }));
 
-        const progressMessage = await message.channel.send(`:stopwatch: **Please wait** for processing... [__Resolution__: ${width} x ${height} | __Size__: ${(size / 1e6).toFixed(1)} MB]`);
+        // send progress message while fetching data
+        let msgIsAvatar = `:stopwatch: **Please wait** for processing... [__Username__: ${target.username} | __Discriminator__: #${target.discriminator} ]`
+        let msgIsURL = `:stopwatch: **Please wait** for processing... [__Resolution__: ${width} x ${height} | __Size__: ${(size / 1e6).toFixed(1)} MB]`
+        const progressMessage = await message.channel.send(typeof width === 'number' ? msgIsURL : msgIsAvatar);
 
         const getData = async () => {
             const imageFetch = await axios.get(imageURL, { responseType: 'arraybuffer' })
@@ -45,7 +49,7 @@ exports.run = async (client, message, args) => {
             .setColor("BLACK")
             .setTitle("DETECT AGE")
             .setThumbnail(`${imageURL || 'https://cdn131.picsart.com/292005232004211.png'}`)
-            .setDescription(`\`\`\`Resolution: ${width} x ${height} | Size: ${(size / 1e6).toFixed(1)} MB\`\`\`\n**Accurecy** : ${((ageData.PeopleWithAge[0].AgeClassificationConfidence) * 100).toFixed(1)}%\n**Age Class** : ${ageData.PeopleWithAge[0].AgeClass}\n**Age** : \u200b  ≈${parseInt(ageData.PeopleWithAge[0].Age)}\n\n:stopwatch: : ${parseInt(timeDifference / 1000)}s`)
+            .setDescription(`\`\`\`${!width ? `Avatar Picture : ${target.username}` : `Resolution: ${width} x ${height} | Size: ${(size / 1e6).toFixed(1)} MB`}\`\`\`\n**Accurecy** : ${((ageData.PeopleWithAge[0].AgeClassificationConfidence) * 100).toFixed(1)}%\n**Age Class** : ${ageData.PeopleWithAge[0].AgeClass}\n**Age** : \u200b  ≈${parseInt(ageData.PeopleWithAge[0].Age)}\n\n:stopwatch: : ${parseInt(timeDifference / 1000)}s`)
             .setFooter(`Requested by ${message.author.username}`, message.author.displayAvatarURL({ dynamic: true }))
         if (message.deletable) message.delete();
         return await message.channel.send(embed)
