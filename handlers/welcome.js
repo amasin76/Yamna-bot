@@ -26,9 +26,9 @@ module.exports = client => {
             .toAttachment()//1024 * 450
 
 
-        let attachment = await new Discord.MessageAttachment(image.toBuffer(), "welcome-image.png");
+        let attachment = new Discord.MessageAttachment(image.toBuffer(), "welcome-image.png");
 
-        await member.guild.channels.cache.find(c => c.id === channel).send(attachment)
+        await member.guild.channels.cache.find(c => c.id === channel).send(await attachment)
     })
     //Welcome Msg========================
     const guildInvites = new Map();
@@ -71,7 +71,7 @@ module.exports = client => {
                     joinChannel.send(embed).catch(err => console.log(err))
 
                 }
-            }, 2000)
+            }, 500)
         }
         catch (err) { console.log(err); }
     })
