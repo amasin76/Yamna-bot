@@ -12,23 +12,23 @@ module.exports = client => {
             .setUsername(member.user.username)
             .setDiscriminator(member.user.discriminator)
             .setMemberCount(member.guild.memberCount)
-            .setGuildName(`\`${member.guild.name}\``)
+            .setGuildName(`${member.guild.name}`)
             .setAvatar(member.user.displayAvatarURL({
                 format: 'png'
             }))
-            .setColor("border", universalColor)
-            .setColor("username-box", universalColor)
+            //.setColor("border", universalColor)
+            //.setColor("username-box", universalColor)
             .setColor("discriminator-box", universalColor)
             .setColor("message-box", universalColor)
             .setColor("title", universalColor)
             .setColor("avatar", universalColor)
             .setBackground(imageLink)
-            .toAttachment()
+            .toAttachment()//1024 * 450
 
 
-        let attachment = new Discord.MessageAttachment(image.toBuffer(), "welcome-image.png");
+        let attachment = await new Discord.MessageAttachment(image.toBuffer(), "welcome-image.png");
 
-        member.guild.channels.cache.find(c => c.id === channel).send(attachment)
+        await member.guild.channels.cache.find(c => c.id === channel).send(attachment)
     })
     //Welcome Msg========================
     const guildInvites = new Map();
@@ -49,13 +49,20 @@ module.exports = client => {
         guildInvites.set(member.guild.id, newInvites);
 
         try {
-            const usedInvite = newInvites.find(inv => cachedInvites.get(inv.code).uses < inv.uses);
+            const usedInvite = newInvites.find(inv => cachedInvites.get(inv.code).uses < inv.uses)
+
+            let tempInvite;
+            if (!usedInvite) {
+                tempInvite = cachedInvites.filter(e => !newInvites.find(a => e.code == a.code))
+                tempInvite = tempInvite.first()
+            }
+
             const embed = new MessageEmbed()
                 //.setTitle(`Welcome to ${member.guild.name}`)
                 //.setDescription(`Hello ${member}, you are our ${member.guild.memberCount}th member\nJoined using ${usedInvite.inviter/*.username*/}'s link\nNumber of uses: ${usedInvite.uses}\nInvite Link: ${usedInvite.url}`)
-                .setDescription(`✨ **Welcome 💖__${member.user}__💖 to ${member.guild.name}** \n✨ **Invited by 💌 __${usedInvite.inviter.tag/*.username*/}'s__ 💌 Invite**`)
+                .setDescription(`✨ **Welcome 💖__${member.user}__💖 to ${member.guild.name}** \n✨ **Invited by 💌 __${usedInvite?.inviter?.tag || tempInvite?.inviter?.username}'s__ 💌 Invite**`)
                 .setColor("#8015EA")
-                .setFooter(`Acc age: 📆 ${moment(member.user.createdTimestamp).format('LL')} ● ${moment(member.user.createdTimestamp).fromNow()}  |  Code: ${usedInvite.code} 🔑`)
+                .setFooter(`Acc age: 📆 ${moment(member.user.createdTimestamp).format('LL')} ● ${moment(member.user.createdTimestamp).fromNow()}  |  Code: ${usedInvite?.code || tempInvite?.code} 🔑`)
             //.setTimestamp()
 
             const joinChannel = member.guild.channels.cache.find(c => c.id === channel) //member.guild.channels.cache.find(channel => channel.id === "717082044022390877")

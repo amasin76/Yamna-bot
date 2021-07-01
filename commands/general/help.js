@@ -16,7 +16,10 @@ exports.run = async (client, message, args) => {
             General: '📕',
             Moderation: '💼',
             Muslim: '🕋',
-            Record: '📼'
+            Premium: '💎',
+            Record: '📼',
+            Together: '💞',
+            Utility: '🔧'
         }
 
         // This will hide a folder from display that includes "hide: true" in their module.json
@@ -26,7 +29,7 @@ exports.run = async (client, message, args) => {
             //.setTimestamp(new Date())
             .setTitle(`**Help Menu** || **Prefix** \`${prefix}\``)
             .setDescription(`**${message.guild.name}** 💖 Type \`${prefix}help [command]\` to get more specific info about a cmd.`)
-            .setFooter("=-=-=-=-=-=-=-=-=-= By: Bio =-=-=-=-=-=-=-=-=-=")
+            .setFooter("=-=-=-=-=-=-=-=-=-=> By: Bio")
 
         for (const mod of module) {
             // You can change the .join(" | ") to commas, dots or every symbol.
@@ -70,7 +73,7 @@ exports.help = {
     name: "help",
     description: "Show a command list.",
     usage: "help [command]",
-    example: "/help verify"
+    example: "=help verify"
 }
 
 exports.conf = {

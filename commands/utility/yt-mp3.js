@@ -2,14 +2,18 @@ const axios = require("axios")
 const cheerio = require("cheerio")
 
 exports.run = async (client, message, args) => {
-    const progressMessage = await message.channel.send(':stopwatch: Please wait a few seconds');
     const rawVideoID = args[0].match(/v=([a-zA-Z0-9_-]+)?/g)
+    if (!rawVideoID) {
+        await message.react("❗");
+        return message.channel.send({ embed: { "title": "❗ Please provide valid youtube URL", "description": `Exemple:\n __www.youtube.com/watch?v=zrE4sCqqdDc__ **or** __v=zrE4sCqqdDc__  `, "color": 0xff2050 } }).then(msg => msg.delete({ timeout: 15000 }));
+    }
+    const progressMessage = await message.channel.send(':stopwatch: Please wait a few seconds');
+
     const videoID = rawVideoID[0]?.slice(2)
 
     const response = await axios.get(`https://www.yt-download.org/api/widget/mp3/${videoID}`)
 
     const $ = cheerio.load(response.data)
-
     const title = $("div.text-center h2").text()
     const img = $("img").attr("src")
 
@@ -18,9 +22,9 @@ exports.run = async (client, message, args) => {
         link.push($(element).attr('href'))
         info.push($(element).text().trim().replace(/\s\s+/g, ' ').split(" "))//.splice(-2, 2)
     })
-    console.log(info)
 
     if (progressMessage.deletable) progressMessage.delete();
+    await message.react("✅");
 
     const embed = new Discord.MessageEmbed()
         .setColor("BLACK")
@@ -41,3 +45,5 @@ exports.conf = {
     aliases: ['ymp3', 'yt3'],
     cooldown: 10
 }
+//https://nsfw-demo.sashido.io/api/image/classify?url=
+//159753 pin gg
