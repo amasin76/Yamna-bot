@@ -22,7 +22,7 @@ let prefix = "=";
 require('discord-buttons')(client)
 require("./logger.js")(client);
 //Handler
-["module", "Event", "distube", "nsfw", "update"/*, "welcome"*/].forEach(handler => {
+["module", "Event", "distube", "nsfw", "update", "welcome"].forEach(handler => {
     require(`./handlers/${handler}`)(client);
 });
 //client=-=-=-=-=-=-=-=-=-=-=-=-=
