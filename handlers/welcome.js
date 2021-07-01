@@ -13,7 +13,7 @@ module.exports = client => {
                 .setUsername(member.user.username)
                 .setDiscriminator(member.user.discriminator)
                 .setMemberCount(member.guild.memberCount)
-                .setGuildName(`${member.guild.name}`)
+                .setGuildName(`| THE EPICS |`)
                 .setAvatar(member.user.displayAvatarURL({
                     format: 'png'
                 }))
@@ -35,19 +35,15 @@ module.exports = client => {
         }
     })
     //Welcome Msg========================
-    try {
-        const guildInvites = new Map();
-        client.on("inviteCreate", async invite => guildInvites.set(invite.guild.id, await invite.guild.fetchInvites()));
-        client.on("ready", () => {
-            client.guilds.cache.forEach(guild => {
-                guild.fetchInvites()
-                    .then(invites => guildInvites.set(guild.id, invites))
-                    .catch(err => console.log(err));
-            });
+    const guildInvites = new Map();
+    client.on("inviteCreate", async invite => guildInvites.set(invite.guild.id, await invite.guild.fetchInvites()));
+    client.on("ready", () => {
+        client.guilds.cache.forEach(guild => {
+            guild.fetchInvites()
+                .then(invites => guildInvites.set(guild.id, invites))
+                .catch(err => console.log(err));
         });
-    } catch (err) {
-        console.log(err)
-    }
+    });
 
     client.on("guildMemberAdd", async member => {
 
