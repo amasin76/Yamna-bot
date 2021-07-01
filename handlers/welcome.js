@@ -8,47 +8,54 @@ const canvas = require('discord-canvas'),
 
 module.exports = client => {
     client.on('guildMemberAdd', async member => {
-        let image = await welcomeCanvas
-            .setUsername(member.user.username)
-            .setDiscriminator(member.user.discriminator)
-            .setMemberCount(member.guild.memberCount)
-            .setGuildName(`${member.guild.name}`)
-            .setAvatar(member.user.displayAvatarURL({
-                format: 'png'
-            }))
-            //.setColor("border", universalColor)
-            //.setColor("username-box", universalColor)
-            .setColor("discriminator-box", universalColor)
-            .setColor("message-box", universalColor)
-            .setColor("title", universalColor)
-            .setColor("avatar", universalColor)
-            .setBackground(imageLink)
-            .toAttachment()//1024 * 450
+        try {
+            let image = await welcomeCanvas
+                .setUsername(member.user.username)
+                .setDiscriminator(member.user.discriminator)
+                .setMemberCount(member.guild.memberCount)
+                .setGuildName(`${member.guild.name}`)
+                .setAvatar(member.user.displayAvatarURL({
+                    format: 'png'
+                }))
+                //.setColor("border", universalColor)
+                //.setColor("username-box", universalColor)
+                .setColor("discriminator-box", universalColor)
+                .setColor("message-box", universalColor)
+                .setColor("title", universalColor)
+                .setColor("avatar", universalColor)
+                .setBackground(imageLink)
+                .toAttachment()//1024 * 450
 
 
-        let attachment = new Discord.MessageAttachment(image.toBuffer(), "welcome-image.png");
+            let attachment = new Discord.MessageAttachment(image.toBuffer(), "welcome-image.png");
 
-        await member.guild.channels.cache.find(c => c.id === channel).send(await attachment)
+            await member.guild.channels.cache.find(c => c.id === channel).send(await attachment)
+        } catch (err) {
+            console.log(err)
+        }
     })
     //Welcome Msg========================
-    const guildInvites = new Map();
-    client.on("inviteCreate", async invite => guildInvites.set(invite.guild.id, await invite.guild.fetchInvites()));
-    client.on("ready", () => {
-        client.guilds.cache.forEach(guild => {
-            guild.fetchInvites()
-                .then(invites => guildInvites.set(guild.id, invites))
-                .catch(err => console.log(err));
-
-
+    try {
+        const guildInvites = new Map();
+        client.on("inviteCreate", async invite => guildInvites.set(invite.guild.id, await invite.guild.fetchInvites()));
+        client.on("ready", () => {
+            client.guilds.cache.forEach(guild => {
+                guild.fetchInvites()
+                    .then(invites => guildInvites.set(guild.id, invites))
+                    .catch(err => console.log(err));
+            });
         });
-    });
+    } catch (err) {
+        console.log(err)
+    }
 
     client.on("guildMemberAdd", async member => {
-        const cachedInvites = guildInvites.get(member.guild.id);
-        const newInvites = await member.guild.fetchInvites();
-        guildInvites.set(member.guild.id, newInvites);
 
         try {
+            const cachedInvites = guildInvites.get(member.guild.id);
+            const newInvites = await member.guild.fetchInvites();
+            guildInvites.set(member.guild.id, newInvites);
+
             const usedInvite = newInvites.find(inv => cachedInvites.get(inv.code).uses < inv.uses)
 
             let tempInvite;
