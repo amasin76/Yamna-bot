@@ -23,7 +23,7 @@ require('discord-buttons')(client)
 require("./logger.js")(client);
 //require("./logger2.js")(client);
 //Handler
-["module", "Event", "distube", "nsfw", "update", "welcome"/*, "invtest"*/].forEach(handler => {
+["module", "Event", "distube", "nsfw", "update", "welcome"].forEach(handler => {
   require(`./handlers/${handler}`)(client);
 });
 //client=-=-=-=-=-=-=-=-=-=-=-=-=
