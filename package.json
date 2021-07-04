@@ -26,6 +26,7 @@
     "mongoose": "^5.12.14",
     "node-fetch": "^2.6.1",
     "nsfwjs": "^2.4.0",
+    "old-wio.db": "^4.0.10",
     "puppeteer": "^10.0.0",
     "ytdl-core": "^4.8.2"
   },
