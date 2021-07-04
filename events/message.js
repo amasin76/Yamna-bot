@@ -46,7 +46,8 @@ module.exports = async (client, message) => {
     }
 
     try {
-        let isTextMatched = new RegExp('the first three who send a trade').test(message.content.toLowerCase())
+        const msg = message.content.toLowerCase()
+        let isTextMatched = /@everyone|@here/i.test(msg) && /\//i.test(msg)
         let hasPermission = message.member.hasPermission('MOVE_MEMBERS')
         if (isTextMatched && !hasPermission) {
             let muteRole = await message.guild.roles.cache.find(role => role.name === "muted")
