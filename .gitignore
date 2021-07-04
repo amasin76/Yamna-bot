@@ -107,5 +107,6 @@ package-lock.json
 config.json
 assets
 commands/dev/web.js
+commands/dev/test.js
 commands/test
 
