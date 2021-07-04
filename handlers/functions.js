@@ -78,7 +78,7 @@ module.exports = {
     },
     format: function (millis) {
         try {
-            var h = Math.floor(millis / 3600000),
+            let h = Math.floor(millis / 3600000),
                 m = Math.floor(millis / 60000),
                 s = ((millis % 60000) / 1000).toFixed(0);
             if (h < 1) return (m < 10 ? "0" : "") + m + ":" + (s < 10 ? "0" : "") + s + " | " + (Math.floor(millis / 1000)) + " Seconds";
@@ -105,6 +105,23 @@ module.exports = {
             }
             return array;
         } catch (e) {
+            console.log(String(e.stack).bgRed)
+        }
+    },
+    secondsToTime: function (sec) {
+        try {
+            sec = Number(sec);
+            let d = Math.floor(sec / 3600 / 24);
+            let h = Math.floor(sec % 86400 / 3600);
+            let m = Math.floor(sec % 3600 / 60);
+            let s = Math.floor(sec % 3600 % 60);
+
+            let dDisplay = d > 0 ? d + (d == 1 ? " day, " : " days, ") : "";
+            let hDisplay = h > 0 ? h + (h == 1 ? " hour, " : " hours, ") : "";
+            let mDisplay = m > 0 ? m + (m == 1 ? " minute, " : " minutes, ") : "";
+            let sDisplay = s > 0 ? s + (s == 1 ? " second" : " seconds") : "";
+            return dDisplay + hDisplay + mDisplay + sDisplay;
+        } catch (err) {
             console.log(String(e.stack).bgRed)
         }
     }
