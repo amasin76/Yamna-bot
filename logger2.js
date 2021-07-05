@@ -7,10 +7,11 @@ module.exports = (client) => {
     const updateColor = '#F5733D'
     const createColor = '#44F641'
     const boostColor = '#EB30DD'
-    const footerMsg = 'Logger'
+    const footerMsg = 'Beta Logger'
     try {
         client.on("guildMemberUpdate", async (oldMember, newMember) => {
             const audit = await oldMember.guild.fetchAuditLogs({ type: "MEMBER_ROLE_UPDATE" }).then(log => log.entries.first());
+            const audit_1 = await oldMember.guild.fetchAuditLogs({ type: "MEMBER_UPDATE" }).then(log => log.entries.first());
             let logchannel = db.fetch(`logs_${oldMember.guild.id}`)
             if (!logchannel) return;
             let options = {}
@@ -123,7 +124,7 @@ module.exports = (client) => {
                     .setFooter(footerMsg, newMember.guild.iconURL())
                     .addField('Old Nickname:', `\`\`\`${oldMember.nickname}\`\`\``, true)
                     .addField('New Nickname:', `\`\`\`${newMember.nickname}\`\`\``, true)
-                    .addField('Executor:', `\`\`\`${audit.executor.username}\`\`\``, true)
+                    .addField('Executor:', `\`\`\`${audit_1.executor.username}\`\`\``, true)
                     .setTimestamp();
 
                 let sChannel = newMember.guild.channels.cache.get(logchannel)
@@ -671,8 +672,9 @@ module.exports = (client) => {
         });
 
         client.on("messageUpdate", (oldMessage, newMessage) => {
-            if (oldMessage.channel.type !== "text") return
-            if (newMessage.channel.type !== "text") return
+            if (oldMessage.channel.type !== "text") return;
+            if (newMessage.channel.type !== "text") return;
+            if (oldMessage.content == newMessage.content) return;
             if (oldMessage.author.bot) return;
             if (!oldMessage.guild) return;
             let logchannel = db.fetch(`logs_${oldMessage.guild.id}`);
@@ -680,11 +682,11 @@ module.exports = (client) => {
 
             const embed = new Discord.MessageEmbed()
                 .setTitle(':level_slider: 〔 MESSAGE Update 〕')
-                .setThumbnail(oldMessage.author.displayAvatarURL({ dynamic: true }))
+                .setThumbnail('https://i.imgur.com/Xkaiwb6.png')
                 .setColor(updateColor || 'YELLOW')
                 .setFooter(footerMsg, oldMessage.guild.iconURL())
                 .setDescription(`**Old Message** :\n\`\`\`${oldMessage.content}\`\`\`\n**New Message** :\n\`\`\`${newMessage.content}\`\`\``)
-                .addField('Executor :', `\`${oldMessage.author.username}\``, true)
+                .addField('Author :', `\`${oldMessage.author.username}\``, true)
                 .addField('Sent in :', `<#${oldMessage.channel.id}>`, true)
                 //.addField('\u200B', '\u200B', false)
                 .setTimestamp();
@@ -696,22 +698,23 @@ module.exports = (client) => {
 
         client.on("messageDelete", async function (message) {
             const audit = await message.guild.fetchAuditLogs({ type: "MESSAGE_DELETE" }).then(log => log.entries.first());
-            let logchannel = db.fetch(`logs_${message.guild.id}`);
-            if (!logchannel) return;
+            const duration = parseInt((Date.now() - audit.createdTimestamp) / 1000)
+            if (message.author.bot) return;
             if (audit.executor.id === message.guild.id) return;
             if (audit.executor.id === process.env.BOT_OWNER) return;
             //if (message.author.bot) return;
             if (!message.guild) return;
+            let logchannel = db.fetch(`logs_${message.guild.id}`);
+            if (!logchannel) return;
             if (message.attachments.first()) {
                 const embed = new Discord.MessageEmbed()
                     .setTitle(':wastebasket: 〔 MESSAGE DELETE 〕')
-                    .setThumbnail(audit.executor.displayAvatarURL({ dynamic: true }) || '')
                     .setColor(deleteColor || 'RED')
                     .setFooter(footerMsg, message.guild.iconURL())
                     .setDescription(message.content.length !== 0 ? `**Content** :\n\`\`\`${message.content}\`\`\`` : "")
                     .addField('Sent by :', `\`${message.author.username}\``, true)
                     .addField('Sent in :', `<#${message.channel.id}>`, true)
-                    .addField('Executor* :', `\`${audit.executor.username || 'N/A'}\``, true)
+                    .addField('Executor :', `\`${duration <= 20 ? audit.executor.username : 'Not Found'}\``, true)
                     .setImage(message.attachments.first().proxyURL)
                     .setTimestamp();
 
@@ -721,14 +724,13 @@ module.exports = (client) => {
             } else {
                 const embed = new Discord.MessageEmbed()
                     .setTitle(':wastebasket: 〔 MESSAGE DELETE〕')
-                    .setThumbnail(audit.executor.displayAvatarURL({ dynamic: true }) || "")
+                    .setThumbnail('https://i.imgur.com/UgMg9cq.png')
                     .setColor(deleteColor || 'RED')
                     .setFooter(footerMsg, message.guild.iconURL())
                     .setDescription(`**Content** :\n\`\`\`${message.content || "I can't get message data (It was embed)"}\`\`\``)
                     .addField('Sent by :', `\`${message.author.username}\``, true)
                     .addField('Sent in :', `<#${message.channel.id}>`, true)
-                    .addField('Executor* :', `\`${audit.executor.username || "N/A"}\``, true)
-                    //.addField('Message Content:', message.content || `I can't get message data (It was embed)`, false)
+                    .addField('Executor :', `\`${duration <= 20 ? audit.executor.username : 'Not Found'}\``, true)
                     .setTimestamp();
 
                 let s1Channel = message.guild.channels.cache.get(logchannel)
