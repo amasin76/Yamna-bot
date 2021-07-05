@@ -29,7 +29,7 @@ module.exports = (client) => {
             const newRoles = newMemberRoles.filter(x => !options.excludedroles.includes(x)).filter(x => !oldMemberRoles.includes(x))
             const rolechanged = (newRoles.length || oldRoles.length)
 
-            const whiteRoles = ['747860442038272081', '807177719502733353', '813215688533082144'] // Comunity,Profile,labo
+            const whiteRoles = ['747860442038272081', '807177719502733353', '717108433572200599', '813215688533082144'] // Comunity, Profile, Streaming now, labo
             const ignoredRoles = whiteRoles.some(role => newRoles.includes(role))
 
             if (rolechanged && !ignoredRoles) {
