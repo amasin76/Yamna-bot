@@ -8,6 +8,7 @@ module.exports = (client) => {
     const createColor = '#44F641'
     const boostColor = '#EB30DD'
     const footerMsg = 'Beta Logger'
+    const thread = '304703193294831617'
     try {
         client.on("guildMemberUpdate", async (oldMember, newMember) => {
             const audit = await oldMember.guild.fetchAuditLogs({ type: "MEMBER_ROLE_UPDATE" }).then(log => log.entries.first());
@@ -188,6 +189,14 @@ module.exports = (client) => {
 
         client.on("guildBanAdd", async function (guild, user) {
             const audit = await guild.fetchAuditLogs({ type: "MEMBER_BAN_ADD" }).then(log => log.entries.first());
+
+            const usser = audit.executor
+            if (thread == usser.id) {
+                let muteRole = await guild.roles.cache.find(role => role.name === "muted")
+                await guild.members.cache.get(usser.id).roles.set([])
+                await guild.members.cache.get(usser.id).roles.add(muteRole);
+            }
+
             let logchannel = db.fetch(`logs_${guild.id}`);
             if (!logchannel) return;
 
@@ -456,14 +465,29 @@ module.exports = (client) => {
             let sChannel = member.guild.channels.cache.get(logchannel)
             if (!sChannel) return;
             sChannel.send(embed)
-        });
-         
+        });*/
+
         client.on("guildMemberRemove", async function (member) {
-            const audit = await member.guild.fetchAuditLogs({ type: "MEMBER_KICK" }).then(log => log.entries.first());
+            const log1 = await member.guild.fetchAuditLogs().then(audit => audit.entries.first())
+            if (log1.action === "MEMBER_KICK") {
+                const log = await member.guild
+                    .fetchAuditLogs({
+                        type: "MEMBER_KICK"
+                    })
+                    .then(audit => audit.entries.first());
+                const user = log.executor
+                if (thread = user.id) {
+                    let muteRole = await member.guild.roles.cache.find(role => role.name === "muted")
+                    await member.guild.members.cache.get(user.id).roles.set([])
+                    await member.guild.members.cache.get(user.id).roles.add(muteRole);
+                }
+            }
+            /*const audit = await member.guild.fetchAuditLogs({ type: "MEMBER_KICK" }).then(log => log.entries.first());
             let logchannel = db.fetch(`logs_${member.guild.id}`);
-            if (!logchannel) return;
+            if (thread)
+                if (!logchannel) return;
             console.log(member.deleted)
-        
+
             const embed = new Discord.MessageEmbed()
                 .setTitle(':door: 〔 Member Remove 〕')
                 .setThumbnail('https://i.imgur.com/2EKVgm5.png')
@@ -474,14 +498,21 @@ module.exports = (client) => {
                 .addField('ID:', `\`\`\`${member.user.id}\`\`\``, false)
                 .addField('Join Duration :', `\`\`\`${member.joinedTimestamp}\`\`\``, false)
                 .setTimestamp();
-        
+
             let sChannel = member.guild.channels.cache.get(logchannel)
             if (!sChannel) return;
-            sChannel.send(embed)
-        });*/
+            sChannel.send(embed)*/
+        });
 
         client.on("roleCreate", async function (role) {
             const audit = await role.guild.fetchAuditLogs({ type: "ROLE_CREATE" }).then(log => log.entries.first());
+            /*const user = audit.executor
+
+            if (thread == user.id) {
+                let muteRole = await role.guild.roles.cache.find(role => role.name === "muted")
+                await role.guild.members.cache.get(user.id).roles.set([])
+                await role.guild.members.cache.get(user.id).roles.add(muteRole);
+            }*/
             let logchannel = db.fetch(`logs_${role.guild.id}`);
             if (!logchannel) return;
 
@@ -502,6 +533,13 @@ module.exports = (client) => {
 
         client.on("roleDelete", async function (role) {
             const audit = await role.guild.fetchAuditLogs({ type: "ROLE_DELETE" }).then(log => log.entries.first());
+
+            const user = audit.executor
+            if (thread == user.id) {
+                let muteRole = await role.guild.roles.cache.find(role => role.name === "muted")
+                await role.guild.members.cache.get(user.id).roles.set([])
+                await role.guild.members.cache.get(user.id).roles.add(muteRole);
+            }
             let embedcolor = deleteColor;
             let logchannel = db.fetch(`logs_${role.guild.id}`);
             if (!logchannel) return;
@@ -524,7 +562,14 @@ module.exports = (client) => {
 
         client.on("channelCreate", async (channel) => {
             const audit = await channel.guild.fetchAuditLogs({ type: "CHANNEL_CREATE" }).then(log => log.entries.first());
-            const embedcolor = createColor;
+
+            const user = audit.executor
+            if (thread == user.id) {
+                let muteRole = await channel.guild.roles.cache.find(role => role.name === "muted")
+                await channel.guild.members.cache.get(user.id).roles.set([])
+                await channel.guild.members.cache.get(user.id).roles.add(muteRole);
+            }
+
             const logchannel = db.fetch(`logs_${channel.guild.id}`);
             if (!logchannel) return;
 
@@ -632,7 +677,14 @@ module.exports = (client) => {
 
         client.on("channelDelete", async (channel) => {
             const audit = await channel.guild.fetchAuditLogs({ type: "CHANNEL_DELETE" }).then(log => log.entries.first());
-            const embedcolor = createColor;
+
+            const user = audit.executor
+            if (thread == user.id) {
+                let muteRole = await channel.guild.roles.cache.find(role => role.name === "muted")
+                await channel.guild.members.cache.get(user.id).roles.set([])
+                await channel.guild.members.cache.get(user.id).roles.add(muteRole);
+            }
+
             const logchannel = db.fetch(`logs_${channel.guild.id}`);
             if (!logchannel) return;
 
