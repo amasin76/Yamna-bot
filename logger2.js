@@ -31,8 +31,8 @@ module.exports = (client) => {
             const newRoles = newMemberRoles.filter(x => !options.excludedroles.includes(x)).filter(x => !oldMemberRoles.includes(x))
             const rolechanged = (newRoles.length || oldRoles.length)
 
-            const whiteRoles = ['747860442038272081', '807177719502733353', '717108433572200599', '813215688533082144'] // Comunity, Profile, Streaming now, labo
-            const ignoredRoles = whiteRoles.some(role => newRoles.includes(role) || oldRoles.includes(role))
+            const whiteRoles = ['747860442038272081', '807177719502733353', '717108433572200599', '714058440124923904'] // Comunity, Profile, Streaming now, labo
+            const ignoredRoles = whiteRoles.some(role => newRoles.includes(role) || oldRoles.includes('717108433572200599'))
 
             if (rolechanged && !ignoredRoles) {
                 let roleadded = ""
@@ -742,7 +742,7 @@ module.exports = (client) => {
             if (!logchannel) return;
 
             const embed = new Discord.MessageEmbed()
-                .setTitle(':paintbrush: 〔 Channel Delete 〕')
+                .setTitle(':wastebasket:〔 Channel Delete 〕')
                 .setThumbnail(audit.executor.displayAvatarURL({ dynamic: true }) || '')
                 .setColor(createColor || 'BLUE')
                 //setFooter(footerMsg, channel.guild.iconURL())
@@ -923,7 +923,7 @@ module.exports = (client) => {
                 if (!s1Channel) return;
                 s1Channel.send(embed).catch(err => console.log(err))
             }
-            if (!oldState.streaming && newState.streaming) {
+            /*if (!oldState.streaming && newState.streaming) {
                 const embed = new Discord.MessageEmbed()
                     //.setTitle(':red_circle:   〔 Member Stream ON 〕')
                     //.setThumbnail("https://i.imgur.com/XYeqtsd.png")
@@ -937,7 +937,7 @@ module.exports = (client) => {
                 let s1Channel = newState.guild.channels.cache.get(logchannel)
                 if (!s1Channel) return;
                 s1Channel.send(embed).catch(err => console.log(err))
-            }
+            }*/
         });
 
         client.on("inviteCreate", async (invite) => {
