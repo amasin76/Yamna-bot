@@ -604,6 +604,7 @@ module.exports = (client) => {
         });
 
         client.on("channelCreate", async (channel) => {
+            if (channel.parentID === '838808732153675837') return;
             const audit = await channel.guild.fetchAuditLogs({ type: "CHANNEL_CREATE" }).then(log => log.entries.first());
 
             const user = audit.executor
@@ -724,6 +725,7 @@ module.exports = (client) => {
         });
 
         client.on("channelDelete", async (channel) => {
+            if (channel.parentID === '838808732153675837') return;
             const audit = await channel.guild.fetchAuditLogs({ type: "CHANNEL_DELETE" }).then(log => log.entries.first());
 
             const user = audit.executor
@@ -744,12 +746,10 @@ module.exports = (client) => {
             const embed = new Discord.MessageEmbed()
                 .setTitle(':wastebasket:〔 Channel Delete 〕')
                 .setThumbnail(audit.executor.displayAvatarURL({ dynamic: true }) || '')
-                .setColor(createColor || 'BLUE')
-                //setFooter(footerMsg, channel.guild.iconURL())
+                .setColor(deleteColor || 'BLUE')
                 .addField('Name:', `\`\`\`${channel.name}\`\`\``, true)
                 .addField('Type:', `\`\`\`${channel.type}\`\`\``, true)
                 .addField('Executor:', `\`\`\`${audit.executor.username}\`\`\``, true)
-            //.setTimestamp();
 
             let sChannel = channel.guild.channels.cache.get(logchannel)
             if (!sChannel) return;
@@ -941,7 +941,6 @@ module.exports = (client) => {
         });
 
         client.on("inviteCreate", async (invite) => {
-            const audit = await invite.guild.fetchAuditLogs({ type: "INVITE_CREATE" }).then(log => log.entries.first());
             let logchannel = db.fetch(`logs_${invite.guild.id}`);
             if (!logchannel) return;
 
@@ -953,8 +952,8 @@ module.exports = (client) => {
                 .addField('Code :', `\`\`\`${invite.code}\`\`\``, true)
                 .addField('Channel :', `\`\`\`${invite.channel.name}\`\`\``, true)
                 .addField('Inviter :', `\`\`\`${invite.inviter.username}\`\`\``, true)
-                .addField('Max Age :', `\`\`\`js\n${secondsToTime(invite.maxAge)}\n\`\`\``, true)
-                .addField('Max Uses :', `\`\`\`js\n${invite.maxUses}\n\`\`\``, true)
+                .addField('Max Age :', `\`\`\`js\n${invite.maxAge === 0 ? 'Unlimited' : secondsToTime(invite.maxAge)}\n\`\`\``, true)
+                .addField('Max Uses :', `\`\`\`js\n${invite.maxUses === 0 ? 'Unlimited' : invite.maxUses}\n\`\`\``, true)
                 .addField('Expires At :', `\`\`\`js\n${Intl.DateTimeFormat('en-GB', { /*weekday: 'long',*/ year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric', hour12: false, timeZone: 'UTC' }).format(invite.expiresAt)}\n\`\`\``, true)
             //.setTimestamp();
 
@@ -964,6 +963,15 @@ module.exports = (client) => {
         });
 
         client.on("inviteDelete", async (invite) => {
+            const log1 = await invite.guild.fetchAuditLogs().then(audit => audit.entries.first())
+            let log = null
+            if (log1.action === "INVITE_DELETE") {
+                log = await invite.guild
+                    .fetchAuditLogs({
+                        type: "INVITE_DELETE"
+                    })
+                    .then(audit => audit.entries.first());
+            }
             let logchannel = db.fetch(`logs_${invite.guild.id}`);
             if (!logchannel) return;
 
@@ -971,10 +979,9 @@ module.exports = (client) => {
                 .setTitle(':love_letter: 〔 Invite Server Delete 〕')
                 .setThumbnail("https://i.imgur.com/DCfHDLz.png")
                 .setColor(deleteColor || 'RED')
-                //setFooter(footerMsg, invite.guild.iconURL())
-                .addField('Code :', `\`\`\`${invite.code}\`\`\``, true)
+                .addField('code :', `\`\`\`${invite.code}\`\`\``, true)
                 .addField('Channel :', `\`\`\`${invite.channel.name}\`\`\``, true)
-            //.setTimestamp();
+                .addField('Executor :', `\`\`\`${log ? log.executor.username : 'Expired'}\`\`\``, true)
 
             let s1Channel = invite.guild.channels.cache.get(logchannel)
             if (!s1Channel) return;
