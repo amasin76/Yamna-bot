@@ -7,7 +7,24 @@ const canvas = require('discord-canvas'),
 
 
 module.exports = client => {
+    const guildInvites = new Map();
+
+    client.on("inviteCreate", async invite => {
+        if (invite.guild.id !== '527174592528252934') return;
+        guildInvites.set(invite.guild.id, await invite.guild.fetchInvites())
+    });
+
+    client.on("ready", () => {
+        client.guilds.cache.forEach(guild => {
+            guild.fetchInvites()
+                .then(invites => guildInvites.set(guild.id, invites))
+                .catch(err => console.log(err));
+        });
+    });
+
     client.on('guildMemberAdd', async member => {
+        if (member.guild.id !== '527174592528252934') return;
+
         try {
             let image = await welcomeCanvas
                 .setUsername(member.user.username)
@@ -30,22 +47,7 @@ module.exports = client => {
             let attachment = new Discord.MessageAttachment(image.toBuffer(), "welcome-image.png");
 
             await member.guild.channels.cache.find(c => c.id === channel).send(await attachment)
-        } catch (err) {
-            console.log(err)
-        }
-    })
-    //Welcome Msg========================
-    const guildInvites = new Map();
-    client.on("inviteCreate", async invite => guildInvites.set(invite.guild.id, await invite.guild.fetchInvites()));
-    client.on("ready", () => {
-        client.guilds.cache.forEach(guild => {
-            guild.fetchInvites()
-                .then(invites => guildInvites.set(guild.id, invites))
-                .catch(err => console.log(err));
-        });
-    });
-
-    client.on("guildMemberAdd", async member => {
+        } catch (err) { console.log(err) }
 
         try {
             const cachedInvites = guildInvites.get(member.guild.id);
@@ -69,12 +71,9 @@ module.exports = client => {
             //.setTimestamp()
 
             const joinChannel = member.guild.channels.cache.find(c => c.id === channel) //member.guild.channels.cache.find(channel => channel.id === "717082044022390877")
-            setTimeout(() => {
-                if (joinChannel) {
-                    joinChannel.send(embed).catch(err => console.log(err))
+            //setTimeout(() => {
+            if (joinChannel) joinChannel.send(embed).catch(err => console.log(err))
 
-                }
-            }, 500)
         }
         catch (err) { console.log(err); }
     })
