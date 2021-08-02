@@ -699,6 +699,7 @@ module.exports = (client) => {
                     .addField('Old Bitrate:', `\`\`\`js\n${parseInt(oldChannel.bitrate / 1000)} Kbps\n\`\`\``, true)
                     .addField('New Bitrate:', `\`\`\`js\n${parseInt(newChannel.bitrate / 1000)} kbps\n\`\`\``, true)
                     .addField('Executor:', `\`\`\`${audit.executor.username}\`\`\``, true)
+                    .addField('Channel Name:', `\`\`\`${oldChannel.name}\`\`\``, true)
                 //.setTimestamp();
 
                 let sChannel = newChannel.guild.channels.cache.get(logchannel)
@@ -933,7 +934,7 @@ module.exports = (client) => {
             }
             if (!oldState.selfVideo && newState.selfVideo) {
                 const embed = new Discord.MessageEmbed()
-                    .setTitle(':microphone2:  〔 Member Camera ON 〕')
+                    .setTitle(':camera_with_flash: 〔 Member Camera ON 〕')
                     .setThumbnail("https://i.imgur.com/tPUeI4E.png")
                     .setColor(createColor || 'RED')
                     //setFooter(footerMsg, newState.guild.iconURL())
