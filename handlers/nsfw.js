@@ -10,13 +10,13 @@ module.exports = client => {
     */
     client.on("message", message => {
         if (message.author.bot) return;
-        if (!message.content.match(/^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/m) && message.attachments.map(x => x.proxyURL).length == 0) return;
+        if (message.attachments.map(x => x.proxyURL).length == 0 && !message.content.match(/(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?/)) return;
         try {
             ///(https?:\/\/.*\.(?:png|jpg))/
 
             let URL = message.attachments.map(x => x.proxyURL)
             if (message.attachments.map(x => x.proxyURL) == 0) {
-                let stringURL = message.content.match(/^(http: \/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/m)[0]
+                let stringURL = message.content.match(/(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?/)[0]
                 URL = stringURL
             }
 
