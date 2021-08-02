@@ -805,38 +805,60 @@ module.exports = (client) => {
             const audit = await message.guild.fetchAuditLogs({ type: "MESSAGE_DELETE" }).then(log => log.entries.first());
             const duration = parseInt((Date.now() - audit.createdTimestamp) / 1000)
             if (message.author.bot) return;
-            if (audit.executor.id === message.guild.id) return;
-            if (audit.executor.id === process.env.BOT_OWNER) return;
-            //if (message.author.bot) return;
+            if (duration <= 20) {
+                if (audit.executor.id === message.guild.id) return;
+                if (audit.executor.id === '484524591696576523'/*process.env.BOT_OWNER*/) return;
+            }
+            if (message.author.bot) return;
             if (!message.guild) return;
             let logchannel = db.fetch(`logs_${message.guild.id}`);
             if (!logchannel) return;
-            if (message.attachments.first()) {
-                const embed = new Discord.MessageEmbed()
-                    .setTitle(':wastebasket: 〔 MESSAGE DELETE 〕')
-                    .setColor(deleteColor || 'RED')
-                    //setFooter(footerMsg, message.guild.iconURL())
-                    .setDescription(message.content.length !== 0 ? `**Content** :\n\`\`\`${message.content}\`\`\`` : "")
-                    .addField('Sent by :', `\`${message.author.username}\``, true)
-                    .addField('Sent in :', `<#${message.channel.id}>`, true)
-                    .addField('Executor :', `\`${duration <= 20 ? audit.executor.username : 'Not Found'}\``, true)
-                    .setImage(message.attachments.first().proxyURL)
-                //.setTimestamp();
 
-                let sChannel = message.guild.channels.cache.get(logchannel)
-                if (!sChannel) return;
-                sChannel.send(embed).catch(err => console.log(err))
+            if (message.attachments.first()) {
+                const rawName = message.attachments.first().name
+                const extention = rawName.slice((rawName.lastIndexOf(".") - 1 >>> 0) + 2)
+                const fileName = rawName.split('.')?.[0]
+                const isImage = (['png', 'jpg', 'gif', 'jpeg', 'webp']).includes(extention)
+                if (isImage) {
+                    const imageAttachment = await new Discord.MessageAttachment(message.attachments.first().proxyURL, `${fileName}.${extention}`)
+                    const embed = new Discord.MessageEmbed()
+                        .setTitle(':wastebasket: 〔 MESSAGE DELETE 〕')
+                        .setColor(deleteColor || 'RED')
+                        .setDescription(message.content.length !== 0 ? `**Content** :\n\`\`\`${message.content}\`\`\`` : "")
+                        .addField('Sent by :', `\`${message.author.username}\``, true)
+                        .addField('Sent in :', `<#${message.channel.id}>`, true)
+                        .addField('Executor :', `\`${duration <= 20 ? audit.executor.username : 'Not Found'}\``, true)
+                        .attachFiles(imageAttachment)
+                        .setImage(`attachment://${fileName}.${extention}`)
+
+                    let sChannel = message.guild.channels.cache.get(logchannel)
+                    if (!sChannel) return;
+                    sChannel.send(embed).catch(err => console.log(err))
+                } else {
+                    const embed = new Discord.MessageEmbed()
+                        .setTitle(':wastebasket: 〔 MESSAGE DELETE 〕')
+                        .setColor(deleteColor || 'RED')
+                        .setDescription(message.content.length !== 0 ? `**Content** :\n\`\`\`${message.content}\`\`\`` : "")
+                        .addField('Sent by :', `\`${message.author.username}\``, true)
+                        .addField('Sent in :', `<#${message.channel.id}>`, true)
+                        .addField('Executor :', `\`${duration <= 20 ? audit.executor.username : 'Not Found'}\``, true)
+                        .addField('File Name :', `\`\`\`${rawName}\`\`\``, false)
+
+                    let sChannel = message.guild.channels.cache.get(logchannel)
+                    if (!sChannel) return;
+                    sChannel.send(embed).catch(err => console.log(err))
+                }
             } else {
+                let isImageURL = message.content.match(/(http[s]*:\/\/)([a-z\-_0-9\/.]+)\.([a-z.]{2,3})\/([a-z0-9\-_\/._~:?#\[\]@!$&'()*+,;=%]*)([a-z0-9]+\.)(jpg|jpeg|png|webp|gif)/gi)
                 const embed = new Discord.MessageEmbed()
                     .setTitle(':wastebasket: 〔 MESSAGE DELETE〕')
                     .setThumbnail('https://i.imgur.com/UgMg9cq.png')
                     .setColor(deleteColor || 'RED')
-                    //setFooter(footerMsg, message.guild.iconURL())
                     .setDescription(`**Content** :\n\`\`\`${message.content || "I can't get message data (It was embed)"}\`\`\``)
                     .addField('Sent by :', `\`${message.author.username}\``, true)
                     .addField('Sent in :', `<#${message.channel.id}>`, true)
                     .addField('Executor :', `\`${duration <= 20 ? audit.executor.username : 'Not Found'}\``, true)
-                //.setTimestamp();
+                    .setImage(isImageURL?.[0] || '')
 
                 let s1Channel = message.guild.channels.cache.get(logchannel)
                 if (!s1Channel) return;
