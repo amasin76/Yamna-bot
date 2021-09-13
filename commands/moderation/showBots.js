@@ -6,7 +6,7 @@ exports.run = async (client, message, args) => {
         .setColor('GREEN')
         .setDescription(`${botsSize.join('\n \━\━\━\━\━\━\━\━\━\━\━\━\━\━\━\━\━\━\ \n')}`)
         .setFooter(`Total Bots : ${message.guild.members.cache.filter(member => member.user.bot).size}`)
-    message.channel.send(x)
+    message.channel.send({ embeds: [x] })
 }
 exports.help = {
     name: "showBots",
@@ -16,5 +16,6 @@ exports.help = {
 }
 exports.conf = {
     aliases: ["showbots", "ls"],
+    userPermissions: ["MANAGE_GUILD"],
     cooldown: 5
 }

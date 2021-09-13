@@ -15,7 +15,7 @@ exports.run = async (client, message, args) => {
         .setDescription(`**${client.user.username}** is currently in **${message.client.guilds.cache.size}** servers.`)
         .setColor('BLUE')
         .addField('Servers', list);
-    message.channel.send(botembed);
+    message.channel.send({ embeds: [botembed] });
 }
 
 exports.help = {

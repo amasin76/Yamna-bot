@@ -1,8 +1,6 @@
 const Prefix = require("../../models/prefixSchema");
 
 exports.run = async (client, message, args) => {
-    if (!message.member.hasPermission('MANAGE_GUILD')) return message.channel.send('You do not have permissions to use this command');
-
     const prefix = args[0];
     if (!prefix)
         return message.channel.send("Hey you need to provide a prefix");
@@ -28,12 +26,13 @@ exports.run = async (client, message, args) => {
 }
 exports.help = {
     name: "setprefix",
-    description: " temp mute a user",
+    description: "set custom server prefix",
     usage: "tmute @user <time>",
     example: "~tmute @sam 1h"
 }
 
 exports.conf = {
     aliases: ["sp"],
+    userPermissions: ["ADMINISTRATOR"],
     cooldown: 5
 }

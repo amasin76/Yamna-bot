@@ -6,7 +6,7 @@ exports.run = async (client, message, args) => {
 
     if (!args[0]) {
         // This will turn the folder (category) into array.
-        let module = client.helps.array();
+        let module = Array.from(client.helps.values());
         let dirEmojis = {
             Audio: '🔊',
             Dev: '💻',
@@ -36,7 +36,7 @@ exports.run = async (client, message, args) => {
             embed.addField(`${dirEmojis[mod.name]} ${mod.name}`, mod.cmds.map(x => `\`${x}\``).join(" | "));
         }
 
-        return message.channel.send(embed);
+        return message.channel.send({ embeds: [embed] });
     } else {
         let cmd = args[0];
 
@@ -61,7 +61,7 @@ exports.run = async (client, message, args) => {
                 .addField("Usage", usage, true)
                 .addField("Example", example, true)
 
-            return message.channel.send(embed);
+            return message.channel.send({ embeds: [embed] });
         } else {
             // If the user type the wrong command.
             return message.channel.send({ embed: { color: "RED", description: "Unknown command." } });

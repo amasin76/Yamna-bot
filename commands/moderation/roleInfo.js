@@ -3,7 +3,7 @@ const { DiscordAPIError } = require("discord.js");
 exports.run = async (client, message, args) => {
     try {
         var r = message.mentions.roles.first() || message.guild.roles.cache.get(args[0]);
-        if (!r) return message.channel.send(`**Mention A Role |OR| Provide A Role ID**`).then(msg => msg.delete({ timeout: 30 * 1000 }))
+        if (!r) return message.channel.send(`**Mention A Role |OR| Provide A Role ID**`).then(msg => setTimeout(() => msg.delete(), 25000));
 
 
         var embed = new Discord.MessageEmbed()
@@ -14,11 +14,11 @@ exports.run = async (client, message, args) => {
             .setFooter(message.guild.name, message.guild.iconURL())
             .addField('Server Name : ', message.guild.name)
             .addField('Role Name : ', r.name)
-            .addField('Role Id : ', r.id)
-            .addField('Role Created At : ', r.createdAt)
-            .addField('Role Members : ', r.members.array().length)
-            .addField('Role Color : ', r.hexColor)
-        message.channel.send(embed)
+            .addField('Role Id : ', r.id.toString())
+            .addField('Role Created At : ', `${r.createdAt}`)
+            .addField(`Role Members (${Array.from(r.members).length}) : `, `${r.members.map(member => `\`${member.user.username}\``).join(" | ")}`)
+            .addField('Role Color : ', r.hexColor.toString())
+        message.channel.send({ embeds: [embed] })
     } catch (err) {
         console.log(err)
     }
@@ -31,5 +31,6 @@ exports.help = {
 }
 exports.conf = {
     aliases: ["roleinfo", "role", "ri"],
+    userPermissions: ["MANAGE_GUILD"],
     cooldown: 5
 }

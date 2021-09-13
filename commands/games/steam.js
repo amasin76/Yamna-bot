@@ -5,7 +5,7 @@ const { MessageEmbed } = require("discord.js");
 exports.run = async (client, message, args) => {
     try {
         const id = args[0]
-        if (!args[0]) return message.channel.send("Please provide an account ID !").then(msg => msg.delete({ timeout: 15000 }));
+        if (!args[0]) return message.channel.send("Please provide an account ID !")//.then(msg => msg.delete({ timeout: 15000 }));
         /*const url = `http://api.steampowered.com/ISteamUser/ResolveVanityURL/v0001/?key=${process.env.STEAM_API}&vanityurl=${args[0]}`;
     
         fetch(url).then(res => res.json()).then(body => {
@@ -50,7 +50,7 @@ exports.run = async (client, message, args) => {
                 **Link :** [Profile](${profileurl})`)
                         .setTimestamp();
 
-                    message.channel.send(embed)
+                    message.channel.send({ embeds: [embed] })
 
                 })
             })

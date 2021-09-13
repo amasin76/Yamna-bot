@@ -11,5 +11,6 @@ exports.help = {
 }
 exports.conf = {
     aliases: ["simulationjoin"],
+    userPermissions: ["ADMINISTRATOR"],
     cooldown: 5
 }

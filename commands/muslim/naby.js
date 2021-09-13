@@ -1,7 +1,7 @@
 exports.run = async (client, message, args) => {
-    let member = message.mentions.members.first();
+    let member = message.mentions.members.first() || message.guild.members.cache.get(args[0])
     if (!member) {
-        message.channel.send("**عليه الصلاة والسلام**");
+        message.channel.send("**عليه خير الصلاة والسلام**");
     } else {
         message.channel.send(`| ${member.user.username} | **صلي على الحبيب محمد** |`)
     }

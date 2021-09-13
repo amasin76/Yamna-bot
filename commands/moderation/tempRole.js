@@ -8,7 +8,6 @@ exports.run = async (client, message, args) => {
     var roodxrrr = "` ` `"; // شي المسافه الي بينهم علئ شان ما اقدر ارسله في الدسكورد 
     var embed123 = new Discord.MessageEmbed();
 
-    if (!roodx.member.hasPermission('MANAGE_ROLES')) return roodx.reply('**Please check Your permissions ): **')
     if (!roodx.guild.me.hasPermission('MANAGE_ROLES')) return roodx.reply('** Please check My permissions ):**')
     if (!roodxuser) return roodx.channel.send(embed123
         .setTitle('**instructions**')
@@ -62,5 +61,6 @@ exports.help = {
 }
 exports.conf = {
     aliases: ["tempRole", "temp-role"],
+    userPermissions: ["ADMINISTRATOR"],
     cooldown: 5
 }

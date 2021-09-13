@@ -1,7 +1,6 @@
 const { Util } = require("discord.js");
 
 exports.run = async (client, message, args) => {
-    if (!message.member.hasPermission('MANNAGE_MESSAGES')) return;
     if (!args.length) return message.reply("please specify some emojis!");
 
     for (const rawEmoji of args) {
@@ -25,5 +24,6 @@ exports.help = {
 
 exports.conf = {
     aliases: ["steal-emoji"],
+    userPermissions: ["MANAGE_GUILD"],
     cooldown: 5
 }

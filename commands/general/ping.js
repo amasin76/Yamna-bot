@@ -20,7 +20,7 @@ exports.run = async (client, message, args) => {
             dynamic: true
         }))
         .setTimestamp();
-    return message.channel.send(embed);
+    return message.channel.send({ embeds: [embed] });
 }
 
 exports.help = {

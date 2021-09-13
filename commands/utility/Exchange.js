@@ -49,7 +49,7 @@ exports.run = async (client, message, args) => {
                         })
                     .setTimestamp();
 
-                message.channel.send(embed)
+                message.channel.send({ embeds: [embed] })
             } else {
                 const errorCode = {
                     401: "Unauthorized Missing or incorrect API token in header.",
@@ -62,7 +62,7 @@ exports.run = async (client, message, args) => {
                     602: "Invalid query parameters.",
                     603: "Authorized Subscription level required."
                 }
-                message.channel.send(`**Error ${code}** : ${errorCode[code]}`).then(msg => msg.delete({ timeout: 20 * 1000 }))
+                message.channel.send(`**Error ${code}** : ${errorCode[code]}`)
             }
         }
         getEXchange(from, to, amount)

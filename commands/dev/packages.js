@@ -10,7 +10,7 @@ exports.run = async (client, message, args) => {
         .setTimestamp()
         .setFooter(message.author.username);
 
-    message.channel.send(embed);
+    message.channel.send({ embeds: [embed] });
 }
 
 exports.help = {

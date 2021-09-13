@@ -3,7 +3,7 @@ const config = require("../../config.json");
 const { delay } = require("../../handlers/functions")
 
 exports.run = async (client, message, args) => {
-    if (!message.member.hasPermission('MANAGE_GUILD')) return message.channel.send('You do not have permissions to use this command');
+    if (!message.member.permissions.has('MANAGE_GUILD')) return message.channel.send('You do not have permissions to use this command');
     try {
         const text = args.join(" ")
         clearamount = Number(args[0]);
@@ -19,19 +19,23 @@ exports.run = async (client, message, args) => {
                 await delay(1500);
             }
         }
-        message.channel.send(new MessageEmbed()
-            .setColor(config.color)
-            .setFooter(config.footertext, config.footericon)
-            .setTitle(`✅ ${clearamount} messages successfully deleted!`)
-        ).then(msg => msg.delete({ timeout: 5000 }));
+        message.channel.send({
+            embeds: [new MessageEmbed()
+                .setColor(config.color)
+                .setFooter(config.footertext, config.footericon)
+                .setTitle(`✅ ${clearamount} messages successfully deleted!`)
+            ]
+        }).then(msg => setTimeout(() => msg.delete(), 8000));
     } catch (e) {
         console.log(e.stock);
-        return message.channel.send(new MessageEmbed()
-            .setColor(config.wrongcolor)
-            .setFooter(config.footertext, config.footericon)
-            .setTitle(`❌ ERROR | An error occurred`)
-            .setDescription(`\`\`\`${e.stock}\`\`\``)
-        );
+        return message.channel.send({
+            embeds: [new MessageEmbed()
+                .setColor(config.wrongcolor)
+                .setFooter(config.footertext, config.footericon)
+                .setTitle(`❌ ERROR | An error occurred`)
+                .setDescription(`\`\`\`${e.stock}\`\`\``)
+            ]
+        });
     }
 }
 exports.help = {
@@ -42,5 +46,6 @@ exports.help = {
 }
 exports.conf = {
     aliases: ["delete", "purge"],
+    userPermissions: ["MANAGE_GUILD"],
     cooldown: 5
 }

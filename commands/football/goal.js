@@ -7,17 +7,18 @@ exports.run = async (client, message, args) => {
     let startTime = new Date();
     const progressMessage = await message.channel.send(`:pick: Gathering screenshot`);
 
-    const browser = await puppeteer.launch();
+    //const browser = await puppeteer.launch();
+    const browser = await puppeteer.launch({
+        headless: false,
+        'args': [
+            '--no-sandbox',
+            '--disable-setuid-sandbox'
+        ]
+    });
     try {
-        //const browser = await puppeteer.launch({
-        //   'args' : [
-        //     '--no-sandbox',
-        //     '--disable-setuid-sandbox'
-        //   ]
-        // });
 
         const page = await browser.newPage();
-        await page.goto('https://www.goal.com/en/tables/')/*,waitUntil: 'load',timeout: 60 * 1000 });*/
+        await page.goto('https://www.goal.com/en/tables/', { waitUntil: 'load', timeout: 90 * 1000 })
         await page.setViewport({ width: 1920, height: 1080 });
 
         // get a list of all elements - same as document.querySelectorAll('*')
@@ -28,11 +29,12 @@ exports.run = async (client, message, args) => {
 
         for (var i = 0; i < 6/*elements.length*/; i++) {
             //await elements[i].screenshot({ path: `assets/screenshot/${i}.png` })
-            let imageBuffer = await elements[i].screenshot({ omitBackground: true })
+            let imageBuffer = await elements[i].screenshot({ omitBackground: false })
             let title = await titles[i]
 
-            const imageAttachment = await new Discord.MessageAttachment(imageBuffer);
-            await message.channel.send(`${title}`, imageAttachment);
+            await message.channel.send({
+                content: `${title}`, files: [{ attachment: imageBuffer }]
+            });
         }
     } catch (e) {
         console.log(`couldnt take screenshot of element with index: ${i}. cause: `, e)

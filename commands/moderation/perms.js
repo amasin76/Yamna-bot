@@ -1,41 +1,45 @@
 exports.run = async (client, message, args) => {
-    if (!message.member.hasPermission('ADMINISTRATOR')) return message.channel.send('You do not have permissions to use this command');
     const permissions = [
-        'CREATE_INSTANT_INVITE',
-        'KICK_MEMBERS',
-        'BAN_MEMBERS',
-        'ADMINISTRATOR',
-        'MANAGE_CHANNELS',
-        'MANAGE_GUILD',
-        'ADD_REACTIONS',
-        'VIEW_AUDIT_LOG',
-        'PRIORITY_SPEAKER',
-        'STREAM',
-        'VIEW_CHANNEL',
-        'SEND_MESSAGES',
-        'SEND_TTS_MESSAGES',
-        'MANAGE_MESSAGES',
-        'EMBED_LINKS',
-        'ATTACH_FILES',
-        'READ_MESSAGE_HISTORY',
-        'MENTION_EVERYONE',
-        'USE_EXTERNAL_EMOJIS',
-        'VIEW_GUILD_INSIGHTS',
-        'CONNECT',
-        'SPEAK',
-        'MUTE_MEMBERS',
-        'DEAFEN_MEMBERS',
-        'MOVE_MEMBERS',
-        'USE_VAD',
-        'CHANGE_NICKNAME',
-        'MANAGE_NICKNAMES',
-        'MANAGE_ROLES',
-        'MANAGE_WEBHOOKS',
-        'MANAGE_EMOJIS',
+        "KICK_MEMBERS",
+        "BAN_MEMBERS",
+        "ADMINISTRATOR",
+        "MANAGE_CHANNELS",
+        "MANAGE_GUILD",
+        "ADD_REACTIONS",
+        "VIEW_AUDIT_LOG",
+        "PRIORITY_SPEAKER",
+        "STREAM",
+        "VIEW_CHANNEL",
+        "SEND_MESSAGES",
+        "SEND_TTS_MESSAGES",
+        "MANAGE_MESSAGES",
+        "EMBED_LINKS",
+        "ATTACH_FILES",
+        "READ_MESSAGE_HISTORY",
+        "MENTION_EVERYONE",
+        "USE_EXTERNAL_EMOJIS",
+        "VIEW_GUILD_INSIGHTS",
+        "CONNECT",
+        "SPEAK",
+        "MUTE_MEMBERS",
+        "DEAFEN_MEMBERS",
+        "MOVE_MEMBERS",
+        "USE_VAD",
+        "CHANGE_NICKNAME",
+        "MANAGE_NICKNAMES",
+        "MANAGE_ROLES",
+        "MANAGE_WEBHOOKS",
+        "MANAGE_EMOJIS_AND_STICKERS",
+        "USE_APPLICATION_COMMANDS",
+        "REQUEST_TO_SPEAK",
+        "MANAGE_THREADS",
+        "USE_PUBLIC_THREADS",
+        "USE_PRIVATE_THREADS",
+        "USE_EXTERNAL_STICKERS"
     ];
     const yes = '✔️', no = '❌', x = "```", s = '📛', c = '♨️';
 
-    let user = message.mentions.members.first() || message.member
+    let user = message.mentions.members.first() || message.guild.members.cache.get(args[0]) || message.member
     let userId = user.user.id
 
     let description = `${s} - Server\n${c} - Current channel\n\n${s} | ${c}\n`
@@ -52,7 +56,7 @@ exports.run = async (client, message, args) => {
     })
     embed.setDescription(x + description + x)
 
-    message.channel.send(embed)
+    message.channel.send({ embeds: [embed] })
 }
 exports.help = {
     name: "perms",
@@ -62,5 +66,6 @@ exports.help = {
 }
 exports.conf = {
     aliases: [],
+    userPermissions: ["ADMINISTRATOR"],
     cooldown: 5
 }

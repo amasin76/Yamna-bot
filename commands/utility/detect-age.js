@@ -12,7 +12,7 @@ exports.run = async (client, message, args) => {
         let width = message.attachments.map(x => x.width)?.[0]
         let height = message.attachments.map(x => x.height)?.[0]
 
-        if (size > 3e6) return message.channel.send(`**❌ Max size supported : 3MB**`).then(msg => msg.delete({ timeout: 15000 }));
+        if (size > 3e6) return message.channel.send(`**❌ Max size supported : 3MB**`);
 
         // send progress message while fetching data
         let msgIsAvatar = `:stopwatch: **Please wait** for processing... [__Username__: ${target.username} | __Discriminator__: #${target.discriminator} ]`
@@ -52,7 +52,7 @@ exports.run = async (client, message, args) => {
             .setDescription(`\`\`\`${!width ? `Avatar Picture : ${target.username}` : `Resolution: ${width} x ${height} | Size: ${(size / 1e6).toFixed(1)} MB`}\`\`\`\n**Accurecy** : ${((ageData.PeopleWithAge[0].AgeClassificationConfidence) * 100).toFixed(1)}%\n**Age Class** : ${ageData.PeopleWithAge[0].AgeClass}\n**Age** : \u200b  ≈${parseInt(ageData.PeopleWithAge[0].Age)}\n\n:stopwatch: : ${parseInt(timeDifference / 1000)}s`)
             .setFooter(`Requested by ${message.author.username}`, message.author.displayAvatarURL({ dynamic: true }))
         if (message.deletable) message.delete();
-        return await message.channel.send(embed)
+        return await message.channel.send({ embeds: [embed] })
     } catch (err) {
         console.error(err)
     }

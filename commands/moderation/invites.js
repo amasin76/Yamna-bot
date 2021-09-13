@@ -2,7 +2,7 @@ const discord = require('discord.js')
 
 exports.run = async (client, message, args) => {
     let user = message.mentions.users.first() || message.author
-    let invites = await message.guild.fetchInvites();
+    let invites = await message.guild.invites.fetch();
     let userInv = invites.filter(u => u.inviter && u.inviter.id === user.id)
 
     if (userInv.size <= 0) {
@@ -17,22 +17,19 @@ exports.run = async (client, message, args) => {
         .setTitle(`\`=-=-=-= ${user.username} Invites =-=-=-=\``)
         .setAuthor('INFO / ALL INVITES', `${message.author.displayAvatarURL({ dynamic: true })}`)
         .setThumbnail('https://img.icons8.com/plasticine/2x/invite.png')
-        //.addField('User Invites', i)
-        //.addField('Invite Codes', invCodes)
         .addFields(
             {
                 name: "💚User Invites: ",
-                value: i,
+                value: `\`\`\`js\n${i}\n\`\`\``,
                 inline: true
             },
             {
                 name: "🔑Invite Codes: ",
-                value: invCodes,
+                value: `\`\`\`fix\n${invCodes}\n\`\`\``,
                 inline: true
             })
         .setColor('GREEN')
-        .setTimestamp()
-    message.channel.send(embed)
+    message.channel.send({ embeds: [embed] })
 }
 exports.help = {
     name: "invites",
@@ -42,5 +39,6 @@ exports.help = {
 }
 exports.conf = {
     aliases: ["inv"],
+    userPermissions: ["MANAGE_GUILD"],
     cooldown: 5
 }

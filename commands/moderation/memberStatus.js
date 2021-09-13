@@ -1,21 +1,21 @@
 exports.run = async (client, message, args) => {
     const online = message.guild.members.cache.filter(m =>
-        m.presence.status === 'online'
+        m.presence?.status === 'online'
     ).size
     const idle = message.guild.members.cache.filter(m =>
-        m.presence.status === 'idle'
+        m.presence?.status === 'idle'
     ).size
     const dnd = message.guild.members.cache.filter(m =>
-        m.presence.status === 'dnd'
+        m.presence?.status === 'dnd'
     ).size
 
     const offline = message.guild.members.cache.filter(m =>
-        m.presence.status === 'offline'
+        m.presence?.status === 'offline'
     ).size
 
 
 
-    var e = new Discord.MessageEmbed()
+    let e = new Discord.MessageEmbed()
         .setColor("#00EB2B")
         .setTitle(`*Members Status`)
         .setDescription(`**
@@ -25,7 +25,7 @@ exports.run = async (client, message, args) => {
 ⚪ Offline : ${offline}
 **`)
         .setTimestamp()
-    message.channel.send(e)
+    message.channel.send({ embeds: [e] })
 }
 exports.help = {
     name: "members-status",
@@ -35,5 +35,6 @@ exports.help = {
 }
 exports.conf = {
     aliases: ["ms"],
+    userPermissions: ["MANAGE_GUILD"],
     cooldown: 5
 }

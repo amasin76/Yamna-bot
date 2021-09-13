@@ -61,7 +61,7 @@ exports.run = async (client, message, args) => {
             `**❯ Roles [${roles.length}] :** ${roles.length < 10 ? roles.join(', ') : roles.length > 10 ? roles.slice(0, 9).join(', ') + '...' : 'None'}`,
             `\u200b`
         ]);
-    return message.channel.send(embed);
+    return message.channel.send({ embeds: [embed] });
 }
 
 /*const embed = new Discord.MessageEmbed()

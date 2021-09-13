@@ -1,16 +1,13 @@
-const { Message, MessageEmbed } = require('discord.js')
-const ms = require('ms')
-
 exports.run = async (client, message, args) => {
-    if (!message.member.hasPermission('MANAGE_GUILD')) return message.channel.send('You do not have permissions to use this command')
     const Member = message.mentions.members.first() || message.guild.members.cache.get(args[0])
     const time = args[1]
     if (!Member) return message.channel.send('Member is not found.')
-    if (!time) return message.channel.send('Please specify a time.')
+    if (!time) return message.channel.send('Please specify a time [minute].')
+    if (1 > parseInt(time) || 1440 < parseInt(time)) return message.channel.send('allowed range [ min: 1 - max: 1440(24h) ]')
     const role = message.guild.roles.cache.find(role => role.name.toLowerCase() === 'muted')
     if (!role) {
         try {
-            message.channel.send('Muted role is not found, attempting to create muted role.')
+            message.channel.send('Muted role is not found, attempting to create muted role ▐ ▐ ▐ . . . ')
 
             let muterole = await message.guild.roles.create({
                 data: {
@@ -37,7 +34,7 @@ exports.run = async (client, message, args) => {
     setTimeout(async () => {
         await Member.roles.remove(role2)
         message.channel.send(`${Member.displayName} is now unmuted`)
-    }, ms(time))
+    }, time * 1000 * 60)
 }
 
 exports.help = {
@@ -49,5 +46,6 @@ exports.help = {
 
 exports.conf = {
     aliases: ["tm"],
+    userPermissions: ["MANAGE_GUILD"],
     cooldown: 5
 }

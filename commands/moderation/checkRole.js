@@ -13,7 +13,7 @@ exports.run = async (client, message, args) => {
         .setDescription(`• ${members.map(m => m.user.username).join("\n• ")}`)
         .setFooter(`Requested By: ${message.author.username}`, message.author.avatarURL)
 
-    message.channel.send(embed);
+    message.channel.send({ embeds: [embed] });
 }
 exports.help = {
     name: "check-role",

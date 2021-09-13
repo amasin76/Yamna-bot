@@ -10,13 +10,20 @@ exports.run = async (client, message, args) => {
         const { body } = await fetch(
             `https://image.thum.io/get/width/1920/crop/675/noanimate/${site}`
         );
-        let att = new Discord.MessageAttachment(body, `${sit}.png`)
-        return message.channel.send(att)
+        //console.log(body)
+        //let att = new Discord.MessageAttachment(body, `${sit}.png`)
+        //console.log(att)
+        return message.channel.send({
+            files: [{
+                attachment: body,
+                name: `${sit}.jpg`
+            }]
+        })
+            .catch(console.error);
 
     } catch (err) {
 
-        return message
-            .reply(`Oh no, an error occurred: \`${err.message}\`. Try again later!`)
+        return message.reply(`Oh no, an error occurred: \`${err.message}\`. Try again later!`)
 
     };
 }

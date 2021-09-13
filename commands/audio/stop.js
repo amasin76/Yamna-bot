@@ -6,41 +6,51 @@ exports.run = async (client, message, args) => {
         const text = args.join(" ")
         const { channel } = message.member.voice; // { message: { member: { voice: { channel: { name: "Allgemein", members: [{user: {"username"}, {user: {"username"}] }}}}}
         if (!channel)
-            return message.channel.send(new MessageEmbed()
-                .setColor(config.wrongcolor)
-                .setFooter(config.footertext, config.footericon)
-                .setTitle(`❌ ERROR | Please join a Channel first`)
-            );
+            return message.channel.send({
+                embeds: [new MessageEmbed()
+                    .setColor(config.wrongcolor)
+                    .setFooter(config.footertext, config.footericon)
+                    .setTitle(`❌ ERROR | Please join a Channel first`)
+                ]
+            });
         if (!client.distube.getQueue(message))
-            return message.channel.send(new MessageEmbed()
-                .setColor(config.wrongcolor)
-                .setFooter(config.footertext, config.footericon)
-                .setTitle(`❌ ERROR | I am not playing Something`)
-                .setDescription(`The Queue is empty`)
-            );
+            return message.channel.send({
+                embeds: [new MessageEmbed()
+                    .setColor(config.wrongcolor)
+                    .setFooter(config.footertext, config.footericon)
+                    .setTitle(`❌ ERROR | I am not playing Something`)
+                    .setDescription(`The Queue is empty`)
+                ]
+            });
         if (client.distube.getQueue(message) && channel.id !== message.guild.me.voice.channel.id)
-            return message.channel.send(new MessageEmbed()
-                .setColor(config.wrongcolor)
-                .setFooter(config.footertext, config.footericon)
-                .setTitle(`❌ ERROR | Please join **my** Channel first`)
-                .setDescription(`Channelname: \`${message.guild.me.voice.channel.name}\``)
-            );
+            return message.channel.send({
+                embeds: [new MessageEmbed()
+                    .setColor(config.wrongcolor)
+                    .setFooter(config.footertext, config.footericon)
+                    .setTitle(`❌ ERROR | Please join **my** Channel first`)
+                    .setDescription(`Channelname: \`${message.guild.me.voice.channel.name}\``)
+                ]
+            });
 
-        message.channel.send(new MessageEmbed()
-            .setColor(config.color)
-            .setFooter(config.footertext, config.footericon)
-            .setTitle("⏹ Stopped playing Music and left your Channel")
-        ).then(msg => msg.delete({ timeout: 4000 }).catch(e => console.log(e.message)))
+        message.channel.send({
+            embeds: [new MessageEmbed()
+                .setColor(config.color)
+                .setFooter(config.footertext, config.footericon)
+                .setTitle("⏹ Stopped playing Music and left your Channel")
+            ]
+        }).then(msg => setTimeout(() => msg.delete(), 5000))
 
         client.distube.stop(message);
     } catch (e) {
         console.log(String(e.stack).bgRed)
-        return message.channel.send(new MessageEmbed()
-            .setColor(config.wrongcolor)
-            .setFooter(config.footertext, config.footericon)
-            .setTitle(`❌ ERROR | An error occurred`)
-            .setDescription(`\`\`\`${e.stack}\`\`\``)
-        );
+        return message.channel.send({
+            embeds: [new MessageEmbed()
+                .setColor(config.wrongcolor)
+                .setFooter(config.footertext, config.footericon)
+                .setTitle(`❌ ERROR | An error occurred`)
+                .setDescription(`\`\`\`${e.stack}\`\`\``)
+            ]
+        });
     }
 }
 
