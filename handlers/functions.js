@@ -116,13 +116,40 @@ module.exports = {
             let m = Math.floor(sec % 3600 / 60);
             let s = Math.floor(sec % 3600 % 60);
 
-            let dDisplay = d > 0 ? d + (d == 1 ? " day, " : " days, ") : "";
-            let hDisplay = h > 0 ? h + (h == 1 ? " hour, " : " hours, ") : "";
-            let mDisplay = m > 0 ? m + (m == 1 ? " minute, " : " minutes, ") : "";
+            let dDisplay = d > 0 ? d + (d == 1 ? " day" : " days") : "";
+            let hDisplay = h > 0 ? h + (h == 1 ? " hour" : " hours") : "";
+            let mDisplay = m > 0 ? m + (m == 1 ? " minute" : " minutes") : "";
             let sDisplay = s > 0 ? s + (s == 1 ? " second" : " seconds") : "";
-            return dDisplay + hDisplay + mDisplay + sDisplay;
+
+            return [dDisplay, hDisplay, mDisplay, sDisplay];
         } catch (err) {
             console.log(String(e.stack).bgRed)
         }
+    },
+    shuffle: function (array) {
+        try {
+            let currentIndex = array.length, randomIndex;
+
+            // While there remain elements to shuffle...
+            while (0 !== currentIndex) {
+
+                // Pick a remaining element...
+                randomIndex = Math.floor(Math.random() * currentIndex);
+                currentIndex--;
+
+                // And swap it with the current element.
+                [array[currentIndex], array[randomIndex]] = [
+                    array[randomIndex], array[currentIndex]];
+            }
+
+            return array;
+        } catch (err) {
+            console.log(String(e.stack).bgRed)
+        }
+    },
+    getKeyByValue: function (object, value) {
+        try {
+            return Object.keys(object).find(key => object[key] === value);
+        } catch (e) { console.log(e) }
     }
 }
