@@ -1,6 +1,34 @@
-const Discord = require('discord.js');
+const { Discord, Intents, Options, LimitedCollection } = require('discord.js');
 const YamnaBot = require("./handlers/ClientBuilder.js");
-const client = new YamnaBot();
+const client = new YamnaBot({
+  ownerID: ['484524591696576523'],
+  intents: [
+    "GUILDS",
+    "GUILD_MEMBERS",
+    "GUILD_BANS",
+    "GUILD_EMOJIS_AND_STICKERS",
+    "GUILD_INTEGRATIONS",
+    "GUILD_WEBHOOKS",
+    "GUILD_INVITES",
+    "GUILD_VOICE_STATES",
+    "GUILD_PRESENCES",
+    "GUILD_MESSAGES",
+    "GUILD_MESSAGE_REACTIONS",
+    "GUILD_MESSAGE_TYPING",
+    "DIRECT_MESSAGES",
+    "DIRECT_MESSAGE_REACTIONS",
+    "DIRECT_MESSAGE_TYPING",
+  ],
+  makeCache: Options.cacheWithLimits({
+    MessageManager: {
+      sweepInterval: 300,
+      sweepFilter: LimitedCollection.filterByLifetime({
+        lifetime: 1800,
+        getComparisonTimestamp: e => e.editedTimestamp ?? e.createdTimestamp,
+      })
+    }
+  })
+});
 const fs = require('fs');
 const { CHANNEL, SERVER, LIVE } = require("./config.json");
 require('dotenv').config();
@@ -19,11 +47,10 @@ mongoose.connect(process.env.MONGODB, {
 
 let prefix = "=";
 //
-require('discord-buttons')(client)
 //require("./logger.js")(client);
 require("./logger2.js")(client);
 //Handler
-["module", "Event", "distube", "nsfw", "update", "welcome"].forEach(handler => {
+["module", "Event", "distube", "nsfw", "update", "welcome"/*, "antigrif"*/].forEach(handler => {
   require(`./handlers/${handler}`)(client);
 });
 //client=-=-=-=-=-=-=-=-=-=-=-=-=

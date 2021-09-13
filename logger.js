@@ -190,7 +190,9 @@ module.exports = (c) => {
             }
 
         });
-
+        //client imgur id 
+        //https://imgur.com/#access_token=8af31773e3ed6f46e1f75e669d8808584b074684&expires_in=315360000&token_type=bearer&refresh_token=101f1d32ba7ac549f09848c17b88ff93e9e4f7e9&account_username=BioJS&account_id=151164404
+        //app-secret 7714d958bcc564670c207f298b69ec48a212aeab
         c.on("messageDelete", function (message) {
             if (message.author.bot) return;
 

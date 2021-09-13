@@ -1,9 +1,10 @@
 const db = require('old-wio.db');
 const { secondsToTime } = require('./handlers/functions');
+const { Permissions } = require('discord.js')
 
 module.exports = (client) => {
     const deleteColor = '#E03A4F'
-    const updateColor = '#F5733D'
+    const updateColor = 'YELLOW'//'#F5733D'
     const createColor = '#44F641'
     const boostColor = '#EB30DD'
     const footerMsg = 'Beta Logger'
@@ -12,8 +13,8 @@ module.exports = (client) => {
     let rcl = 0, rdl = 0, cdl = 0, ccl = 0, kl = 0, tl = 1800000;
     try {
         client.on("guildMemberUpdate", async (oldMember, newMember) => {
-            const audit = await oldMember.guild.fetchAuditLogs({ type: "MEMBER_ROLE_UPDATE" }).then(log => log.entries.first());
-            const audit_1 = await oldMember.guild.fetchAuditLogs({ type: "MEMBER_UPDATE" }).then(log => log.entries.first());
+            const audit = await oldMember.guild.fetchAuditLogs({ limit: 1, type: "MEMBER_ROLE_UPDATE" }).then(log => log.entries.first());
+            const audit_1 = await oldMember.guild.fetchAuditLogs({ limit: 1, type: "MEMBER_UPDATE" }).then(log => log.entries.first());
             let logchannel = db.fetch(`logs_${oldMember.guild.id}`)
             if (!logchannel) return;
             let options = {}
@@ -25,8 +26,8 @@ module.exports = (client) => {
             // Add default empty list
             if (typeof options.excludedroles === "undefined") options.excludedroles = new Array([])
             if (typeof options.trackroles === "undefined") options.trackroles = true
-            const oldMemberRoles = oldMember.roles.cache.keyArray()
-            const newMemberRoles = newMember.roles.cache.keyArray()
+            const oldMemberRoles = [...oldMember.roles.cache.keys()]
+            const newMemberRoles = [...newMember.roles.cache.keys()]
             const oldRoles = oldMemberRoles.filter(x => !options.excludedroles.includes(x)).filter(x => !newMemberRoles.includes(x))
             const newRoles = newMemberRoles.filter(x => !options.excludedroles.includes(x)).filter(x => !oldMemberRoles.includes(x))
             const rolechanged = (newRoles.length || oldRoles.length)
@@ -62,7 +63,7 @@ module.exports = (client) => {
 
                 let sChannel = oldMember.guild.channels.cache.get(logchannel)
                 if (!sChannel) return;
-                sChannel.send(embed).catch(err => console.log(err))
+                sChannel.send({ embeds: [embed] }).catch(err => console.log(err))
             }
             if (!oldMember.premiumSince && newMember.premiumSince) {
                 const embed = new Discord.MessageEmbed()
@@ -75,7 +76,7 @@ module.exports = (client) => {
 
                 let sChannel = oldMember.guild.channels.cache.get(logchannel)
                 if (!sChannel) return;
-                sChannel.send(embed).catch(err => console.log(err))
+                sChannel.send({ embeds: [embed] }).catch(err => console.log(err))
             }
             if (oldMember.premiumSince && !newMember.premiumSince) {
                 const embed = new Discord.MessageEmbed()
@@ -88,7 +89,7 @@ module.exports = (client) => {
 
                 let sChannel = newMember.guild.channels.cache.get(logchannel)
                 if (!sChannel) return;
-                sChannel.send(embed).catch(err => console.log(err))
+                sChannel.send({ embeds: [embed] }).catch(err => console.log(err))
             }
             if (oldMember.user.discriminator !== newMember.user.discriminator) {
                 const embed = new Discord.MessageEmbed()
@@ -102,7 +103,7 @@ module.exports = (client) => {
 
                 let sChannel = newMember.guild.channels.cache.get(logchannel)
                 if (!sChannel) return;
-                sChannel.send(embed).catch(err => console.log(err))
+                sChannel.send({ embeds: [embed] }).catch(err => console.log(err))
             }
             if (oldMember.user.username !== newMember.user.username) {
                 const embed = new Discord.MessageEmbed()
@@ -116,7 +117,7 @@ module.exports = (client) => {
 
                 let sChannel = newMember.guild.channels.cache.get(logchannel)
                 if (!sChannel) return;
-                sChannel.send(embed).catch(err => console.log(err))
+                sChannel.send({ embeds: [embed] }).catch(err => console.log(err))
             }
             if (oldMember.nickname !== newMember.nickname) {
                 const embed = new Discord.MessageEmbed()
@@ -131,7 +132,7 @@ module.exports = (client) => {
 
                 let sChannel = newMember.guild.channels.cache.get(logchannel)
                 if (!sChannel) return;
-                sChannel.send(embed).catch(err => console.log(err))
+                sChannel.send({ embeds: [embed] }).catch(err => console.log(err))
             }
             if (oldMember.user.avatar !== newMember.user.avatar) {
                 const embed = new Discord.MessageEmbed()
@@ -144,12 +145,12 @@ module.exports = (client) => {
 
                 let sChannel = newMember.guild.channels.cache.get(logchannel)
                 if (!sChannel) return;
-                sChannel.send(embed).catch(err => console.log(err))
+                sChannel.send({ embeds: [embed] }).catch(err => console.log(err))
             }
         });
 
         client.on("emojiCreate", async function (emoji) {
-            const audit = await emoji.guild.fetchAuditLogs({ type: "EMOJI_CREATE" }).then(log => log.entries.first());
+            const audit = await emoji.guild.fetchAuditLogs({ limit: 1, type: "EMOJI_CREATE" }).then(log => log.entries.first());
             let logchannel = db.fetch(`logs_${emoji.guild.id}`);
             if (!logchannel) return;
             const embed = new Discord.MessageEmbed()
@@ -166,11 +167,11 @@ module.exports = (client) => {
 
             let sChannel = emoji.guild.channels.cache.get(logchannel)
             if (!sChannel) return;
-            sChannel.send(embed).catch(err => console.log(err))
+            sChannel.send({ embeds: [embed] }).catch(err => console.log(err))
         });
 
         client.on("emojiDelete", async function (emoji) {
-            const audit = await emoji.guild.fetchAuditLogs({ type: "EMOJI_DELETE" }).then(log => log.entries.first());
+            const audit = await emoji.guild.fetchAuditLogs({ limit: 1, type: "EMOJI_DELETE" }).then(log => log.entries.first());
             let logchannel = db.fetch(`logs_${emoji.guild.id}`);
             if (!logchannel) return;
             const embed = new Discord.MessageEmbed()
@@ -185,11 +186,11 @@ module.exports = (client) => {
 
             let sChannel = emoji.guild.channels.cache.get(logchannel)
             if (!sChannel) return;
-            sChannel.send(embed).catch(err => console.log(err))
+            sChannel.send({ embeds: [embed] }).catch(err => console.log(err))
         });
 
-        client.on("guildBanAdd", async function (guild, user) {
-            const audit = await guild.fetchAuditLogs({ type: "MEMBER_BAN_ADD" }).then(log => log.entries.first());
+        client.on("guildBanAdd", async function (ban) {
+            const audit = await ban.guild.fetchAuditLogs({ limit: 1, type: "MEMBER_BAN_ADD" }).then(log => log.entries.first());
 
             if (numberBanMap.has(audit.executor.id)) {
                 const userData = numberBanMap.get(audit.executor.id)
@@ -198,9 +199,9 @@ module.exports = (client) => {
                 userData.nBan = nBan
                 numberBanMap.set(audit.executor.id, userData)
                 if (nBan === 5) {
-                    let muteRole = await guild.roles.cache.find(role => role.name === "muted")
-                    await guild.member(audit.executor.id).roles.set([])
-                    await guild.member(audit.executor.id).roles.add(muteRole);
+                    let muteRole = await ban.guild.roles.cache.find(role => role.name === "muted")
+                    await ban.guild.member(audit.executor.id).roles.set([])
+                    await ban.guild.member(audit.executor.id).roles.add(muteRole);
                 }
             } else {
                 numberBanMap.set(audit.executor.id, { nBan: 1 });
@@ -216,46 +217,43 @@ module.exports = (client) => {
                 await guild.members.cache.get(usser.id).roles.add(muteRole);
             }*/
 
-            let logchannel = db.fetch(`logs_${guild.id}`);
+            let logchannel = db.fetch(`logs_${ban.guild.id}`);
             if (!logchannel) return;
 
             const embed = new Discord.MessageEmbed()
                 .setTitle(':lock:   〔 BAN ADD 〕')
-                .setThumbnail(user.displayAvatarURL({ dynamic: true }) || '')
+                .setThumbnail(ban.user.displayAvatarURL({ dynamic: true }) || '')
                 .setColor(deleteColor || 'RED')
-                ////setFooter(footerMsg, guild.iconURL())
-                .addField('Username:', `\`\`\`${user.username}\`\`\``, true)
-                .addField('ID:', `\`\`\`${user.id}\`\`\``, true)
+                .addField('Username:', `\`\`\`${ban.user.username}\`\`\``, true)
+                .addField('ID:', `\`\`\`js\n${ban.user.id}\n\`\`\``, true)
                 .addField('Executor* :', `\`\`\`${audit.executor.username || 'N/A'}\`\`\``, true)
-            //.setTimestamp();
+                .addField('Reason :', `\`\`\`${ban?.reason || 'None'}\`\`\``, false)
 
-            let sChannel = guild.channels.cache.get(logchannel)
+            let sChannel = ban.guild.channels.cache.get(logchannel)
             if (!sChannel) return;
-            sChannel.send(embed).catch(err => console.log(err))
+            sChannel.send({ embeds: [embed] }).catch(err => console.log(err))
         });
 
-        client.on("guildBanRemove", async function (guild, user) {
-            const audit = await guild.fetchAuditLogs({ type: "MEMBER_BAN_REMOVE" }).then(log => log.entries.first());
-            let logchannel = db.fetch(`logs_${guild.id}`);
+        client.on("guildBanRemove", async function (ban) {
+            const audit = await ban.guild.fetchAuditLogs({ limit: 1, type: "MEMBER_BAN_REMOVE" }).then(log => log.entries.first());
+            let logchannel = db.fetch(`logs_${ban.guild.id}`);
             if (!logchannel) return;
 
             const embed = new Discord.MessageEmbed()
                 .setTitle(':unlock:   〔 BAN REMOVE 〕')
-                .setThumbnail(user.displayAvatarURL({ dynamic: true }) || '')
-                .setColor(deleteColor || 'BLUE')
-                ////setFooter(footerMsg, guild.iconURL())
-                .addField('Username:', `\`\`\`${user.username}\`\`\``, true)
-                .addField('ID:', `\`\`\`${user.id}\`\`\``, true)
+                .setThumbnail(ban.user.displayAvatarURL({ dynamic: true }) || '')
+                .setColor(updateColor || 'BLUE')
+                .addField('Username:', `\`\`\`${ban.user.username}\`\`\``, true)
+                .addField('ID:', `\`\`\`js\n${ban.user.id}\n\`\`\``, true)
                 .addField('Executor* :', `\`\`\`${audit.executor.username || 'N/A'}\`\`\``, true)
-            //.setTimestamp();
 
-            let sChannel = guild.channels.cache.get(logchannel)
+            let sChannel = ban.guild.channels.cache.get(logchannel)
             if (!sChannel) return;
-            sChannel.send(embed).catch(err => console.log(err))
+            sChannel.send({ embeds: [embed] }).catch(err => console.log(err))
         });
 
         client.on("guildUpdate", async function (oldGuild, newGuild) {
-            const audit = await oldGuild.fetchAuditLogs({ type: "GUILD_UPDATE" }).then(log => log.entries.first());
+            const audit = await oldGuild.fetchAuditLogs({ limit: 1, type: "GUILD_UPDATE" }).then(log => log.entries.first());
             let logchannel = db.fetch(`logs_${oldGuild.id}`);
             if (!logchannel) return;
             if (!newGuild.available) return;
@@ -265,45 +263,39 @@ module.exports = (client) => {
                     .setTitle(':wrench:  〔 Guild afkChannel Update 〕')
                     .setThumbnail(newGuild.iconURL({ dynamic: true }) || '')
                     .setColor(updateColor || 'BLUE')
-                    ////setFooter(footerMsg, newGuild.iconURL())
                     .addField('Old afkChannel:', `\`\`\`js\n${oldGuild.afkChannel.name} : ${parseInt(oldGuild.afkTimeout / 60)} min\n\`\`\``, true)
                     .addField('New afkChannel:', `\`\`\`js\n${newGuild.afkChannel.name} : ${parseInt(newGuild.afkTimeout / 60)} min\n\`\`\``, true)
                     .addField('Executor:', `\`\`\`${audit.executor.username}\`\`\``, true)
-                //.setTimestamp();
 
                 let sChannel = newGuild.channels.cache.get(logchannel)
                 if (!sChannel) return;
-                sChannel.send(embed).catch(err => console.log(err))
+                sChannel.send({ embeds: [embed] }).catch(err => console.log(err))
             }
             if (oldGuild.icon !== newGuild.icon) {
                 const embed = new Discord.MessageEmbed()
                     .setTitle(':wrench:  〔 Guild afkChannel Update 〕')
                     .setThumbnail(newGuild.iconURL({ dynamic: true }) || '')
                     .setColor(updateColor || 'BLUE')
-                    ////setFooter(footerMsg, newGuild.iconURL())
                     .addField('Old icon:', `\`\`\`${oldGuild.iconURL({ format: 'png' })}\`\`\``, false)
                     .addField('New icon:', `\`\`\`${newGuild.iconURL({ format: 'png' })}\`\`\``, false)
                     .addField('Executor:', `\`\`\`${audit.executor.username}\`\`\``, true)
-                //.setTimestamp();
 
                 let sChannel = newGuild.channels.cache.get(logchannel)
                 if (!sChannel) return;
-                sChannel.send(embed).catch(err => console.log(err))
+                sChannel.send({ embeds: [embed] }).catch(err => console.log(err))
             }
             if (oldGuild.description !== newGuild.description) {
                 const embed = new Discord.MessageEmbed()
                     .setTitle(':wrench:  〔 Guild Description Update 〕')
                     .setThumbnail(newGuild.iconURL({ dynamic: true }) || '')
                     .setColor(updateColor || 'BLUE')
-                    ////setFooter(footerMsg, newGuild.iconURL())
                     .addField('Old Description:', `\`\`\`${oldGuild.description}\`\`\``, false)
                     .addField('New Description:', `\`\`\`${newGuild.description}\`\`\``, false)
                     .addField('Executor:', `\`\`\`${audit.executor.username}\`\`\``, true)
-                //.setTimestamp();
 
                 let sChannel = newGuild.channels.cache.get(logchannel)
                 if (!sChannel) return;
-                sChannel.send(embed).catch(err => console.log(err))
+                sChannel.send({ embeds: [embed] }).catch(err => console.log(err))
             }
             /*if (oldGuild.features !== newGuild.features) {
                 const embed = new Discord.MessageEmbed()
@@ -319,7 +311,7 @@ module.exports = (client) => {
     
                 let sChannel = newGuild.channels.cache.get(logchannel)
                 if (!sChannel) return;
-                sChannel.send(embed).catch(err => console.log(err))
+                sChannel.send({embeds: [embed]}).catch(err => console.log(err))
             }*/
             if (oldGuild.premiumTier !== newGuild.premiumTier) {
                 const TIER_0 = '🥰50 Emoji, 🔉96kbps Audio, 📤8MB Upload, \n🎬720p@30fps Stream'
@@ -331,15 +323,13 @@ module.exports = (client) => {
                     .setTitle(':c: 〔 Guild Premium Tier Update 〕')
                     .setThumbnail('https://i.imgur.com/2SgsN97.png' || newGuild.iconURL({ dynamic: true }))
                     .setColor(boostColor || 'WHITE')
-                    ////setFooter(footerMsg, newGuild.iconURL())
                     .addField('Old Premium Tier :', `\`\`\`${oldGuild.premiumTier}\`\`\``, true)
                     .addField('New Premium Tier :', `\`\`\`${newGuild.premiumTier}\`\`\``, true)
                     .addField('Current Tier Premium Features :', `\`\`\`${newGuild.premiumTier === 1 ? TIER_1 : newGuild.premiumTier === 2 ? TIER_2 : newGuild.premiumTier === 3 ? TIER_3 : TIER_0}\`\`\``, false)
-                //.setTimestamp();
 
                 let sChannel = newGuild.channels.cache.get(logchannel)
                 if (!sChannel) return;
-                sChannel.send(embed).catch(err => console.log(err))
+                sChannel.send({ embeds: [embed] }).catch(err => console.log(err))
             }
             if (oldGuild.defaultMessageNotifications !== newGuild.defaultMessageNotifications) {
                 const embed = new Discord.MessageEmbed()
@@ -349,49 +339,42 @@ module.exports = (client) => {
                     .addField('Old Features:', `\`\`\`${oldGuild.defaultMessageNotifications}\`\`\``, true)
                     .addField('New Features:', `\`\`\`${newGuild.defaultMessageNotifications}\`\`\``, true)
                     .addField('Executor:', `\`\`\`${audit.executor.username}\`\`\``, true)
-                //.setTimestamp();
-                //setFooter(footerMsg, newGuild.iconURL())
 
                 let sChannel = newGuild.channels.cache.get(logchannel)
                 if (!sChannel) return;
-                sChannel.send(embed).catch(err => console.log(err))
+                sChannel.send({ embeds: [embed] }).catch(err => console.log(err))
             }
             if (oldGuild.explicitContentFilter !== newGuild.explicitContentFilter) {
                 const embed = new Discord.MessageEmbed()
                     .setTitle(':wrench: 〔 Guild Explicit Content Filter Update 〕')
                     .setThumbnail(newGuild.iconURL({ dynamic: true }) || '')
                     .setColor(updateColor || 'BLUE')
-                    //setFooter(footerMsg, newGuild.iconURL())
                     .addField('Old Features:', `\`\`\`${oldGuild.explicitContentFilter}\`\`\``, false)
                     .addField('New Features:', `\`\`\`${newGuild.explicitContentFilter}\`\`\``, false)
                     .addField('Executor:', `\`\`\`${audit.executor.username}\`\`\``, true)
-                //.setTimestamp();
 
                 let sChannel = newGuild.channels.cache.get(logchannel)
                 if (!sChannel) return;
-                sChannel.send(embed).catch(err => console.log(err))
+                sChannel.send({ embeds: [embed] }).catch(err => console.log(err))
             }
             if (oldGuild.systemChannel !== newGuild.systemChannel) {
                 const embed = new Discord.MessageEmbed()
                     .setTitle(':wrench: 〔 Guild System Channel Update 〕')
                     .setThumbnail(newGuild.iconURL({ dynamic: true }) || '')
                     .setColor(updateColor || 'BLUE')
-                    //setFooter(footerMsg, newGuild.iconURL())
                     .addField('Old Sys Channel :', `\`\`\`${oldGuild.systemChannel?.name || 'No Sys channel'}\`\`\``, true)
                     .addField('New Sys Channel :', `\`\`\`${newGuild.systemChannel?.name || 'No Sys channel'}\`\`\``, true)
                     .addField('Executor:', `\`\`\`${audit.executor.username}\`\`\``, true)
-                //.setTimestamp();
 
                 let sChannel = newGuild.channels.cache.get(logchannel)
                 if (!sChannel) return;
-                sChannel.send(embed).catch(err => console.log(err))
+                sChannel.send({ embeds: [embed] }).catch(err => console.log(err))
             }
             if (oldGuild.verificationLevel !== newGuild.verificationLevel) {
                 const embed = new Discord.MessageEmbed()
                     .setTitle(':wrench: 〔 Guild Verification Level Update 〕')
                     .setThumbnail(newGuild.iconURL({ dynamic: true }) || '')
                     .setColor(updateColor || 'BLUE')
-                    //setFooter(footerMsg, newGuild.iconURL())
                     .addField('Old Level :', `\`\`\`${oldGuild.verificationLevel}\`\`\``, true)
                     .addField('New Level :', `\`\`\`${newGuild.verificationLevel}\`\`\``, true)
                     .addField('Executor:', `\`\`\`${audit.executor.username}\`\`\``, true)
@@ -399,22 +382,20 @@ module.exports = (client) => {
 
                 let sChannel = newGuild.channels.cache.get(logchannel)
                 if (!sChannel) return;
-                sChannel.send(embed).catch(err => console.log(err))
+                sChannel.send({ embeds: [embed] }).catch(err => console.log(err))
             }
             if (oldGuild.banner !== newGuild.banner) {
                 const embed = new Discord.MessageEmbed()
                     .setTitle(':wrench: 〔 Guild Banner Update 〕')
                     .setThumbnail(newGuild.bannerURL({ dynamic: true, format: 'png' }) || newGuild.iconURL({ dynamic: true }))
                     .setColor(updateColor || 'BLUE')
-                    //setFooter(footerMsg, newGuild.iconURL())
                     .addField('Old Banner :', `\`\`\`${oldGuild.bannerURL({ dynamic: true, format: 'png' })}\`\`\``, false)
                     .addField('New Banner :', `\`\`\`${newGuild.bannerURL({ dynamic: true, format: 'png' })}\`\`\``, false)
                     .addField('Executor:', `\`\`\`${audit.executor.username}\`\`\``, true)
-                //.setTimestamp();
 
                 let sChannel = newGuild.channels.cache.get(logchannel)
                 if (!sChannel) return;
-                sChannel.send(embed).catch(err => console.log(err))
+                sChannel.send({ embeds: [embed] }).catch(err => console.log(err))
             }
             if (oldGuild.systemChannelFlags.bitfield !== newGuild.systemChannelFlags.bitfield) {
                 let copy_1 = '', copy_2 = '';
@@ -438,7 +419,7 @@ module.exports = (client) => {
 
                 let sChannel = newGuild.channels.cache.get(logchannel)
                 if (!sChannel) return;
-                sChannel.send(embed).catch(err => console.log(err))
+                sChannel.send({ embeds: [embed] }).catch(err => console.log(err))
             }
             if (oldGuild.widgetEnabled !== newGuild.widgetEnabled) {
                 const embed = new Discord.MessageEmbed()
@@ -453,7 +434,7 @@ module.exports = (client) => {
 
                 let sChannel = newGuild.channels.cache.get(logchannel)
                 if (!sChannel) return;
-                sChannel.send(embed).catch(err => console.log(err))
+                sChannel.send({ embeds: [embed] }).catch(err => console.log(err))
             }
 
         });
@@ -482,7 +463,7 @@ module.exports = (client) => {
         
             let sChannel = member.guild.channels.cache.get(logchannel)
             if (!sChannel) return;
-            sChannel.send(embed)
+            sChannel.send({embeds: [embed]})
         });*/
 
         client.on("guildMemberRemove", async function (member) {
@@ -490,6 +471,7 @@ module.exports = (client) => {
             if (log1.action === "MEMBER_KICK") {
                 const log = await member.guild
                     .fetchAuditLogs({
+                        limit: 1,
                         type: "MEMBER_KICK"
                     })
                     .then(audit => audit.entries.first());
@@ -506,30 +488,29 @@ module.exports = (client) => {
                     }
                 }
             }
-            /*const audit = await member.guild.fetchAuditLogs({ type: "MEMBER_KICK" }).then(log => log.entries.first());
+            const audit = await member.guild.fetchAuditLogs({ limit: 1, type: "MEMBER_KICK" }).then(log => log.entries.first());
+            const duration = parseInt((Date.now() - audit.createdTimestamp) / 1000)
+            const hasKicked = duration < 10
             let logchannel = db.fetch(`logs_${member.guild.id}`);
-            if (thread)
-                if (!logchannel) return;
-            console.log(member.deleted)
-
+            //if (thread)
+            if (!logchannel) return;
             const embed = new Discord.MessageEmbed()
                 .setTitle(':door: 〔 Member Remove 〕')
                 .setThumbnail('https://i.imgur.com/2EKVgm5.png')
                 .setColor(deleteColor || 'BLUE')
                 //setFooter(footerMsg, member.guild.iconURL())
                 .addField('Username:', `\`\`\`${member.user.username}\`\`\``, true)
-                .addField(member.deleted ? ('Kicked by:', `\`\`\`${audit.executor.username}\`\`\``) : '', true)
-                .addField('ID:', `\`\`\`${member.user.id}\`\`\``, false)
-                .addField('Join Duration :', `\`\`\`${member.joinedTimestamp}\`\`\``, false)
-                //.setTimestamp();
+                .addField('ID:', `\`\`\`js\n${member.user.id}\n\`\`\``, false)
+                .addField('Join Duration :', `\`\`\`js\n${secondsToTime((Date.now() - member.joinedTimestamp) / 1000)?.[0]}\n\`\`\``, false)
+            if (hasKicked) embed.addField('Kicked by:', `\`\`\`fix\n${audit.executor.username} - ${audit.executor.id}\`\`\``, true)
 
             let sChannel = member.guild.channels.cache.get(logchannel)
             if (!sChannel) return;
-            sChannel.send(embed)*/
+            sChannel.send({ embeds: [embed] })
         });
 
         client.on("roleCreate", async function (role) {
-            const audit = await role.guild.fetchAuditLogs({ type: "ROLE_CREATE" }).then(log => log.entries.first());
+            const audit = await role.guild.fetchAuditLogs({ limit: 1, type: "ROLE_CREATE" }).then(log => log.entries.first());
             /*const user = audit.executor
 
             if (thread == user.id) {
@@ -557,19 +538,124 @@ module.exports = (client) => {
                 .setTitle(':paintbrush:  〔 ROLE CREATE 〕')
                 .setThumbnail(audit.executor.displayAvatarURL({ dynamic: true }) || '')
                 .setColor(createColor || 'BLUE')
-                //setFooter(footerMsg, role.guild.iconURL())
                 .addField('Name :', `\`\`\`${role.name}\`\`\``, true)
                 .addField('Executor :', `\`\`\`${audit.executor.username}\`\`\``, true)
                 .addField('Mentionable : ', `\`\`\`${role.mentionable}\`\`\``, true)
-            //.setTimestamp();
 
             let sChannel = role.guild.channels.cache.get(logchannel)
             if (!sChannel) return;
-            sChannel.send(embed)
+            sChannel.send({ embeds: [embed] })
         });
+        client.on("roleUpdate", async function (oldRole, newRole) {
+            const audit = await newRole.guild.fetchAuditLogs({ limit: 1, type: "ROLE_UPDATE" }).then(log => log.entries.first());
+            let logchannel = db.fetch(`logs_${newRole.guild.id}`);
+            if (!logchannel) return;
 
+            const added = ~oldRole.permissions.bitfield & newRole.permissions.bitfield;
+            const removed = oldRole.permissions.bitfield & ~newRole.permissions.bitfield;
+
+            const addedPerms = new Permissions(added).toArray();
+            const removedPerms = new Permissions(removed).toArray();
+            if (addedPerms.length !== 0 || removedPerms.length !== 0) {
+                const embed = new Discord.MessageEmbed()
+                    .setTitle(':wrench: 〔 ROLE PERMISSIONS UPDATE 〕')
+                    .setThumbnail(audit.executor.displayAvatarURL({ dynamic: true }) || '')
+                    .setColor(updateColor || 'YELLOW')
+                    .addField('Role Name :', `\`\`\`${oldRole.name}\`\`\``, true)
+                    .addField('Executor :', `\`\`\`${audit.executor.username}\`\`\``, true)
+                if (addedPerms.length !== 0) embed.addField(':white_check_mark:Permissions Added : ', `\`\`\`${addedPerms.join("\n")}\`\`\``, false)
+                if (removedPerms.length !== 0) embed.addField(':x:Permissions removed : ', `\`\`\`${removedPerms.join("\n")}\`\`\``, false)
+
+                let sChannel = newRole.guild.channels.cache.get(logchannel)
+                if (!sChannel) return;
+                sChannel.send({ embeds: [embed] })
+            }
+            if (oldRole.name !== newRole.name) {
+                const embed = new Discord.MessageEmbed()
+                    .setTitle(':wrench: 〔 ROLE NAME UPDATE 〕')
+                    .setThumbnail(audit.executor.displayAvatarURL({ dynamic: true }) || '')
+                    .setColor(updateColor || 'YELLOW')
+                    .addField('Old Name :', `\`\`\`${oldRole.name}\`\`\``, true)
+                    .addField('New Name :', `\`\`\`${newRole.name}\`\`\``, true)
+                    .addField('Executor :', `\`\`\`${audit.executor.username}\`\`\``, true)
+
+                let sChannel = newRole.guild.channels.cache.get(logchannel)
+                if (!sChannel) return;
+                sChannel.send({ embeds: [embed] })
+            }
+            if (oldRole.position !== newRole.position) {
+                const embed = new Discord.MessageEmbed()
+                    .setTitle(':wrench: 〔 ROLE POSITION UPDATE 〕')
+                    .setThumbnail(audit.executor.displayAvatarURL({ dynamic: true }) || '')
+                    .setColor(updateColor || 'YELLOW')
+                    .addField('Old Position :', `\`\`\`${oldRole.position}\`\`\``, true)
+                    .addField('New Position :', `\`\`\`${newRole.position}\`\`\``, true)
+                    .addField('Executor :', `\`\`\`${audit.executor.username}\`\`\``, true)
+                    .addField('Role Name :', `\`\`\`${newRole.name}\`\`\``, true)
+
+                let sChannel = newRole.guild.channels.cache.get(logchannel)
+                if (!sChannel) return;
+                sChannel.send({ embeds: [embed] })
+            }
+            if (oldRole.color !== newRole.color) {
+                const embed = new Discord.MessageEmbed()
+                    .setTitle(':wrench: 〔 ROLE COLOR UPDATE 〕')
+                    .setThumbnail(audit.executor.displayAvatarURL({ dynamic: true }) || '')
+                    .setColor(updateColor || 'YELLOW')
+                    .addField('Old Color :', `\`\`\`${oldRole.color}\`\`\``, true)
+                    .addField('New Color :', `\`\`\`${newRole.color}\`\`\``, true)
+                    .addField('Executor :', `\`\`\`${audit.executor.username}\`\`\``, true)
+                    .addField('Role Name :', `\`\`\`${newRole.name}\`\`\``, true)
+
+                let sChannel = newRole.guild.channels.cache.get(logchannel)
+                if (!sChannel) return;
+                sChannel.send({ embeds: [embed] })
+            }
+            if (oldRole.managed !== newRole.managed) {
+                const embed = new Discord.MessageEmbed()
+                    .setTitle(':wrench: 〔 ROLE MANAGED UPDATE 〕')
+                    .setThumbnail(audit.executor.displayAvatarURL({ dynamic: true }) || '')
+                    .setColor(updateColor || 'YELLOW')
+                    .addField('Old STATE :', `\`\`\`js\n${oldRole.managed}\n\`\`\``, true)
+                    .addField('New STATE :', `\`\`\`js\n${newRole.managed}\n\`\`\``, true)
+                    .addField('Executor :', `\`\`\`${audit.executor.username}\`\`\``, true)
+                    .addField('Role Name :', `\`\`\`${newRole.name}\`\`\``, true)
+
+                let sChannel = newRole.guild.channels.cache.get(logchannel)
+                if (!sChannel) return;
+                sChannel.send({ embeds: [embed] })
+            }
+            if (oldRole.mentionable !== newRole.mentionable) {
+                const embed = new Discord.MessageEmbed()
+                    .setTitle(':wrench: 〔 ROLE MENTIONABLE UPDATE 〕')
+                    .setThumbnail(audit.executor.displayAvatarURL({ dynamic: true }) || '')
+                    .setColor(updateColor || 'YELLOW')
+                    .addField('Old STATE :', `\`\`\`js\n${oldRole.mentionable}\n\`\`\``, true)
+                    .addField('New STATE :', `\`\`\`js\n${newRole.mentionable}\n\`\`\``, true)
+                    .addField('Executor :', `\`\`\`${audit.executor.username}\`\`\``, true)
+                    .addField('Role Name :', `\`\`\`${newRole.name}\`\`\``, true)
+
+                let sChannel = newRole.guild.channels.cache.get(logchannel)
+                if (!sChannel) return;
+                sChannel.send({ embeds: [embed] })
+            }
+            /*} else {
+                const embed = new Discord.MessageEmbed()
+                    .setTitle(':wrench: 〔 ROLE UPDATE 〕')
+                    .setThumbnail(audit.executor.displayAvatarURL({ dynamic: true }) || '')
+                    .setColor(updateColor || 'YELLOW')
+                    .setDescription('Role have been updated\n-check audit for more info')
+                    .addField('Role Name :', `\`\`\`${newRole.name}\`\`\``, true)
+                    .addField('Role ID :', `\`\`\`${newRole.id}\`\`\``, true)
+                    .addField('Executor :', `\`\`\`${audit.executor.username}\`\`\``, true)
+ 
+                let sChannel = newRole.guild.channels.cache.get(logchannel)
+                if (!sChannel) return;
+                sChannel.send({ embeds: [embed] })
+            }*/
+        });
         client.on("roleDelete", async function (role) {
-            const audit = await role.guild.fetchAuditLogs({ type: "ROLE_DELETE" }).then(log => log.entries.first());
+            const audit = await role.guild.fetchAuditLogs({ limit: 1, type: "ROLE_DELETE" }).then(log => log.entries.first());
 
             const user = audit.executor
             if (thread == user.id) {
@@ -600,12 +686,12 @@ module.exports = (client) => {
 
             let sChannel = role.guild.channels.cache.get(logchannel)
             if (!sChannel) return;
-            sChannel.send(embed)
+            sChannel.send({ embeds: [embed] })
         });
 
         client.on("channelCreate", async (channel) => {
             if (channel.parentID === '838808732153675837') return;
-            const audit = await channel.guild.fetchAuditLogs({ type: "CHANNEL_CREATE" }).then(log => log.entries.first());
+            const audit = await channel.guild.fetchAuditLogs({ limit: 1, type: "CHANNEL_CREATE" }).then(log => log.entries.first());
 
             const user = audit.executor
             if (thread == user.id) {
@@ -634,11 +720,11 @@ module.exports = (client) => {
 
             let sChannel = channel.guild.channels.cache.get(logchannel)
             if (!sChannel) return;
-            sChannel.send(embed).catch(err => console.log(err))
+            sChannel.send({ embeds: [embed] }).catch(err => console.log(err))
         });
 
         client.on("channelUpdate", async (oldChannel, newChannel) => {
-            const audit = await oldChannel.guild.fetchAuditLogs({ type: "CHANNEL_UPDATE" }).then(log => log.entries.first());
+            const audit = await oldChannel.guild.fetchAuditLogs({ limit: 1, type: "CHANNEL_UPDATE" }).then(log => log.entries.first());
             const embedcolor = createColor;
             const logchannel = db.fetch(`logs_${oldChannel.guild.id}`);
             if (!logchannel) return;
@@ -657,7 +743,7 @@ module.exports = (client) => {
 
                 let sChannel = newChannel.guild.channels.cache.get(logchannel)
                 if (!sChannel) return;
-                sChannel.send(embed).catch(err => console.log(err))
+                sChannel.send({ embeds: [embed] }).catch(err => console.log(err))
             }
             else if (oldChannel.type != newChannel.type) {
                 const embed = new Discord.MessageEmbed()
@@ -668,11 +754,12 @@ module.exports = (client) => {
                     .addField('Old Type:', `\`\`\`${oldChannel.type}\`\`\``, true)
                     .addField('New Type:', `\`\`\`${newChannel.type}\`\`\``, true)
                     .addField('Executor:', `\`\`\`${audit.executor.username}\`\`\``, true)
+                    .addField('Channel Name :', `\`\`\`${newChannel.name}\`\`\``, true)
                 //.setTimestamp();
 
                 let sChannel = newChannel.guild.channels.cache.get(logchannel)
                 if (!sChannel) return;
-                sChannel.send(embed).catch(err => console.log(err))
+                sChannel.send({ embeds: [embed] }).catch(err => console.log(err))
             }
             else if (oldChannel.topic != newChannel.topic) {
                 const embed = new Discord.MessageEmbed()
@@ -683,14 +770,14 @@ module.exports = (client) => {
                     .addField('Old Topic:', `\`\`\`${oldChannel.topic}\`\`\``, false)
                     .addField('New Topic:', `\`\`\`${newChannel.topic}\`\`\``, false)
                     .addField('Executor:', `\`\`\`${audit.executor.username}\`\`\``, true)
-                    .addField('Channel Type:', `\`\`\`${newChannel.type}\`\`\``, true)
+                    .addField('Channel Name :', `\`\`\`${newChannel.name}\`\`\``, true)
                 //.setTimestamp();
 
                 let sChannel = newChannel.guild.channels.cache.get(logchannel)
                 if (!sChannel) return;
-                sChannel.send(embed).catch(err => console.log(err))
+                sChannel.send({ embeds: [embed] }).catch(err => console.log(err))
             }
-            else if (newChannel.type === 'voice' && oldChannel.bitrate !== newChannel.bitrate) {
+            else if (newChannel.type === 'GUILD_VOICE' && oldChannel.bitrate !== newChannel.bitrate) {
                 const embed = new Discord.MessageEmbed()
                     .setTitle(':wrench:  〔 Channel Bitrate Update 〕')
                     .setThumbnail(audit.executor.displayAvatarURL({ dynamic: true }) || '')
@@ -699,35 +786,88 @@ module.exports = (client) => {
                     .addField('Old Bitrate:', `\`\`\`js\n${parseInt(oldChannel.bitrate / 1000)} Kbps\n\`\`\``, true)
                     .addField('New Bitrate:', `\`\`\`js\n${parseInt(newChannel.bitrate / 1000)} kbps\n\`\`\``, true)
                     .addField('Executor:', `\`\`\`${audit.executor.username}\`\`\``, true)
-                    .addField('Channel Name:', `\`\`\`${oldChannel.name}\`\`\``, true)
+                    .addField('Channel Name:', `\`\`\`${newChannel.name}\`\`\``, true)
                 //.setTimestamp();
 
                 let sChannel = newChannel.guild.channels.cache.get(logchannel)
                 if (!sChannel) return;
-                sChannel.send(embed)
+                sChannel.send({ embeds: [embed] }).catch(err => console.log(err))
             }
-            else if (newChannel.type === 'voice' && oldChannel.userLimit !== newChannel.userLimit) {
+            else if (newChannel.type === 'GUILD_VOICE' && oldChannel.userLimit !== newChannel.userLimit) {
                 const embed = new Discord.MessageEmbed()
                     .setTitle(':wrench:  〔 Channel User Limit Update 〕')
                     .setThumbnail(audit.executor.displayAvatarURL({ dynamic: true }) || '')
                     .setColor(updateColor || 'BLUE')
-                    //setFooter(footerMsg, oldChannel.guild.iconURL())
                     .addField('Old User Limit:', `\`\`\`js\n${oldChannel.userLimit}\n\`\`\``, true)
                     .addField('New User Limit:', `\`\`\`js\n${newChannel.userLimit}\n\`\`\``, true)
                     .addField('Executor:', `\`\`\`${audit.executor.username}\`\`\``, true)
-                //.setTimestamp();
+                    .addField('Channel Name :', `\`\`\`${newChannel.name}\`\`\``, true)
 
                 let sChannel = newChannel.guild.channels.cache.get(logchannel)
                 if (!sChannel) return;
-                sChannel.send(embed).catch(err => console.log(err))
+                sChannel.send({ embeds: [embed] }).catch(err => console.log(err))
             }
+            else if (newChannel.type === 'GUILD_TEXT' && oldChannel.nsfw !== newChannel.nsfw) {
+                const embed = new Discord.MessageEmbed()
+                    .setTitle(':wrench:  〔 Channel isNSFW Update 〕')
+                    .setThumbnail(audit.executor.displayAvatarURL({ dynamic: true }) || '')
+                    .setColor(updateColor || 'BLUE')
+                    .addField('Old STATE:', `\`\`\`js\n${oldChannel.nsfw}\n\`\`\``, true)
+                    .addField('New STATE:', `\`\`\`js\n${newChannel.nsfw}\n\`\`\``, true)
+                    .addField('Executor:', `\`\`\`${audit.executor.username}\`\`\``, true)
+                    .addField('Channel Name :', `\`\`\`${newChannel.name}\`\`\``, true)
 
+                let sChannel = newChannel.guild.channels.cache.get(logchannel)
+                if (!sChannel) return;
+                sChannel.send({ embeds: [embed] }).catch(err => console.log(err))
+            }
+            else if (oldChannel.permissionOverwrites !== newChannel.permissionOverwrites) {
+
+                const oldAllowed = await oldChannel.permissionOverwrites.cache.filter(e => !newChannel.permissionOverwrites.cache.find(a => a.allow.bitfield == e.allow.bitfield));
+                const oldDenyed = await oldChannel.permissionOverwrites.cache.filter(e => !newChannel.permissionOverwrites.cache.find(a => a.deny.bitfield == e.deny.bitfield));
+                const newAllowed = await newChannel.permissionOverwrites.cache.filter(e => !oldChannel.permissionOverwrites.cache.find(a => a.allow.bitfield == e.allow.bitfield));
+                const newDenyed = await newChannel.permissionOverwrites.cache.filter(e => !oldChannel.permissionOverwrites.cache.find(a => a.deny.bitfield == e.deny.bitfield));
+
+                const added = oldAllowed.map(e => newAllowed.map(a => ~e.allow.bitfield & a.allow.bitfield));
+                //console.log(added)
+                const removed = oldDenyed.map(e => newDenyed.map(a => ~e.deny.bitfield & a.deny.bitfield));
+                //console.log(removed)
+
+                const addedPerms = await new Permissions(added).toArray();
+                //console.log(addedPerms)
+                const removedPerms = await new Permissions(removed).toArray();
+                //console.log(removedPerms)
+
+                const permsType = oldAllowed.first()?.type || oldDenyed.first()?.type
+                const target = permsType === 'role'
+                    ? newChannel.guild.roles.cache.get(newAllowed.first()?.id)?.name
+                    : newChannel.guild.members.cache.get(newAllowed.first()?.id)?.user.username
+
+                const embed = await new Discord.MessageEmbed()
+                    .setTitle(':wrench:  〔 Channel Permissions Update 〕')
+                    .setThumbnail(audit.executor.displayAvatarURL({ dynamic: true }) || '')
+                    .setColor(updateColor || 'BLUE')
+                    .addField('Channel Name:', `\`\`\`${newChannel.name}\`\`\``, true)
+                    .addField('Executor:', `\`\`\`${audit.executor.username}\`\`\``, true)
+                    .addField('\u200b', '\u200b', true)
+                    .addField('Type:', `\`\`\`${permsType || 'Not Found'}\`\`\``, true)
+                    .addField('Target:', `\`\`\`${target || 'Not Found'}\`\`\``, true)
+                    .addField('\u200b', '\u200b', true)
+                if (addedPerms.length !== 0) embed.addField(':white_check_mark:Permissions Added : ', `\`\`\`${addedPerms.join(",\n")}\`\`\``, false)
+                if (removedPerms.length !== 0) embed.addField(':x:Permissions removed : ', `\`\`\`${removedPerms.join(",\n")}\`\`\``, false)
+                if (addedPerms.length == 0 && removedPerms.length == 0) embed.addField(':x:Permissions removed : ', `\`\`\`DEFAULT\`\`\``, false)
+                if (!permsType && !target) embed.addField('New Overrides : ', `\`\`\`more info check audit log\`\`\``, false)
+
+                let sChannel = newChannel.guild.channels.cache.get(logchannel)
+                if (!sChannel) return;
+                sChannel.send({ embeds: [embed] }).catch(err => console.log(err))
+            }
 
         });
 
         client.on("channelDelete", async (channel) => {
             if (channel.parentID === '838808732153675837') return;
-            const audit = await channel.guild.fetchAuditLogs({ type: "CHANNEL_DELETE" }).then(log => log.entries.first());
+            const audit = await channel.guild.fetchAuditLogs({ limit: 1, type: "CHANNEL_DELETE" }).then(log => log.entries.first());
 
             const user = audit.executor
             if (thread == user.id) {
@@ -754,11 +894,11 @@ module.exports = (client) => {
 
             let sChannel = channel.guild.channels.cache.get(logchannel)
             if (!sChannel) return;
-            sChannel.send(embed).catch(err => console.log(err))
+            sChannel.send({ embeds: [embed] }).catch(err => console.log(err))
         });
 
         client.on("channelPinsUpdate", async (channel, time) => {
-            const audit = await channel.guild.fetchAuditLogs({ type: "MESSAGE_PIN" }).then(log => log.entries.first());
+            const audit = await channel.guild.fetchAuditLogs({ limit: 1, type: "MESSAGE_PIN" }).then(log => log.entries.first());
             const logchannel = db.fetch(`logs_${channel.guild.id}`);
             if (!logchannel) return;
 
@@ -774,7 +914,7 @@ module.exports = (client) => {
 
             let sChannel = channel.guild.channels.cache.get(logchannel)
             if (!sChannel) return;
-            sChannel.send(embed).catch(err => console.log(err))
+            sChannel.send({ embeds: [embed] }).catch(err => console.log(err))
         });
 
         client.on("messageUpdate", (oldMessage, newMessage) => {
@@ -799,11 +939,11 @@ module.exports = (client) => {
 
             let sChannel = oldMessage.guild.channels.cache.get(logchannel)
             if (!sChannel) return;
-            sChannel.send(embed).catch(err => console.log(err))
+            sChannel.send({ embeds: [embed] }).catch(err => console.log(err))
         });
 
         client.on("messageDelete", async function (message) {
-            const audit = await message.guild.fetchAuditLogs({ type: "MESSAGE_DELETE" }).then(log => log.entries.first());
+            const audit = await message.guild.fetchAuditLogs({ limit: 1, type: "MESSAGE_DELETE" }).then(log => log.entries.first());
             const duration = parseInt((Date.now() - audit.createdTimestamp) / 1000)
             if (message.author.bot) return;
             if (duration <= 20) {
@@ -817,6 +957,7 @@ module.exports = (client) => {
 
             if (message.attachments.first()) {
                 const rawName = message.attachments.first().name
+                const { contentType } = message.attachments.first()
                 const extention = rawName.slice((rawName.lastIndexOf(".") - 1 >>> 0) + 2)
                 const fileName = rawName.split('.')?.[0]
                 const isImage = (['png', 'jpg', 'gif', 'jpeg', 'webp']).includes(extention)
@@ -829,12 +970,12 @@ module.exports = (client) => {
                         .addField('Sent by :', `\`${message.author.username}\``, true)
                         .addField('Sent in :', `<#${message.channel.id}>`, true)
                         .addField('Executor :', `\`${duration <= 20 ? audit.executor.username : 'Not Found'}\``, true)
-                        .attachFiles(imageAttachment)
+                        //.attachFiles(imageAttachment)
                         .setImage(`attachment://${fileName}.${extention}`)
 
                     let sChannel = message.guild.channels.cache.get(logchannel)
                     if (!sChannel) return;
-                    sChannel.send(embed).catch(err => console.log(err))
+                    sChannel.send({ embeds: [embed], files: [imageAttachment] }).catch(err => console.log(err))
                 } else {
                     const embed = new Discord.MessageEmbed()
                         .setTitle(':wastebasket: 〔 MESSAGE DELETE 〕')
@@ -843,14 +984,15 @@ module.exports = (client) => {
                         .addField('Sent by :', `\`${message.author.username}\``, true)
                         .addField('Sent in :', `<#${message.channel.id}>`, true)
                         .addField('Executor :', `\`${duration <= 20 ? audit.executor.username : 'Not Found'}\``, true)
-                        .addField('File Name :', `\`\`\`${rawName}\`\`\``, false)
+                        .addField('File Name :', `\`\`\`${rawName}\`\`\``, true)
+                        .addField('File Type :', `\`\`\`${contentType}\`\`\``, true)
 
                     let sChannel = message.guild.channels.cache.get(logchannel)
                     if (!sChannel) return;
-                    sChannel.send(embed).catch(err => console.log(err))
+                    sChannel.send({ embeds: [embed] }).catch(err => console.log(err))
                 }
             } else {
-                let isImageURL = message.content.match(/(http[s]*:\/\/)([a-z\-_0-9\/.]+)\.([a-z.]{2,3})\/([a-z0-9\-_\/._~:?#\[\]@!$&'()*+,;=%]*)([a-z0-9]+\.)(jpg|jpeg|png|webp|gif)/gi)
+                let isImageURL = message.content.match(/(http[s]*:\/\/)([a-z\-_0-9\/.]+)\.([a-z.]{2,3})\/([a-z0-9\-_\/._~:?#\[\]@!$&'()*+,;=%]*)([a-z0-9]+\.)(jpg|jpeg|png|webp|gif|tiff|bmp)/gi)
                 const embed = new Discord.MessageEmbed()
                     .setTitle(':wastebasket: 〔 MESSAGE DELETE〕')
                     .setThumbnail('https://i.imgur.com/UgMg9cq.png')
@@ -863,12 +1005,12 @@ module.exports = (client) => {
 
                 let s1Channel = message.guild.channels.cache.get(logchannel)
                 if (!s1Channel) return;
-                s1Channel.send(embed).catch(err => console.log(err))
+                s1Channel.send({ embeds: [embed] }).catch(err => console.log(err))
             }
         });
         ///////////////=-=-=-=-=-=-=-=-=
         client.on("voiceStateUpdate", async (oldState, newState) => {
-            const audit = await newState.guild.fetchAuditLogs({ type: "MEMBER_UPDATE" }).then(log => log.entries.first());
+            const audit = await newState.guild.fetchAuditLogs({ limit: 1, type: "MEMBER_UPDATE" }).then(log => log.entries.first());
             let logchannel = db.fetch(`logs_${newState.guild.id}`);
             if (!logchannel) return;
 
@@ -885,7 +1027,7 @@ module.exports = (client) => {
 
                 let s1Channel = newState.guild.channels.cache.get(logchannel)
                 if (!s1Channel) return;
-                s1Channel.send(embed).catch(err => console.log(err))
+                s1Channel.send({ embeds: [embed] }).catch(err => console.log(err))
             }
             if (oldState.serverMute && !newState.serverMute) {
                 const embed = new Discord.MessageEmbed()
@@ -900,7 +1042,7 @@ module.exports = (client) => {
 
                 let s1Channel = newState.guild.channels.cache.get(logchannel)
                 if (!s1Channel) return;
-                s1Channel.send(embed).catch(err => console.log(err))
+                s1Channel.send({ embeds: [embed] }).catch(err => console.log(err))
             }
             if (!oldState.serverDeaf && newState.serverDeaf) {
                 const embed = new Discord.MessageEmbed()
@@ -915,7 +1057,7 @@ module.exports = (client) => {
 
                 let s1Channel = newState.guild.channels.cache.get(logchannel)
                 if (!s1Channel) return;
-                s1Channel.send(embed).catch(err => console.log(err))
+                s1Channel.send({ embeds: [embed] }).catch(err => console.log(err))
             }
             if (oldState.serverDeaf && !newState.serverDeaf) {
                 const embed = new Discord.MessageEmbed()
@@ -930,7 +1072,7 @@ module.exports = (client) => {
 
                 let s1Channel = newState.guild.channels.cache.get(logchannel)
                 if (!s1Channel) return;
-                s1Channel.send(embed).catch(err => console.log(err))
+                s1Channel.send({ embeds: [embed] }).catch(err => console.log(err))
             }
             if (!oldState.selfVideo && newState.selfVideo) {
                 const embed = new Discord.MessageEmbed()
@@ -944,7 +1086,7 @@ module.exports = (client) => {
 
                 let s1Channel = newState.guild.channels.cache.get(logchannel)
                 if (!s1Channel) return;
-                s1Channel.send(embed).catch(err => console.log(err))
+                s1Channel.send({ embeds: [embed] }).catch(err => console.log(err))
             }
             /*if (!oldState.streaming && newState.streaming) {
                 const embed = new Discord.MessageEmbed()
@@ -959,7 +1101,7 @@ module.exports = (client) => {
 
                 let s1Channel = newState.guild.channels.cache.get(logchannel)
                 if (!s1Channel) return;
-                s1Channel.send(embed).catch(err => console.log(err))
+                s1Channel.send({embeds: [embed]}).catch(err => console.log(err))
             }*/
         });
 
@@ -975,14 +1117,14 @@ module.exports = (client) => {
                 .addField('Code :', `\`\`\`${invite.code}\`\`\``, true)
                 .addField('Channel :', `\`\`\`${invite.channel.name}\`\`\``, true)
                 .addField('Inviter :', `\`\`\`${invite.inviter.username}\`\`\``, true)
-                .addField('Max Age :', `\`\`\`js\n${invite.maxAge === 0 ? 'Unlimited' : secondsToTime(invite.maxAge)}\n\`\`\``, true)
+                .addField('Max Age :', `\`\`\`js\n${invite.maxAge === 0 ? 'Unlimited' : secondsToTime(invite.maxAge)?.[0]}\n\`\`\``, true)
                 .addField('Max Uses :', `\`\`\`js\n${invite.maxUses === 0 ? 'Unlimited' : invite.maxUses}\n\`\`\``, true)
                 .addField('Expires At :', `\`\`\`js\n${Intl.DateTimeFormat('en-GB', { /*weekday: 'long',*/ year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric', hour12: false, timeZone: 'UTC' }).format(invite.expiresAt)}\n\`\`\``, true)
             //.setTimestamp();
 
             let s1Channel = invite.guild.channels.cache.get(logchannel)
             if (!s1Channel) return;
-            s1Channel.send(embed).catch(err => console.log(err))
+            s1Channel.send({ embeds: [embed] }).catch(err => console.log(err))
         });
 
         client.on("inviteDelete", async (invite) => {
@@ -1008,7 +1150,7 @@ module.exports = (client) => {
 
             let s1Channel = invite.guild.channels.cache.get(logchannel)
             if (!s1Channel) return;
-            s1Channel.send(embed).catch(err => console.log(err))
+            s1Channel.send({ embeds: [embed] }).catch(err => console.log(err))
         });
     } catch (err) {
         console.log(err)
