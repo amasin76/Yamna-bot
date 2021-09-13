@@ -1,5 +1,3 @@
-const { CHANNEL, SERVER, LIVE } = require("../config.json");
-
 module.exports = async client => {
     console.log(`${client.user.username} im ready`)
     // bot.user.setActivity("Hello", {type: "STREAMING", url:"https://twitch.tv/Strandable"});
@@ -11,7 +9,8 @@ module.exports = async client => {
         `💖${client.users.cache.size} 𝙐𝙎𝙀𝙍𝙎💖`,
         "Javascript",
         "V2.1",
-        "By | 7ANKALISS✨",
+        "Discord.js v13",
+        "By | BIO✨",
         `💖${client.users.cache.size} 𝙐𝙎𝙀𝙍𝙎💖`,
     ]
 

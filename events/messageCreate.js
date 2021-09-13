@@ -27,7 +27,7 @@ module.exports = async (client, message) => {
             .then(m => m.delete({ timeout: 30 * 1000 }))
     }
 
-    let shareLinks = ["twitch.tv/", "youtube.com/", "youtu.be/"]
+    let shareLinks = ["twitch.tv/", "younube.com/", "youtu.be/"]
     let whiteChannel = ["746777186714779770", "717058723692019772"]
     try {
         if (message.author.bot) return;
@@ -48,7 +48,7 @@ module.exports = async (client, message) => {
     try {
         const msg = message.content.toLowerCase()
         let isTextMatched = /@everyone|@here/i.test(msg) && /\//i.test(msg)
-        let hasPermission = message.member.hasPermission('MOVE_MEMBERS')
+        let hasPermission = message.member.permissions.has('MOVE_MEMBERS')
         if (isTextMatched && !hasPermission) {
             let muteRole = await message.guild.roles.cache.find(role => role.name === "muted")
             await message.member.roles.set([])
@@ -174,7 +174,7 @@ module.exports = async (client, message) => {
 
         if (now < expirationTime) {
             const timeLeft = (expirationTime - now) / 1000;
-            return message.channel.send(`Calm down dude, please wait **${timeLeft.toFixed(1)}** seconds to try the command again.`);
+            return message.channel.send(`Cooldown, please wait **${timeLeft.toFixed(1)}** seconds to try the command again.`);
         }
 
         timestamps.set(member.id, now);
@@ -183,7 +183,7 @@ module.exports = async (client, message) => {
 
     try {
         if (!commandFile) return;
-        commandFile.run(client, message, args);
+        commandFile.run(client, message, args, prefix);
     } catch (error) {
         console.log(error.message);
     } finally {
