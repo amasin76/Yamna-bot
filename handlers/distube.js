@@ -35,7 +35,7 @@ module.exports = (client) => {
             ]
         })
         )*/
-        .on("addSong", (queue, song) => {
+        /*.on("addSong", (queue, song) => {
             queue.textChannel.send({
                 embeds: [new Discord.MessageEmbed()
                     .setTitle("Added :thumbsup: " + song.name)
@@ -48,7 +48,7 @@ module.exports = (client) => {
                 ]
             })
         }
-        )
+        
         .on("playList", (queue, playlist, song) => queue.textChannel.send({
             embeds: [new Discord.MessageEmbed()
                 .setTitle("Playing Playlist :notes: " + playlist.name + ` - \`[${playlist.songs.length} songs]\``)
@@ -61,18 +61,20 @@ module.exports = (client) => {
                 .setFooter(`Requested by: ${song.user.tag}`, song.user.displayAvatarURL({ dynamic: true }))
             ]
         })
-        )
-        .on("addList", (queue, playlist) => queue.textChannel.send({
-            embeds: [new Discord.MessageEmbed()
-                .setTitle(`:clipboard: Added Playlist:  \`${playlist.name} - ${playlist.source.toUpperCase()}\``)
-                .setURL(playlist.url)
-                .setColor(config.color)
-                .addField("Duration", `\`\`\`js\n${playlist.formattedDuration}\n\`\`\``, true)
-                .addField(`Queue Length`, `\`\`\`js\n${queue.songs.length} Tracks\n\`\`\``, true)
-                //.setThumbnail(playlist.thumbnail)
-                .setFooter(`Requested by: ${playlist.user.tag}`, playlist.user.displayAvatarURL({ dynamic: true }))
-            ]
-        })
+        )*/
+        .on("addList", (queue, playlist) => {
+            queue.textChannel.send({
+                embeds: [new Discord.MessageEmbed()
+                    .setTitle(`:clipboard: Added Playlist:  \`${playlist.name} - ${playlist.source.toUpperCase()}\``)
+                    .setURL(playlist.url)
+                    .setColor(config.color)
+                    .addField("Duration", `\`\`\`js\n${playlist.formattedDuration}\n\`\`\``, true)
+                    .addField(`Queue Length`, `\`\`\`js\n${queue.songs.length} Tracks\n\`\`\``, true)
+                    //.setThumbnail(playlist.thumbnail)
+                    .setFooter(`Requested by: ${playlist.user.tag}`, playlist.user.displayAvatarURL({ dynamic: true }))
+                ]
+            })
+        }
         )
         .on("searchResult", (message, result) =>
             message.channel.send({
