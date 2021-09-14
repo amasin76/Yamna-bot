@@ -13,7 +13,6 @@ module.exports = client => {
         if (message.author.bot) return;
         if (message.attachments.map(x => x.proxyURL).length !== 0 && message.attachments.map(x => x.contentType)?.[0]?.split('/')?.[0] !== 'image') return
         if (message.attachments.map(x => x.proxyURL).length == 0 && !message.content.match(/(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?/)) return;
-        console.log('in')
         let ext = ['ffd8', '8950', /*'4749',*/ '424D'] //  hex code = [jpg, png, gif, bmp]
         try {
 
@@ -23,8 +22,6 @@ module.exports = client => {
                 URL = stringURL
             }
 
-            console.log(message.embeds[0])
-
             async function fn() {
                 const pic = await axios.get(`${URL}`, {
                     responseType: 'arraybuffer',
@@ -32,9 +29,6 @@ module.exports = client => {
 
                 let start = pic?.data.toString('hex', 0, 2)//.slice(0, 2)
                 if (pic?.status === 200) {
-                    console.log('in 2')
-                    console.log(start)
-                    console.log(!ext.includes(start))
                     if (!ext.includes(start)) return console.log('Blocked')
                 }
 
