@@ -7,15 +7,15 @@ module.exports = (client) => {
 
     client.distube = new DisTube.default(client, {
         emitNewSongOnly: true,
-        searchSongs: 1,
-        searchCooldown: 10,
+        searchSongs: 0,
+        savePreviousSongs: true,
+        //searchCooldown: 10,
         leaveOnEmpty: true,
         emptyCooldown: 10,
         leaveOnFinish: true,
         leaveOnStop: true,
-        updateYouTubeDL: false,
+        updateYouTubeDL: true,
         plugins: [new SoundCloudPlugin(), new SpotifyPlugin()],
-        //leaveOnEmpty: false
     })
 
     // Queue status template
