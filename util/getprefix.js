@@ -8,7 +8,7 @@ const getprefix = async (guildID) => {
     if (result) {
         return result.prefix;
     } else if (!result) {
-        return "=";
+        return "-";
     }
 };
 
