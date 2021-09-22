@@ -54,7 +54,7 @@ module.exports = client => {
 
         try {
             const cachedInvites = guildInvites.get(member.guild.id);
-            const newInvites = await member.guild.invites.fetch()
+            const newInvites = await member.guild.invites.fetch({ force: true })
             guildInvites.set(member.guild.id, newInvites);
 
             const usedInvite = newInvites.find(inv => cachedInvites.get(inv.code).uses < inv.uses)
