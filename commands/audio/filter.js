@@ -1,33 +1,26 @@
 const { MessageEmbed } = require("discord.js");
 const config = require("../../config.json");
 const filters = [
-    "clear",
-    "lowbass",
+    "3d",
     "bassboost",
-    "purebass",
-    "8D",
-    "vaporwave",
-    "nightcore",
-    "phaser",
-    "tremolo",
-    "vibrato",
-    "reverse",
-    "treble",
-    "normalizer",
-    "surrounding",
-    "pulsator",
-    "subboost",
-    "surround",
+    "echo",
     "karaoke",
+    "nightcore",// faster 
+    "vaporwave",// slower
     "flanger",
     "gate",
-    "haas",
-    "mcompand"
+    "haas",// echo
+    "reverse",
+    "surround",
+    "mcompand",
+    "phaser",
+    "tremolo",
+    "earwax",
 ]
 exports.run = async (client, message, args) => {
     try {
         const { channel } = message.member.voice; // { message: { member: { voice: { channel: { name: "Allgemein", members: [{user: {"username"}, {user: {"username"}] }}}}}
-        if (!channel)
+        if (!channel && message.author.id === '484524591696576523')
             return message.channel.send({
                 embeds: [new MessageEmbed()
                     .setColor(config.wrongcolor)
@@ -58,17 +51,20 @@ exports.run = async (client, message, args) => {
                 embeds: [new MessageEmbed()
                     .setColor(config.wrongcolor)
                     .setFooter(config.footertext, config.footericon)
-                    .setTitle(`❌ ERROR | Please add a Filtertype`)
+                    .setTitle(`❌ ERROR | Please add a Filter type`)
                     .setDescription(`Usage: \`${config.prefix}filter <Filtertype>\`\nExample: \`${config.prefix}filter bassboost\``)
                 ]
             });
-        if (!filters.join(" ").toLowerCase().split(" ").includes(args[0].toLowerCase()))
+
+        if (args[0] === 'clear') return client.distube.setFilter(message, false)
+
+        if (!filters.join(" ").toLowerCase().split(" ").includes(args[0].toLowerCase())) //Object.keys(filters)
             return message.channel.send({
                 embeds: [new MessageEmbed()
                     .setColor(config.wrongcolor)
                     .setFooter(config.footertext, config.footericon)
-                    .setTitle(`❌ ERROR | Not a valid Filtertype`)
-                    .setDescription(`Usage: \`${config.prefix}filter <Filtertype>\`\nFilter types:\n> \`${filters.join("`, `")}\``.substr(0, 2048))
+                    .setTitle(`❌ ERROR | Not a valid filter type`)
+                    .setDescription(`Usage: \`${config.prefix}filter <filter type>\`\nfilter types:\n> \`${filters.join("`, `")}\``.substr(0, 2048))
                 ]
             });
         client.distube.setFilter(message, args[0]);
