@@ -35,9 +35,7 @@ module.exports = client => {
                 .setDiscriminator(member.user.discriminator)
                 .setMemberCount(member.guild.memberCount)
                 .setGuildName(`| THE EPICS |`)
-                .setAvatar(member.user.displayAvatarURL({
-                    format: 'png'
-                }))
+                .setAvatar(member.user.displayAvatarURL({ format: 'png' }))
                 //.setColor("border", universalColor)
                 //.setColor("username-box", universalColor)
                 .setColor("discriminator-box", universalColor)
@@ -54,7 +52,7 @@ module.exports = client => {
 
         try {
             const cachedInvites = guildInvites.get(member.guild.id);
-            const newInvites = await member.guild.invites.fetch({ force: true })
+            const newInvites = await member.guild.invites.fetch({ cache: false })
             guildInvites.set(member.guild.id, newInvites);
 
             const usedInvite = newInvites.find(inv => cachedInvites.get(inv.code).uses < inv.uses)
