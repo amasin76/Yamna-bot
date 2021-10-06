@@ -489,7 +489,7 @@ module.exports = (client) => {
                 }
             }
             const audit = await member.guild.fetchAuditLogs({ limit: 1, type: "MEMBER_KICK" }).then(log => log.entries.first());
-            const duration = parseInt((Date.now() - audit.createdTimestamp) / 1000)
+            const duration = parseInt((Date.now() - audit?.createdTimestamp) / 1000)
             const hasKicked = duration < 10
             let logchannel = db.fetch(`logs_${member.guild.id}`);
             //if (thread)
@@ -845,7 +845,7 @@ module.exports = (client) => {
 
                 const embed = await new Discord.MessageEmbed()
                     .setTitle(':wrench:  〔 Channel Permissions Update 〕')
-                    .setThumbnail(audit.executor.displayAvatarURL({ dynamic: true }) || '')
+                    .setThumbnail(audit?.executor?.displayAvatarURL({ dynamic: true }) || '')
                     .setColor(updateColor || 'BLUE')
                     .addField('Channel Name:', `\`\`\`${newChannel.name}\`\`\``, true)
                     .addField('Executor:', `\`\`\`${audit.executor.username}\`\`\``, true)

@@ -12,7 +12,7 @@ module.exports = client => {
     client.on("inviteCreate", async invite => {
 
         if (invite.guild.id !== '527174592528252934') return;
-        guildInvites.set(invite.guild.id, await invite.guild.invites.fetch({ cache: false }))
+        guildInvites.set(invite.guild.id, await invite.guild.invites.fetch({ cache: true }))
 
     });
 
@@ -52,7 +52,7 @@ module.exports = client => {
 
         try {
             const cachedInvites = guildInvites.get(member.guild.id);
-            const newInvites = await member.guild.invites.fetch({ cache: false })
+            const newInvites = await member.guild.invites.fetch({ cache: true })
             guildInvites.set(member.guild.id, newInvites);
 
             const usedInvite = newInvites.find(inv => cachedInvites.get(inv.code).uses < inv.uses)
