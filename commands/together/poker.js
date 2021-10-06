@@ -44,7 +44,7 @@ exports.run = async (client, message, args) => {
                 })
             })
             .catch(e => {
-                message.channel.send("❌ | Could not start **YouTube Together**!");
+                message.channel.send("❌ | Could not start **Poker Together**!");
             })
     } catch (err) {
         console.log(err)
