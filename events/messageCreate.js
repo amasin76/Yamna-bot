@@ -50,9 +50,8 @@ module.exports = async (client, message) => {
         let isTextMatched = /@everyone|@here/i.test(msg) && /\//i.test(msg)
         let hasPermission = message.member.permissions.has('MOVE_MEMBERS')
         if (isTextMatched && !hasPermission) {
-            let muteRole = await message.guild.roles.cache.find(role => role.name === "muted")
-            await message.member.roles.set([])
-            await message.member.roles.add(muteRole);
+            //let muteRole = await message.guild.roles.cache.find(role => role.name === "muted")
+            await message.member.timeout(7 * 24 * 60 * 60 * 1000, "Potential Scammer")
         }
     } catch (err) {
         console.log(err)
