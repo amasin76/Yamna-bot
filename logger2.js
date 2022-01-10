@@ -724,6 +724,7 @@ module.exports = (client) => {
         });
 
         client.on("channelUpdate", async (oldChannel, newChannel) => {
+            if (channel.parentId === '838808732153675837') return;
             const audit = await oldChannel.guild.fetchAuditLogs({ limit: 1, type: "CHANNEL_UPDATE" }).then(log => log.entries.first());
             const embedcolor = createColor;
             const logchannel = db.fetch(`logs_${oldChannel.guild.id}`);
@@ -866,7 +867,7 @@ module.exports = (client) => {
         });
 
         client.on("channelDelete", async (channel) => {
-            if (channel.parentID === '838808732153675837') return;
+            if (channel.parentId === '838808732153675837') return;
             const audit = await channel.guild.fetchAuditLogs({ limit: 1, type: "CHANNEL_DELETE" }).then(log => log.entries.first());
 
             const user = audit.executor
