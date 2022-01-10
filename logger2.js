@@ -690,7 +690,7 @@ module.exports = (client) => {
         });
 
         client.on("channelCreate", async (channel) => {
-            if (channel.parentID === '838808732153675837') return;
+            if (channel.parentID == '838808732153675837') return;
             const audit = await channel.guild.fetchAuditLogs({ limit: 1, type: "CHANNEL_CREATE" }).then(log => log.entries.first());
 
             const user = audit.executor
