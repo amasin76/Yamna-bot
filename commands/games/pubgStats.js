@@ -118,7 +118,7 @@ exports.run = async (client, message, args) => {
     }
 };
 exports.help = {
-    name: "pubg",
+    name: "pubgStats",
     description: "Get pubg life-time stats",
     usage: "<prefix>pubg <player name><mode>",
     example: "=pubg cubevilly squad-fpp"
