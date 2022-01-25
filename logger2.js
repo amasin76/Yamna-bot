@@ -690,7 +690,9 @@ module.exports = (client) => {
         });
 
         client.on("channelCreate", async (channel) => {
-            if (channel.parentID === '838808732153675837') return;
+            console.log('1')
+            console.log(channel.parentId)
+            if (channel.parentID === '713512410878574643') return;
             const audit = await channel.guild.fetchAuditLogs({ limit: 1, type: "CHANNEL_CREATE" }).then(log => log.entries.first());
 
             const user = audit.executor
@@ -848,7 +850,7 @@ module.exports = (client) => {
                     .setThumbnail(audit?.executor?.displayAvatarURL({ dynamic: true }) || '')
                     .setColor(updateColor || 'BLUE')
                     .addField('Channel Name:', `\`\`\`${newChannel.name}\`\`\``, true)
-                    .addField('Executor:', `\`\`\`${audit.executor.username}\`\`\``, true)
+                    .addField('Executor:', `\`\`\`${audit?.executor?.username}\`\`\``, true)
                     .addField('\u200b', '\u200b', true)
                     .addField('Type:', `\`\`\`${permsType || 'Not Found'}\`\`\``, true)
                     .addField('Target:', `\`\`\`${target || 'Not Found'}\`\`\``, true)
