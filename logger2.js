@@ -57,7 +57,7 @@ module.exports = (client) => {
                     .setColor(updateColor || 'YELLOW')
                     ////setFooter(footerMsg, oldMember.guild.iconURL())
                     .addField('Username:', `\`\`\`${oldMember.user.username}\`\`\``, true)
-                    .addField('Executor:', `\`\`\`${audit.executor.username}\`\`\``, true)
+                    .addField('Executor:', `\`\`\`${audit?.executor?.username}\`\`\``, true)
                     .addField(roleremoved ? '❌ Role Removed :' : '✅ Role Added :', roleremoved ? `\`\`\`${roleremoved}\`\`\`` : `\`\`\`${roleadded}\`\`\``, true)
                 //.setTimestamp();
 
@@ -160,7 +160,7 @@ module.exports = (client) => {
                 ////setFooter(footerMsg, emoji.guild.iconURL())
                 .addField('Name: ', `\`\`\`${emoji.name}\`\`\``, true)
                 .addField('ID: ', `\`\`\`${emoji.id}\`\`\``, true)
-                .addField('Executor* :', `\`\`\`${audit.executor.username || 'N/A'}\`\`\``, true)
+                .addField('Executor* :', `\`\`\`${audit?.executor?.username || 'N/A'}\`\`\``, true)
                 .addField('How it looks:', `<${emoji.animateda ? 'a' : ''}:${emoji.name}:${emoji.id}>`, true)
                 .addField('Animated: ', `\`\`\`${emoji.animated}\`\`\``, true)
             //.setTimestamp();
@@ -181,7 +181,7 @@ module.exports = (client) => {
                 ////setFooter(footerMsg, emoji.guild.iconURL())
                 .addField('Name: ', `\`\`\`${emoji.name}\`\`\``, true)
                 .addField('Animated: ', `\`\`\`${emoji.animated}\`\`\``, true)
-                .addField('Executor* :', `\`\`\`${audit.executor.username || 'N/A'}\`\`\``, true)
+                .addField('Executor* :', `\`\`\`${audit?.executor?.username || 'N/A'}\`\`\``, true)
             //.setTimestamp();
 
             let sChannel = emoji.guild.channels.cache.get(logchannel)
@@ -192,25 +192,25 @@ module.exports = (client) => {
         client.on("guildBanAdd", async function (ban) {
             const audit = await ban.guild.fetchAuditLogs({ limit: 1, type: "MEMBER_BAN_ADD" }).then(log => log.entries.first());
 
-            if (numberBanMap.has(audit.executor.id)) {
-                const userData = numberBanMap.get(audit.executor.id)
+            if (numberBanMap.has(audit?.executor?.id)) {
+                const userData = numberBanMap.get(audit?.executor?.id)
                 const { nBan } = userData
                 nBan += 1
                 userData.nBan = nBan
-                numberBanMap.set(audit.executor.id, userData)
+                numberBanMap.set(audit?.executor?.id, userData)
                 if (nBan === 5) {
                     let muteRole = await ban.guild.roles.cache.find(role => role.name === "muted")
-                    await ban.guild.member(audit.executor.id).roles.set([])
-                    await ban.guild.member(audit.executor.id).roles.add(muteRole);
+                    await ban.guild.member(audit?.executor?.id).roles.set([])
+                    await ban.guild.member(audit?.executor?.id).roles.add(muteRole);
                 }
             } else {
-                numberBanMap.set(audit.executor.id, { nBan: 1 });
+                numberBanMap.set(audit?.executor?.id, { nBan: 1 });
                 setTimeout(() => {
-                    numberBanMap.delete(audit.executor.id)
+                    numberBanMap.delete(audit?.executor?.id)
                 }, 1800000)
             }
 
-            /*const usser = audit.executor
+            /*const usser = audit?.executor
             if (thread == usser.id) {
                 let muteRole = await guild.roles.cache.find(role => role.name === "muted")
                 await guild.members.cache.get(usser.id).roles.set([])
@@ -226,7 +226,7 @@ module.exports = (client) => {
                 .setColor(deleteColor || 'RED')
                 .addField('Username:', `\`\`\`${ban.user.username}\`\`\``, true)
                 .addField('ID:', `\`\`\`js\n${ban.user.id}\n\`\`\``, true)
-                .addField('Executor* :', `\`\`\`${audit.executor.username || 'N/A'}\`\`\``, true)
+                .addField('Executor* :', `\`\`\`${audit?.executor?.username || 'N/A'}\`\`\``, true)
                 .addField('Reason :', `\`\`\`${ban?.reason || 'None'}\`\`\``, false)
 
             let sChannel = ban.guild.channels.cache.get(logchannel)
@@ -245,7 +245,7 @@ module.exports = (client) => {
                 .setColor(updateColor || 'BLUE')
                 .addField('Username:', `\`\`\`${ban.user.username}\`\`\``, true)
                 .addField('ID:', `\`\`\`js\n${ban.user.id}\n\`\`\``, true)
-                .addField('Executor* :', `\`\`\`${audit.executor.username || 'N/A'}\`\`\``, true)
+                .addField('Executor* :', `\`\`\`${audit?.executor?.username || 'N/A'}\`\`\``, true)
 
             let sChannel = ban.guild.channels.cache.get(logchannel)
             if (!sChannel) return;
@@ -265,7 +265,7 @@ module.exports = (client) => {
                     .setColor(updateColor || 'BLUE')
                     .addField('Old afkChannel:', `\`\`\`js\n${oldGuild.afkChannel.name} : ${parseInt(oldGuild.afkTimeout / 60)} min\n\`\`\``, true)
                     .addField('New afkChannel:', `\`\`\`js\n${newGuild.afkChannel.name} : ${parseInt(newGuild.afkTimeout / 60)} min\n\`\`\``, true)
-                    .addField('Executor:', `\`\`\`${audit.executor.username}\`\`\``, true)
+                    .addField('Executor:', `\`\`\`${audit?.executor?.username}\`\`\``, true)
 
                 let sChannel = newGuild.channels.cache.get(logchannel)
                 if (!sChannel) return;
@@ -278,7 +278,7 @@ module.exports = (client) => {
                     .setColor(updateColor || 'BLUE')
                     .addField('Old icon:', `\`\`\`${oldGuild.iconURL({ format: 'png' })}\`\`\``, false)
                     .addField('New icon:', `\`\`\`${newGuild.iconURL({ format: 'png' })}\`\`\``, false)
-                    .addField('Executor:', `\`\`\`${audit.executor.username}\`\`\``, true)
+                    .addField('Executor:', `\`\`\`${audit?.executor?.username}\`\`\``, true)
 
                 let sChannel = newGuild.channels.cache.get(logchannel)
                 if (!sChannel) return;
@@ -291,7 +291,7 @@ module.exports = (client) => {
                     .setColor(updateColor || 'BLUE')
                     .addField('Old Description:', `\`\`\`${oldGuild.description}\`\`\``, false)
                     .addField('New Description:', `\`\`\`${newGuild.description}\`\`\``, false)
-                    .addField('Executor:', `\`\`\`${audit.executor.username}\`\`\``, true)
+                    .addField('Executor:', `\`\`\`${audit?.executor?.username}\`\`\``, true)
 
                 let sChannel = newGuild.channels.cache.get(logchannel)
                 if (!sChannel) return;
@@ -306,7 +306,7 @@ module.exports = (client) => {
                     //setFooter(footerMsg, newGuild.iconURL())
                     .addField('Old Features:', `\`\`\`${oldGuild.features}\`\`\``, false)
                     .addField('New Features:', `\`\`\`${newGuild.features}\`\`\``, false)
-                    .addField('Executor:', `\`\`\`${audit.executor.username}\`\`\``, true)
+                    .addField('Executor:', `\`\`\`${audit?.executor?.username}\`\`\``, true)
                     //.setTimestamp();
     
                 let sChannel = newGuild.channels.cache.get(logchannel)
@@ -338,7 +338,7 @@ module.exports = (client) => {
                     .setColor(updateColor || 'BLUE')
                     .addField('Old Features:', `\`\`\`${oldGuild.defaultMessageNotifications}\`\`\``, true)
                     .addField('New Features:', `\`\`\`${newGuild.defaultMessageNotifications}\`\`\``, true)
-                    .addField('Executor:', `\`\`\`${audit.executor.username}\`\`\``, true)
+                    .addField('Executor:', `\`\`\`${audit?.executor?.username}\`\`\``, true)
 
                 let sChannel = newGuild.channels.cache.get(logchannel)
                 if (!sChannel) return;
@@ -351,7 +351,7 @@ module.exports = (client) => {
                     .setColor(updateColor || 'BLUE')
                     .addField('Old Features:', `\`\`\`${oldGuild.explicitContentFilter}\`\`\``, false)
                     .addField('New Features:', `\`\`\`${newGuild.explicitContentFilter}\`\`\``, false)
-                    .addField('Executor:', `\`\`\`${audit.executor.username}\`\`\``, true)
+                    .addField('Executor:', `\`\`\`${audit?.executor?.username}\`\`\``, true)
 
                 let sChannel = newGuild.channels.cache.get(logchannel)
                 if (!sChannel) return;
@@ -364,7 +364,7 @@ module.exports = (client) => {
                     .setColor(updateColor || 'BLUE')
                     .addField('Old Sys Channel :', `\`\`\`${oldGuild.systemChannel?.name || 'No Sys channel'}\`\`\``, true)
                     .addField('New Sys Channel :', `\`\`\`${newGuild.systemChannel?.name || 'No Sys channel'}\`\`\``, true)
-                    .addField('Executor:', `\`\`\`${audit.executor.username}\`\`\``, true)
+                    .addField('Executor:', `\`\`\`${audit?.executor?.username}\`\`\``, true)
 
                 let sChannel = newGuild.channels.cache.get(logchannel)
                 if (!sChannel) return;
@@ -377,7 +377,7 @@ module.exports = (client) => {
                     .setColor(updateColor || 'BLUE')
                     .addField('Old Level :', `\`\`\`${oldGuild.verificationLevel}\`\`\``, true)
                     .addField('New Level :', `\`\`\`${newGuild.verificationLevel}\`\`\``, true)
-                    .addField('Executor:', `\`\`\`${audit.executor.username}\`\`\``, true)
+                    .addField('Executor:', `\`\`\`${audit?.executor?.username}\`\`\``, true)
                 //.setTimestamp();
 
                 let sChannel = newGuild.channels.cache.get(logchannel)
@@ -391,7 +391,7 @@ module.exports = (client) => {
                     .setColor(updateColor || 'BLUE')
                     .addField('Old Banner :', `\`\`\`${oldGuild.bannerURL({ dynamic: true, format: 'png' })}\`\`\``, false)
                     .addField('New Banner :', `\`\`\`${newGuild.bannerURL({ dynamic: true, format: 'png' })}\`\`\``, false)
-                    .addField('Executor:', `\`\`\`${audit.executor.username}\`\`\``, true)
+                    .addField('Executor:', `\`\`\`${audit?.executor?.username}\`\`\``, true)
 
                 let sChannel = newGuild.channels.cache.get(logchannel)
                 if (!sChannel) return;
@@ -429,7 +429,7 @@ module.exports = (client) => {
                     //setFooter(footerMsg, newGuild.iconURL())
                     .addField('Old Widget:', `\`\`\`js\n${oldGuild.widgetEnabled}\n\`\`\``, true)
                     .addField('New Widget:', `\`\`\`js\n${newGuild.widgetEnabled}\n\`\`\``, true)
-                    .addField('Executor:', `\`\`\`${audit.executor.username}\`\`\``, true)
+                    .addField('Executor:', `\`\`\`${audit?.executor?.username}\`\`\``, true)
                 //.setTimestamp();
 
                 let sChannel = newGuild.channels.cache.get(logchannel)
@@ -467,14 +467,14 @@ module.exports = (client) => {
         });*/
 
         client.on("guildMemberRemove", async function (member) {
-            const log1 = await member.guild.fetchAuditLogs().then(audit => audit.entries.first())
+            const log1 = await member.guild.fetchAuditLogs().then(audit => audit?.entries?.first())
             if (log1.action === "MEMBER_KICK") {
                 const log = await member.guild
                     .fetchAuditLogs({
                         limit: 1,
                         type: "MEMBER_KICK"
                     })
-                    .then(audit => audit.entries.first());
+                    .then(audit => audit?.entries?.first());
 
                 const user = log.executor
                 if (thread == user.id) {
@@ -502,7 +502,7 @@ module.exports = (client) => {
                 .addField('Username:', `\`\`\`${member.user.username}\`\`\``, true)
                 .addField('ID:', `\`\`\`js\n${member.user.id}\n\`\`\``, false)
                 .addField('Join Duration :', `\`\`\`js\n${secondsToTime((Date.now() - member.joinedTimestamp) / 1000)?.[0]}\n\`\`\``, false)
-            if (hasKicked) embed.addField('Kicked by:', `\`\`\`fix\n${audit.executor.username} - ${audit.executor.id}\`\`\``, true)
+            if (hasKicked) embed.addField('Kicked by:', `\`\`\`fix\n${audit?.executor?.username} - ${audit?.executor?.id}\`\`\``, true)
 
             let sChannel = member.guild.channels.cache.get(logchannel)
             if (!sChannel) return;
@@ -511,7 +511,7 @@ module.exports = (client) => {
 
         client.on("roleCreate", async function (role) {
             const audit = await role.guild.fetchAuditLogs({ limit: 1, type: "ROLE_CREATE" }).then(log => log.entries.first());
-            /*const user = audit.executor
+            /*const user = audit?.executor
 
             if (thread == user.id) {
                 let muteRole = await role.guild.roles.cache.find(role => role.name === "muted")
@@ -519,7 +519,7 @@ module.exports = (client) => {
                 await role.guild.members.cache.get(user.id).roles.add(muteRole);
             }*/
 
-            const user = audit.executor
+            const user = audit?.executor
             if (thread == user.id) {
                 rcl += 1
                 if (rcl == 2) {
@@ -536,10 +536,10 @@ module.exports = (client) => {
 
             const embed = new Discord.MessageEmbed()
                 .setTitle(':paintbrush:  〔 ROLE CREATE 〕')
-                .setThumbnail(audit.executor.displayAvatarURL({ dynamic: true }) || '')
+                .setThumbnail(audit?.executor?.displayAvatarURL({ dynamic: true }) || '')
                 .setColor(createColor || 'BLUE')
                 .addField('Name :', `\`\`\`${role.name}\`\`\``, true)
-                .addField('Executor :', `\`\`\`${audit.executor.username}\`\`\``, true)
+                .addField('Executor :', `\`\`\`${audit?.executor?.username}\`\`\``, true)
                 .addField('Mentionable : ', `\`\`\`${role.mentionable}\`\`\``, true)
 
             let sChannel = role.guild.channels.cache.get(logchannel)
@@ -559,10 +559,10 @@ module.exports = (client) => {
             if (addedPerms.length !== 0 || removedPerms.length !== 0) {
                 const embed = new Discord.MessageEmbed()
                     .setTitle(':wrench: 〔 ROLE PERMISSIONS UPDATE 〕')
-                    .setThumbnail(audit.executor.displayAvatarURL({ dynamic: true }) || '')
+                    .setThumbnail(audit?.executor?.displayAvatarURL({ dynamic: true }) || '')
                     .setColor(updateColor || 'YELLOW')
                     .addField('Role Name :', `\`\`\`${oldRole.name}\`\`\``, true)
-                    .addField('Executor :', `\`\`\`${audit.executor.username}\`\`\``, true)
+                    .addField('Executor :', `\`\`\`${audit?.executor?.username}\`\`\``, true)
                 if (addedPerms.length !== 0) embed.addField(':white_check_mark:Permissions Added : ', `\`\`\`${addedPerms.join("\n")}\`\`\``, false)
                 if (removedPerms.length !== 0) embed.addField(':x:Permissions removed : ', `\`\`\`${removedPerms.join("\n")}\`\`\``, false)
 
@@ -573,11 +573,11 @@ module.exports = (client) => {
             if (oldRole.name !== newRole.name) {
                 const embed = new Discord.MessageEmbed()
                     .setTitle(':wrench: 〔 ROLE NAME UPDATE 〕')
-                    .setThumbnail(audit.executor.displayAvatarURL({ dynamic: true }) || '')
+                    .setThumbnail(audit?.executor?.displayAvatarURL({ dynamic: true }) || '')
                     .setColor(updateColor || 'YELLOW')
                     .addField('Old Name :', `\`\`\`${oldRole.name}\`\`\``, true)
                     .addField('New Name :', `\`\`\`${newRole.name}\`\`\``, true)
-                    .addField('Executor :', `\`\`\`${audit.executor.username}\`\`\``, true)
+                    .addField('Executor :', `\`\`\`${audit?.executor?.username}\`\`\``, true)
 
                 let sChannel = newRole.guild.channels.cache.get(logchannel)
                 if (!sChannel) return;
@@ -586,11 +586,11 @@ module.exports = (client) => {
             if (oldRole.position !== newRole.position) {
                 const embed = new Discord.MessageEmbed()
                     .setTitle(':wrench: 〔 ROLE POSITION UPDATE 〕')
-                    .setThumbnail(audit.executor.displayAvatarURL({ dynamic: true }) || '')
+                    .setThumbnail(audit?.executor?.displayAvatarURL({ dynamic: true }) || '')
                     .setColor(updateColor || 'YELLOW')
                     .addField('Old Position :', `\`\`\`${oldRole.position}\`\`\``, true)
                     .addField('New Position :', `\`\`\`${newRole.position}\`\`\``, true)
-                    .addField('Executor :', `\`\`\`${audit.executor.username}\`\`\``, true)
+                    .addField('Executor :', `\`\`\`${audit?.executor?.username}\`\`\``, true)
                     .addField('Role Name :', `\`\`\`${newRole.name}\`\`\``, true)
 
                 let sChannel = newRole.guild.channels.cache.get(logchannel)
@@ -600,11 +600,11 @@ module.exports = (client) => {
             if (oldRole.color !== newRole.color) {
                 const embed = new Discord.MessageEmbed()
                     .setTitle(':wrench: 〔 ROLE COLOR UPDATE 〕')
-                    .setThumbnail(audit.executor.displayAvatarURL({ dynamic: true }) || '')
+                    .setThumbnail(audit?.executor?.displayAvatarURL({ dynamic: true }) || '')
                     .setColor(updateColor || 'YELLOW')
                     .addField('Old Color :', `\`\`\`${oldRole.color}\`\`\``, true)
                     .addField('New Color :', `\`\`\`${newRole.color}\`\`\``, true)
-                    .addField('Executor :', `\`\`\`${audit.executor.username}\`\`\``, true)
+                    .addField('Executor :', `\`\`\`${audit?.executor?.username}\`\`\``, true)
                     .addField('Role Name :', `\`\`\`${newRole.name}\`\`\``, true)
 
                 let sChannel = newRole.guild.channels.cache.get(logchannel)
@@ -614,11 +614,11 @@ module.exports = (client) => {
             if (oldRole.managed !== newRole.managed) {
                 const embed = new Discord.MessageEmbed()
                     .setTitle(':wrench: 〔 ROLE MANAGED UPDATE 〕')
-                    .setThumbnail(audit.executor.displayAvatarURL({ dynamic: true }) || '')
+                    .setThumbnail(audit?.executor?.displayAvatarURL({ dynamic: true }) || '')
                     .setColor(updateColor || 'YELLOW')
                     .addField('Old STATE :', `\`\`\`js\n${oldRole.managed}\n\`\`\``, true)
                     .addField('New STATE :', `\`\`\`js\n${newRole.managed}\n\`\`\``, true)
-                    .addField('Executor :', `\`\`\`${audit.executor.username}\`\`\``, true)
+                    .addField('Executor :', `\`\`\`${audit?.executor?.username}\`\`\``, true)
                     .addField('Role Name :', `\`\`\`${newRole.name}\`\`\``, true)
 
                 let sChannel = newRole.guild.channels.cache.get(logchannel)
@@ -628,11 +628,11 @@ module.exports = (client) => {
             if (oldRole.mentionable !== newRole.mentionable) {
                 const embed = new Discord.MessageEmbed()
                     .setTitle(':wrench: 〔 ROLE MENTIONABLE UPDATE 〕')
-                    .setThumbnail(audit.executor.displayAvatarURL({ dynamic: true }) || '')
+                    .setThumbnail(audit?.executor?.displayAvatarURL({ dynamic: true }) || '')
                     .setColor(updateColor || 'YELLOW')
                     .addField('Old STATE :', `\`\`\`js\n${oldRole.mentionable}\n\`\`\``, true)
                     .addField('New STATE :', `\`\`\`js\n${newRole.mentionable}\n\`\`\``, true)
-                    .addField('Executor :', `\`\`\`${audit.executor.username}\`\`\``, true)
+                    .addField('Executor :', `\`\`\`${audit?.executor?.username}\`\`\``, true)
                     .addField('Role Name :', `\`\`\`${newRole.name}\`\`\``, true)
 
                 let sChannel = newRole.guild.channels.cache.get(logchannel)
@@ -642,12 +642,12 @@ module.exports = (client) => {
             /*} else {
                 const embed = new Discord.MessageEmbed()
                     .setTitle(':wrench: 〔 ROLE UPDATE 〕')
-                    .setThumbnail(audit.executor.displayAvatarURL({ dynamic: true }) || '')
+                    .setThumbnail(audit?.executor?.displayAvatarURL({ dynamic: true }) || '')
                     .setColor(updateColor || 'YELLOW')
                     .setDescription('Role have been updated\n-check audit for more info')
                     .addField('Role Name :', `\`\`\`${newRole.name}\`\`\``, true)
                     .addField('Role ID :', `\`\`\`${newRole.id}\`\`\``, true)
-                    .addField('Executor :', `\`\`\`${audit.executor.username}\`\`\``, true)
+                    .addField('Executor :', `\`\`\`${audit?.executor?.username}\`\`\``, true)
  
                 let sChannel = newRole.guild.channels.cache.get(logchannel)
                 if (!sChannel) return;
@@ -657,7 +657,7 @@ module.exports = (client) => {
         client.on("roleDelete", async function (role) {
             const audit = await role.guild.fetchAuditLogs({ limit: 1, type: "ROLE_DELETE" }).then(log => log.entries.first());
 
-            const user = audit.executor
+            const user = audit?.executor
             if (thread == user.id) {
                 rdl += 1
                 if (rdl == 2) {
@@ -675,12 +675,12 @@ module.exports = (client) => {
 
             const embed = new Discord.MessageEmbed()
                 .setTitle(':wastebasket: 〔 ROLE DELETE 〕')
-                .setThumbnail(audit.executor.displayAvatarURL({ dynamic: true }) || '')
+                .setThumbnail(audit?.executor?.displayAvatarURL({ dynamic: true }) || '')
                 .setColor(deleteColor || 'RED')
                 //setFooter(footerMsg, role.guild.iconURL())
                 //.setDescription('⚒️ **Role got created!**')
                 .addField('Name :', `\`\`\`${role.name}\`\`\``, true)
-                .addField('Executor :', `\`\`\`${audit.executor.username}\`\`\``, true)
+                .addField('Executor :', `\`\`\`${audit?.executor?.username}\`\`\``, true)
                 .addField('Mentionable : ', `\`\`\`${role.mentionable}\`\`\``, true)
             //.setTimestamp();
 
@@ -693,7 +693,7 @@ module.exports = (client) => {
             if (channel.parentId === '838808732153675837') return;
             const audit = await channel.guild.fetchAuditLogs({ limit: 1, type: "CHANNEL_CREATE" }).then(log => log.entries.first());
 
-            const user = audit.executor
+            const user = audit?.executor
             if (thread == user.id) {
                 ccl += 1
                 if (ccl == 5) {
@@ -710,10 +710,10 @@ module.exports = (client) => {
 
             const embed = new Discord.MessageEmbed()
                 .setTitle(':paintbrush: 〔 Channel Create 〕')
-                .setThumbnail(audit.executor.displayAvatarURL({ dynamic: true }) || '')
+                .setThumbnail(audit?.executor?.displayAvatarURL({ dynamic: true }) || '')
                 .setColor(createColor || 'BLUE')
                 //setFooter(footerMsg, channel.guild.iconURL())
-                .addField('Executor:', `\`\`\`${audit.executor.username}\`\`\``, true)
+                .addField('Executor:', `\`\`\`${audit?.executor?.username}\`\`\``, true)
                 .addField('Channel Name:', `<#${channel.id}>`, true)
                 .addField('Channel Type:', `\`\`\`${channel.type}\`\`\``, true)
             //.setTimestamp();
@@ -732,13 +732,13 @@ module.exports = (client) => {
             if (oldChannel.name != newChannel.name) {
                 const embed = new Discord.MessageEmbed()
                     .setTitle(':wrench:  〔 Channel Name Update 〕')
-                    .setThumbnail(audit.executor.displayAvatarURL({ dynamic: true }) || '')
+                    .setThumbnail(audit?.executor?.displayAvatarURL({ dynamic: true }) || '')
                     .setColor(updateColor || 'BLUE')
                     //setFooter(footerMsg, oldChannel.guild.iconURL())
                     .addField('Old Name:', `\`\`\`${oldChannel.name}\`\`\``, true)
                     .addField('New Name:', `\`\`\`${newChannel.name}\`\`\``, true)
                     .addField('Tag Name:', `<#${newChannel.id}>`, true)
-                    .addField('Executor:', `\`\`\`${audit.executor.username}\`\`\``, true)
+                    .addField('Executor:', `\`\`\`${audit?.executor?.username}\`\`\``, true)
                     .addField('Channel Type:', `\`\`\`${newChannel.type}\`\`\``, true)
                 //.setTimestamp();
 
@@ -749,12 +749,12 @@ module.exports = (client) => {
             else if (oldChannel.type != newChannel.type) {
                 const embed = new Discord.MessageEmbed()
                     .setTitle(':wrench:  〔 Channel Type Update 〕')
-                    .setThumbnail(audit.executor.displayAvatarURL({ dynamic: true }) || '')
+                    .setThumbnail(audit?.executor?.displayAvatarURL({ dynamic: true }) || '')
                     .setColor(updateColor || 'BLUE')
                     //setFooter(footerMsg, oldChannel.guild.iconURL())
                     .addField('Old Type:', `\`\`\`${oldChannel.type}\`\`\``, true)
                     .addField('New Type:', `\`\`\`${newChannel.type}\`\`\``, true)
-                    .addField('Executor:', `\`\`\`${audit.executor.username}\`\`\``, true)
+                    .addField('Executor:', `\`\`\`${audit?.executor?.username}\`\`\``, true)
                     .addField('Channel Name :', `\`\`\`${newChannel.name}\`\`\``, true)
                 //.setTimestamp();
 
@@ -765,12 +765,12 @@ module.exports = (client) => {
             else if (oldChannel.topic != newChannel.topic) {
                 const embed = new Discord.MessageEmbed()
                     .setTitle(':wrench:  〔 Channel Topic Update 〕')
-                    .setThumbnail(audit.executor.displayAvatarURL({ dynamic: true }) || '')
+                    .setThumbnail(audit?.executor?.displayAvatarURL({ dynamic: true }) || '')
                     .setColor(updateColor || 'BLUE')
                     //setFooter(footerMsg, oldChannel.guild.iconURL())
                     .addField('Old Topic:', `\`\`\`${oldChannel.topic}\`\`\``, false)
                     .addField('New Topic:', `\`\`\`${newChannel.topic}\`\`\``, false)
-                    .addField('Executor:', `\`\`\`${audit.executor.username}\`\`\``, true)
+                    .addField('Executor:', `\`\`\`${audit?.executor?.username}\`\`\``, true)
                     .addField('Channel Name :', `\`\`\`${newChannel.name}\`\`\``, true)
                 //.setTimestamp();
 
@@ -781,12 +781,12 @@ module.exports = (client) => {
             else if (newChannel.type === 'GUILD_VOICE' && oldChannel.bitrate !== newChannel.bitrate) {
                 const embed = new Discord.MessageEmbed()
                     .setTitle(':wrench:  〔 Channel Bitrate Update 〕')
-                    .setThumbnail(audit.executor.displayAvatarURL({ dynamic: true }) || '')
+                    .setThumbnail(audit?.executor?.displayAvatarURL({ dynamic: true }) || '')
                     .setColor(updateColor || 'BLUE')
                     //setFooter(footerMsg, oldChannel.guild.iconURL())
                     .addField('Old Bitrate:', `\`\`\`js\n${parseInt(oldChannel.bitrate / 1000)} Kbps\n\`\`\``, true)
                     .addField('New Bitrate:', `\`\`\`js\n${parseInt(newChannel.bitrate / 1000)} kbps\n\`\`\``, true)
-                    .addField('Executor:', `\`\`\`${audit.executor.username}\`\`\``, true)
+                    .addField('Executor:', `\`\`\`${audit?.executor?.username}\`\`\``, true)
                     .addField('Channel Name:', `\`\`\`${newChannel.name}\`\`\``, true)
                 //.setTimestamp();
 
@@ -797,11 +797,11 @@ module.exports = (client) => {
             else if (newChannel.type === 'GUILD_VOICE' && oldChannel.userLimit !== newChannel.userLimit) {
                 const embed = new Discord.MessageEmbed()
                     .setTitle(':wrench:  〔 Channel User Limit Update 〕')
-                    .setThumbnail(audit.executor.displayAvatarURL({ dynamic: true }) || '')
+                    .setThumbnail(audit?.executor?.displayAvatarURL({ dynamic: true }) || '')
                     .setColor(updateColor || 'BLUE')
                     .addField('Old User Limit:', `\`\`\`js\n${oldChannel.userLimit}\n\`\`\``, true)
                     .addField('New User Limit:', `\`\`\`js\n${newChannel.userLimit}\n\`\`\``, true)
-                    .addField('Executor:', `\`\`\`${audit.executor.username}\`\`\``, true)
+                    .addField('Executor:', `\`\`\`${audit?.executor?.username}\`\`\``, true)
                     .addField('Channel Name :', `\`\`\`${newChannel.name}\`\`\``, true)
 
                 let sChannel = newChannel.guild.channels.cache.get(logchannel)
@@ -811,11 +811,11 @@ module.exports = (client) => {
             else if (newChannel.type === 'GUILD_TEXT' && oldChannel.nsfw !== newChannel.nsfw) {
                 const embed = new Discord.MessageEmbed()
                     .setTitle(':wrench:  〔 Channel isNSFW Update 〕')
-                    .setThumbnail(audit.executor.displayAvatarURL({ dynamic: true }) || '')
+                    .setThumbnail(audit?.executor?.displayAvatarURL({ dynamic: true }) || '')
                     .setColor(updateColor || 'BLUE')
                     .addField('Old STATE:', `\`\`\`js\n${oldChannel.nsfw}\n\`\`\``, true)
                     .addField('New STATE:', `\`\`\`js\n${newChannel.nsfw}\n\`\`\``, true)
-                    .addField('Executor:', `\`\`\`${audit.executor.username}\`\`\``, true)
+                    .addField('Executor:', `\`\`\`${audit?.executor?.username}\`\`\``, true)
                     .addField('Channel Name :', `\`\`\`${newChannel.name}\`\`\``, true)
 
                 let sChannel = newChannel.guild.channels.cache.get(logchannel)
@@ -870,7 +870,7 @@ module.exports = (client) => {
             if (channel.parentId === '838808732153675837') return;
             const audit = await channel.guild.fetchAuditLogs({ limit: 1, type: "CHANNEL_DELETE" }).then(log => log.entries.first());
 
-            const user = audit.executor
+            const user = audit?.executor
             if (thread == user.id) {
                 cdl += 1
                 if (cdl == 2) {
@@ -887,11 +887,11 @@ module.exports = (client) => {
 
             const embed = new Discord.MessageEmbed()
                 .setTitle(':wastebasket:〔 Channel Delete 〕')
-                .setThumbnail(audit.executor.displayAvatarURL({ dynamic: true }) || '')
+                .setThumbnail(audit?.executor?.displayAvatarURL({ dynamic: true }) || '')
                 .setColor(deleteColor || 'BLUE')
                 .addField('Name:', `\`\`\`${channel.name}\`\`\``, true)
                 .addField('Type:', `\`\`\`${channel.type}\`\`\``, true)
-                .addField('Executor:', `\`\`\`${audit.executor.username}\`\`\``, true)
+                .addField('Executor:', `\`\`\`${audit?.executor?.username}\`\`\``, true)
 
             let sChannel = channel.guild.channels.cache.get(logchannel)
             if (!sChannel) return;
@@ -908,7 +908,7 @@ module.exports = (client) => {
                 .setThumbnail('https://i.imgur.com/qubMpPG.png')
                 .setColor(createColor || 'BLUE')
                 //setFooter(footerMsg, channel.guild.iconURL())
-                .addField('Executor:', `\`\`\`${audit.executor.username}\`\`\``, true)
+                .addField('Executor:', `\`\`\`${audit?.executor?.username}\`\`\``, true)
                 .addField('Channel Name:', `<#${channel.id}>`, true)
                 .addField('Pinned at:', `\`\`\`${Intl.DateTimeFormat('en-GB', { timeStyle: 'long' }).format(time)}\`\`\``, true)
             //.setTimestamp();
@@ -945,11 +945,11 @@ module.exports = (client) => {
 
         client.on("messageDelete", async function (message) {
             const audit = await message.guild.fetchAuditLogs({ limit: 1, type: "MESSAGE_DELETE" }).then(log => log.entries.first());
-            const duration = parseInt((Date.now() - audit.createdTimestamp) / 1000)
+            const duration = parseInt((Date.now() - audit?.createdTimestamp) / 1000)
             if (message.author.bot) return;
             if (duration <= 20) {
-                if (audit.executor.id === message.guild.id) return;
-                if (audit.executor.id === '484524591696576523'/*process.env.BOT_OWNER*/) return;
+                if (audit?.executor?.id === message.guild.id) return;
+                if (audit?.executor?.id === '484524591696576523'/*process.env.BOT_OWNER*/) return;
             }
             if (message.author.bot) return;
             if (!message.guild) return;
@@ -970,7 +970,7 @@ module.exports = (client) => {
                         .setDescription(message.content.length !== 0 ? `**Content** :\n\`\`\`${message.content}\`\`\`` : "")
                         .addField('Sent by :', `\`${message.author.username}\``, true)
                         .addField('Sent in :', `<#${message.channel.id}>`, true)
-                        .addField('Executor :', `\`${duration <= 20 ? audit.executor.username : 'Not Found'}\``, true)
+                        .addField('Executor :', `\`${duration <= 20 ? audit?.executor?.username : 'Not Found'}\``, true)
                         //.attachFiles(imageAttachment)
                         .setImage(`attachment://${fileName}.${extention}`)
 
@@ -984,7 +984,7 @@ module.exports = (client) => {
                         .setDescription(message.content.length !== 0 ? `**Content** :\n\`\`\`${message.content}\`\`\`` : "")
                         .addField('Sent by :', `\`${message.author.username}\``, true)
                         .addField('Sent in :', `<#${message.channel.id}>`, true)
-                        .addField('Executor :', `\`${duration <= 20 ? audit.executor.username : 'Not Found'}\``, true)
+                        .addField('Executor :', `\`${duration <= 20 ? audit?.executor?.username : 'Not Found'}\``, true)
                         .addField('File Name :', `\`\`\`${rawName}\`\`\``, true)
                         .addField('File Type :', `\`\`\`${contentType}\`\`\``, true)
 
@@ -1001,7 +1001,7 @@ module.exports = (client) => {
                     .setDescription(`**Content** :\n\`\`\`${message.content || "I can't get message data (It was embed)"}\`\`\``)
                     .addField('Sent by :', `\`${message.author.username}\``, true)
                     .addField('Sent in :', `<#${message.channel.id}>`, true)
-                    .addField('Executor :', `\`${duration <= 20 ? audit.executor.username : 'Not Found'}\``, true)
+                    .addField('Executor :', `\`${duration <= 20 ? audit?.executor?.username : 'Not Found'}\``, true)
                     .setImage(isImageURL?.[0] || '')
 
                 let s1Channel = message.guild.channels.cache.get(logchannel)
@@ -1023,7 +1023,7 @@ module.exports = (client) => {
                     //setFooter(footerMsg, newState.guild.iconURL())
                     .addField('User :', `\`\`\`${newState.member.displayName}\`\`\``, true)
                     .addField('Voice Channel :', `<#${newState.channel.id}>`, true)
-                    .addField('Executor* :', `\`\`\`${audit.executor.username || "N/A"}\`\`\``, true)
+                    .addField('Executor* :', `\`\`\`${audit?.executor?.username || "N/A"}\`\`\``, true)
                 //.setTimestamp();
 
                 let s1Channel = newState.guild.channels.cache.get(logchannel)
@@ -1038,7 +1038,7 @@ module.exports = (client) => {
                     //setFooter(footerMsg, newState.guild.iconURL())
                     .addField('User :', `\`\`\`${newState.member.displayName}\`\`\``, true)
                     .addField('Voice Channel :', `<#${newState.channel.id}>`, true)
-                    .addField('Executor* :', `\`\`\`${audit.executor.username || "N/A"}\`\`\``, true)
+                    .addField('Executor* :', `\`\`\`${audit?.executor?.username || "N/A"}\`\`\``, true)
                 //.setTimestamp();
 
                 let s1Channel = newState.guild.channels.cache.get(logchannel)
@@ -1053,7 +1053,7 @@ module.exports = (client) => {
                     //setFooter(footerMsg, newState.guild.iconURL())
                     .addField('User :', `\`\`\`${newState.member.displayName}\`\`\``, true)
                     .addField('Voice Channel :', `<#${newState.channel.id}>`, true)
-                    .addField('Executor* :', `\`\`\`${audit.executor.username || "N/A"}\`\`\``, true)
+                    .addField('Executor* :', `\`\`\`${audit?.executor?.username || "N/A"}\`\`\``, true)
                 //.setTimestamp();
 
                 let s1Channel = newState.guild.channels.cache.get(logchannel)
@@ -1068,7 +1068,7 @@ module.exports = (client) => {
                     //setFooter(footerMsg, newState.guild.iconURL())
                     .addField('User :', `\`\`\`${newState.member.displayName}\`\`\``, true)
                     .addField('Voice Channel :', `<#${newState.channel.id}>`, true)
-                    .addField('Executor* :', `\`\`\`${audit.executor.username || "N/A"}\`\`\``, true)
+                    .addField('Executor* :', `\`\`\`${audit?.executor?.username || "N/A"}\`\`\``, true)
                 //.setTimestamp();
 
                 let s1Channel = newState.guild.channels.cache.get(logchannel)
@@ -1129,14 +1129,14 @@ module.exports = (client) => {
         });
 
         client.on("inviteDelete", async (invite) => {
-            const log1 = await invite.guild.fetchAuditLogs().then(audit => audit.entries.first())
+            const log1 = await invite.guild.fetchAuditLogs().then(audit => audit?.entries?.first())
             let log = null
             if (log1.action === "INVITE_DELETE") {
                 log = await invite.guild
                     .fetchAuditLogs({
                         type: "INVITE_DELETE"
                     })
-                    .then(audit => audit.entries.first());
+                    .then(audit => audit?.entries?.first());
             }
             let logchannel = db.fetch(`logs_${invite.guild.id}`);
             if (!logchannel) return;
