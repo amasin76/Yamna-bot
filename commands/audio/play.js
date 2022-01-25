@@ -27,7 +27,7 @@ exports.run = async (client, message, args) => {
                 embeds: [new MessageEmbed()
                     .setColor(config.wrongcolor)
                     .setFooter(config.footertext, config.footericon)
-                    .setTitle(`❌ ERROR | You didn't provided a Searchterm`)
+                    .setTitle(`❌ ERROR | You didn't provided a Search term`)
                     .setDescription(`Usage: \`${config.prefix}play <URL / TITLE>\``)
                 ]
             });

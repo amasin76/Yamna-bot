@@ -1,23 +1,59 @@
+const { MessageEmbed } = require("discord.js");
+const config = require("../../config.json");
+const { delay } = require("../../handlers/functions");
+const { joinVoiceChannel } = require('@discordjs/voice');
+// user = message.member
 exports.run = async (client, message, args) => {
-    const voiceChannel = message.member.voice.channel
-    if (!voiceChannel)
-        return message.channel.send("You Are Not In a Voice Channel!")
     try {
-        await voiceChannel.join().then(connection => {
-            connection.voice.setSelfDeaf(true)
+        const text = args.join(" ")
+        const { channel } = message.member.voice; // { message: { member: { voice: { channel: { name: "Allgemein", members: [{user: {"username"}, {user: {"username"}] }}}}}
+        if (!channel)
+            return message.channel.send({
+                embeds: [new MessageEmbed()
+                    .setColor(config.wrongcolor)
+                    .setFooter(config.footertext, config.footericon)
+                    .setTitle(`❌ ERROR | Please join a Channel first`)
+                ]
+            });
+        if (client.distube.getQueue(message) && channel.id !== message.guild.me.voice.channel.id)
+            return message.channel.send({
+                embeds: [new MessageEmbed()
+                    .setColor(config.wrongcolor)
+                    .setFooter(config.footertext, config.footericon)
+                    .setTitle(`❌ ERROR | Please join **my** Channel first`)
+                    .setDescription(`Channelname: \`${message.guild.me.voice.channel.name}\``)
+                ]
+            });
+
+        joinVoiceChannel({
+            channelId: message.member.voice.channel.id,
+            guildId: message.guild.id,
+            adapterCreator: message.guild.voiceAdapterCreator,
+            debug: true
         })
-    } catch (error) {
-        return message.channel.send(`There Was An Error Connecting To The Voice Channel: ${error}`)
+
+        setTimeout(() => { if (message.guild.me.voice.channel.id === channel.id) return message.react('✅') }, 1000)
+
+    } catch (e) {
+        console.log(String(e.stack).bgRed)
+        return message.channel.send({
+            embeds: [new MessageEmbed()
+                .setColor(config.wrongcolor)
+                .setFooter(config.footertext, config.footericon)
+                .setTitle(`❌ | An error occurred`)
+                .setDescription(`\`\`\`${e}\`\`\``)
+            ]
+        });
     }
 }
 exports.help = {
-    name: 'join',
-    description: '--',
-    usage: '<prefix>',
-    example: '='
+    name: "join",
+    description: "PLays a track from youtube",
+    usage: "<prefix>play <URL / TITLE>",
+    example: "~p sound effect"
 }
 exports.conf = {
-    aliases: ['j'],
-    userPermissions: [],
+    aliases: ["p"],
+    mePermissions: ["SPEAK", "CONNECT"],
     cooldown: 5
 }
