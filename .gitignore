@@ -110,3 +110,5 @@ commands/dev/web.js
 commands/dev/test.js
 commands/test
 
+handlers/nsfw.js
+index.js
