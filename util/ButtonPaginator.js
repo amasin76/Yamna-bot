@@ -1,5 +1,4 @@
 const { MessageButton, MessageActionRow, Collector } = require('discord.js');
-const ms = require("ms")
 
 const paginator = async (msg, pages) => {
     if (!msg && !msg.channel) throw new Error("Provide a message to access the channel")
