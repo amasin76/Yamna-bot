@@ -163,5 +163,16 @@ module.exports = {
             case 3: return num + "rd";
         }
         return num + "th";
+    },
+    delay: function (delayInms) {
+        try {
+            return new Promise((resolve) => {
+                setTimeout(() => {
+                    resolve(2);
+                }, delayInms);
+            });
+        } catch (e) {
+            console.log(String(e.stack).bgRed)
+        }
     }
 }
