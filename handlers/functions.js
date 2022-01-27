@@ -3,17 +3,16 @@ module.exports = {
     getMember: function (message, toFind = "") {
         try {
             toFind = toFind.toLowerCase();
-            let target = message.guild.members.get(toFind);
+            let target = message.guild.members.cache.get(toFind);
             if (!target && message.mentions.members) target = message.mentions.members.first();
             if (!target && toFind) {
-                target = message.guild.members.find((member) => {
+                target = message.guild.members.cache.find((member) => {
                     return member.displayName.toLowerCase().includes(toFind) || member.user.tag.toLowerCase().includes(toFind);
                 });
             }
-            if (!target) target = message.member;
             return target;
         } catch (e) {
-            console.log(String(e.stack).bgRed)
+            console.log(e)
         }
     },
     //changeging the duration from ms to a date
