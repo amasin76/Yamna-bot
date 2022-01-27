@@ -3,24 +3,70 @@ const { access_api } = process.env;
 const paginator = require('../../util/ButtonPaginator')
 const config = require("../../config.json");
 const axios = require('axios');
+const { player } = require('../../util/fetchData')
+const { getMember } = require('../../handlers/functions')
+const playerData = require('../../models/playerSchema')
 
 exports.run = async (client, message, args) => {
-    console.log("in")
     try {
-        if (!args[0]) return message.channel.send('Specify Player-Name\n \`Syntax: -pubg <player-name>\` \n \`Exemple: -pubg kaymind\`')
+        console.time('lab')
 
-        const name = args[0]
+        let accountId = null, result = null;
+        let target = getMember(message, args[0]) || message.member;
+        let pubgName = args[1] || args[0];
+        let nav = false, save = true;
+        let guideMsg = '';
 
-        const player = await axios.get(`https://api.pubg.com/shards/steam/players?filter[playerNames]=${name}`, {
-            headers: {
-                'Authorization': `Bearer ${access_api}`,
-                'Accept': 'application/vnd.api+json'
+        if (args[0] && !getMember(message, args[0])) {
+            nav = true
+            save = false
+        };
+
+        if (!nav) { result = await playerData.findOne({ _id: target.user.id }) }
+
+        if (target && !result && !nav) {
+            guideMsg = await message.channel.send({
+                embeds: [new MessageEmbed().setDescription('- Please provide **IGN (in-game name)**, because this player not registered yet in database\n- Exemple: TGLTN\`\`\`fix\nim waiting to type IGN...\n\`\`\`')]
+            })
+
+            const filter = m => m.author.id == message.author.id;
+
+            await message.channel.awaitMessages({ filter, max: 1, time: 120_000 })
+                .then(collected => {
+                    if (collected.size === 0) return guideMsg.delete().then(message.channel.send({
+                        embeds: [new MessageEmbed().setDescription('**Session Expired**: You dont provide any IGN (in-game name)')]
+                    }))
+                    pubgName = collected.first().content
+                    return pubgName
+                }).catch(err => { console.log(err); return err });
+            if (pubgName === (args[1] || args[0])) return
+        }
+
+
+
+
+        if (result) {
+            accountId = result
+        } else {
+            accountId = await player(target?.user?.id, target?.user?.username, pubgName, save)
+            if (accountId && save) {
+                message.react('📀')
+                guideMsg.edit({
+                    embeds: [new MessageEmbed().setDescription(`✅ **IGN**: \`${pubgName}\` of <@${target.user.id}> successfully saved in our database`).setFooter('so next time you dont need provide IGN again')]
+                })
             }
-        })
+        }
 
-        const { data: [{ id: accountId }] } = player.data
+        if (accountId?.status) {
+            const embedErr = new MessageEmbed()
+                .setTitle(`❌ ${accountId.title}`)
+                .setDescription(`Error Code: ${accountId.status}\n${accountId.detail || ''}`);
+            message.react('❌')
+            return message.channel.send({ embeds: [embedErr] })
+        }
 
-        let res = await axios.get(`https://api.pubg.com/shards/steam/players/${accountId}/survival_mastery`, {
+
+        let res = await axios.get(`https://api.pubg.com/shards/steam/players/${accountId.pubgId || accountId}/survival_mastery`, {
             headers: {
                 'Authorization': `Bearer ${access_api}`,
                 'Accept': 'application/vnd.api+json'
@@ -139,9 +185,13 @@ exports.run = async (client, message, args) => {
                 },
 
             )
-        message.channel.send({ embeds: [embedMain] })
-    } catch (err) {
 
+        message.react('✅')
+        message.channel.send({ embeds: [embedMain] })
+
+        console.timeEnd('lab')
+    } catch (err) {
+        console.log(err)
     }
 
 }
