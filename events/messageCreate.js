@@ -52,6 +52,7 @@ module.exports = async (client, message) => {
         if (isTextMatched && !hasPermission) {
             //let muteRole = await message.guild.roles.cache.find(role => role.name === "muted")
             await message.member.timeout(7 * 24 * 60 * 60 * 1000, "Potential Scammer")
+            message?.delete()
         }
     } catch (err) {
         console.log(err)
