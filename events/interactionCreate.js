@@ -14,10 +14,10 @@ module.exports = async (client, interaction) => {
 
         //platforms
         const platformRoles = {
-            'pc': '937120830452797480',
-            'ps': '937120833799868477',
-            'xbox': '937120835834093629',
-            'mobile': '937120837885112381',
+            'pc': '929428032400261160',
+            'ps': '929428037131440128',
+            'xbox': '929428042038771774',
+            'mobile': '929428045197107240',
         }
         if (interaction.customId === 'platformRoles') {
 
@@ -44,9 +44,9 @@ module.exports = async (client, interaction) => {
         }
         //Refersh Rate
         const refershRateRoles = {
-            '60hz': '937132999177285652',
-            '120hz': '937133000875995197',
-            '240hz': '937133006030794812',
+            '60hz': '936607305775075419',
+            '120hz': '936607422322200606',
+            '240hz': '936607457965391872',
         }
         if (interaction.customId === 'rrRole') {
 
