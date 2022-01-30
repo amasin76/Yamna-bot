@@ -1,4 +1,7 @@
+const { includes } = require("old-wio.db")
+
 module.exports = async (client, interaction) => {
+    console.log(interaction.values)
     //Select Menu
     if (interaction.isSelectMenu()) { //Profile
         await interaction.deferReply({ ephemeral: true })
@@ -7,46 +10,64 @@ module.exports = async (client, interaction) => {
         const role = interaction.guild.roles.cache.get(roleId)
         const memberRoles = interaction.member.roles
         const hasRole = memberRoles.cache.has(roleId)
+        const isSelected = !!roleId
 
         //platforms
         const platformRoles = {
-            'pc': '929428032400261160',
-            'ps': '929428037131440128',
-            'xbox': '929428042038771774',
-            'mobile': '929428045197107240',
+            'pc': '937120830452797480',
+            'ps': '937120833799868477',
+            'xbox': '937120835834093629',
+            'mobile': '937120837885112381',
         }
         if (interaction.customId === 'platformRoles') {
 
-            if (!roleId) return memberRoles.remove(Object.values(platformRoles)) //unchecked the option
+            const subRoles = Object.values(platformRoles).filter(i => !i.includes(roleId))
 
-            if (hasRole) {
-                await memberRoles.remove(roleId)
-                const embed = new Discord.MessageEmbed().setDescription(`✅ ${role.name} has been removed`);
+            if (!roleId) {
+
+                memberRoles.remove(subRoles) //unchecked the option
+                const embed = new Discord.MessageEmbed().setDescription(`✅ Your state has been reset`);
+                interaction.followUp({ embeds: [embed] })
+            } else if (hasRole && !isSelected) {
+                memberRoles.remove(roleId)
+                const embed = new Discord.MessageEmbed().setDescription(`✅ <@&${role.id}> role has been removed`);
+                interaction.followUp({ embeds: [embed] })
+            } else if (hasRole && isSelected) {
+                const embed = new Discord.MessageEmbed().setDescription(`✅ Already you have <@&${role.id}> role`);
                 interaction.followUp({ embeds: [embed] })
             } else {
-                await memberRoles.remove(Object.values(platformRoles))
+                await memberRoles.remove(subRoles)
                 memberRoles.add(roleId)
-                const embed = new Discord.MessageEmbed().setDescription(`✅ ${role.name} has been added`);
+                const embed = new Discord.MessageEmbed().setDescription(`✅ <@&${role.id}> role has been added`);
                 interaction.followUp({ embeds: [embed] })
             }
         }
         //Refersh Rate
         const refershRateRoles = {
-            '60hz': '936607305775075419',
-            '120hz': '936607422322200606',
-            '240hz': '936607457965391872',
+            '60hz': '937132999177285652',
+            '120hz': '937133000875995197',
+            '240hz': '937133006030794812',
         }
         if (interaction.customId === 'rrRole') {
 
-            if (!roleId) return memberRoles.remove(Object.values(platformRoles)) //unchecked the option
+            const subRoles = Object.values(refershRateRoles).filter(i => !i.includes(roleId))
 
-            if (hasRole) {
+            if (!roleId) {
+                memberRoles.remove(subRoles) //unchecked the option
+                const embed = new Discord.MessageEmbed().setDescription(`✅ Your state has been reset`);
+                interaction.followUp({ embeds: [embed] })
+            } else if (hasRole && !isSelected) {
                 memberRoles.remove(roleId)
-                interaction.followUp(`✅ ${role.name} has been removed`)
+                const embed = new Discord.MessageEmbed().setDescription(`✅ <@&${role.id}> role has been removed`);
+                interaction.followUp({ embeds: [embed] })
+            } else if (hasRole && isSelected) {
+                const embed = new Discord.MessageEmbed().setDescription(`✅ Already you have <@&${role.id}> role`);
+                interaction.followUp({ embeds: [embed] })
             } else {
-                await memberRoles.remove(Object.values(refershRateRoles))
+                await memberRoles.remove(subRoles)
                 memberRoles.add(roleId)
-                interaction.followUp(`✅ ${role.name} has been added`)
+                const embed = new Discord.MessageEmbed().setDescription(`✅ <@&${role.id}> role has been added`);
+                interaction.followUp({ embeds: [embed] })
             }
         }
     }
