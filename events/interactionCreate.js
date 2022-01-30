@@ -1,7 +1,7 @@
 module.exports = async (client, interaction) => {
     //Select Menu
     if (interaction.isSelectMenu()) { //Profile
-        await interaction.deferReply({ ephermal: true })
+        await interaction.deferReply({ ephemeral: true })
 
         const roleId = interaction?.values[0]
         const role = interaction.guild.roles.cache.get(roleId)
@@ -20,12 +20,14 @@ module.exports = async (client, interaction) => {
             if (!roleId) return memberRoles.remove(Object.values(platformRoles)) //unchecked the option
 
             if (hasRole) {
-                memberRoles.remove(roleId)
-                //interaction.followUp(`✅ ${role.name} has been removed`).then(msg => setTimeout(() => msg.delete(), 8000))
+                await memberRoles.remove(roleId)
+                const embed = new Discord.MessageEmbed().setDescription(`✅ ${role.name} has been removed`);
+                return interaction.followUp({ embeds: [embed] })
             } else {
                 await memberRoles.remove(Object.values(platformRoles))
-                memberRoles.add(roleId)
-                //interaction.followUp(`✅ ${role.name} has been added`)
+                await memberRoles.add(roleId)
+                const embed = new Discord.MessageEmbed().setDescription(`✅ ${role.name} has been added`);
+                return interaction.followUp({ embeds: [embed] })
             }
         }
         //Refersh Rate
