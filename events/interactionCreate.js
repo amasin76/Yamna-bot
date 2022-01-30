@@ -21,11 +21,11 @@ module.exports = async (client, interaction) => {
 
             if (hasRole) {
                 memberRoles.remove(roleId)
-                interaction.followUp(`✅ ${role.name} has been removed`)
+                //interaction.followUp(`✅ ${role.name} has been removed`).then(msg => setTimeout(() => msg.delete(), 8000))
             } else {
                 await memberRoles.remove(Object.values(platformRoles))
                 memberRoles.add(roleId)
-                interaction.followUp(`✅ ${role.name} has been added`)
+                //interaction.followUp(`✅ ${role.name} has been added`)
             }
         }
         //Refersh Rate
