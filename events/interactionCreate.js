@@ -22,12 +22,12 @@ module.exports = async (client, interaction) => {
             if (hasRole) {
                 await memberRoles.remove(roleId)
                 const embed = new Discord.MessageEmbed().setDescription(`✅ ${role.name} has been removed`);
-                return interaction.followUp({ embeds: [embed] })
+                interaction.followUp({ embeds: [embed] })
             } else {
                 await memberRoles.remove(Object.values(platformRoles))
-                await memberRoles.add(roleId)
+                memberRoles.add(roleId)
                 const embed = new Discord.MessageEmbed().setDescription(`✅ ${role.name} has been added`);
-                return interaction.followUp({ embeds: [embed] })
+                interaction.followUp({ embeds: [embed] })
             }
         }
         //Refersh Rate
