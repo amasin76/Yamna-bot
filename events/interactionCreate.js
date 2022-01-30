@@ -38,7 +38,7 @@ module.exports = async (client, interaction) => {
         }
         if (interaction.customId === 'rrRole') {
 
-            if (!values[0]) return memberRoles.remove(Object.values(platformRoles)) //unchecked the option
+            if (!roleId) return memberRoles.remove(Object.values(platformRoles)) //unchecked the option
 
             if (hasRole) {
                 memberRoles.remove(roleId)
