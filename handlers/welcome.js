@@ -1,4 +1,5 @@
 const { MessageEmbed } = require("discord.js");
+const { Invites } = require('../util/fetchData');
 const moment = require('moment');
 let { unicolor, imageLink, channel } = require('../config.json')
 const universalColor = unicolor.toUpperCase()
@@ -41,12 +42,17 @@ module.exports = client => {
             const embed = new MessageEmbed()
                 .setDescription(`✨ **Welcome 💖__${member.user}__💖 to  ${member.guild.name}** \n✨ **Invited by 💌 __${invite?.inviter?.tag}'s__ 💌 Invite\***`)
                 .setColor("#8015EA")
-                .setFooter(`Acc age: 📆 ● ${moment(member.user.createdTimestamp).fromNow()}  ●  Code: 🔑 ${invite?.code || 'n/a'}  ●  Type: ✈ ${type}`)
+                .setFooter(`Acc age: 📆 ${moment(member.user.createdTimestamp).fromNow()}  ●  Code: 🔑 ${invite?.code || 'n/a'}  ●  Type: ✈ ${type}`)
 
 
             const joinChannel = member.guild.channels.cache.find(c => c.id === channel)
             if (joinChannel) joinChannel.send({ embeds: [embed] }).catch(err => console.log(err))
         } catch (err) { console.log(err) }
+
+        //DB
+        const inGuild = { state: true }
+        const t = await Invites(member, inGuild, invite)
+        console.log(t)
 
     })
 }

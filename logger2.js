@@ -1,6 +1,7 @@
 const db = require('old-wio.db');
 const { secondsToTime } = require('./handlers/functions');
 const { Permissions } = require('discord.js')
+const { Invites } = require('./util/fetchData');
 
 module.exports = (client) => {
     const deleteColor = '#E03A4F'
@@ -467,31 +468,30 @@ module.exports = (client) => {
         });*/
 
         client.on("guildMemberRemove", async function (member) {
+
             const log1 = await member.guild.fetchAuditLogs().then(audit => audit?.entries?.first())
+            let log
             if (log1.action === "MEMBER_KICK") {
-                const log = await member.guild
+                log = await member.guild
                     .fetchAuditLogs({
                         limit: 1,
                         type: "MEMBER_KICK"
                     })
                     .then(audit => audit?.entries?.first());
-
-                const user = log.executor
-                if (thread == user.id) {
-                    kl += 1
-                    if (kl == 5) {
-                        let muteRole = await member.guild.roles.cache.find(role => role.name === "muted")
-                        await member.guild.members.cache.get(user.id).roles.set([])
-                        await member.guild.members.cache.get(user.id).roles.add(muteRole);
-                    } else {
-                        setTimeout(() => { kl = 0 }, tl)
-                    }
-                }
             }
+
             const audit = await member.guild.fetchAuditLogs({ limit: 1, type: "MEMBER_KICK" }).then(log => log.entries.first());
             const duration = parseInt((Date.now() - audit?.createdTimestamp) / 1000)
             const hasKicked = duration < 10
             let logchannel = db.fetch(`logs_${member.guild.id}`);
+            //DB
+            try {
+                const inGuild = { state: false, reason: log?.reason, kicked: hasKicked ? `${log?.executor.username} [${log?.executor.id}]` : false }
+                const t = await Invites(member, inGuild)
+                console.log(t)
+            } catch (err) {
+                console.log(err)
+            }
             //if (thread)
             if (!logchannel) return;
             const embed = new Discord.MessageEmbed()
@@ -503,6 +503,7 @@ module.exports = (client) => {
                 .addField('ID:', `\`\`\`js\n${member.user.id}\n\`\`\``, false)
                 .addField('Join Duration :', `\`\`\`js\n${secondsToTime((Date.now() - member.joinedTimestamp) / 1000)?.[0]}\n\`\`\``, false)
             if (hasKicked) embed.addField('Kicked by:', `\`\`\`fix\n${audit?.executor?.username} - ${audit?.executor?.id}\`\`\``, true)
+
 
             let sChannel = member.guild.channels.cache.get(logchannel)
             if (!sChannel) return;
@@ -724,7 +725,7 @@ module.exports = (client) => {
         });
 
         client.on("channelUpdate", async (oldChannel, newChannel) => {
-            if (channel?.parentId === '838808732153675837') return;
+            if (oldChannel?.parentId === '838808732153675837') return;
             const audit = await oldChannel.guild.fetchAuditLogs({ limit: 1, type: "CHANNEL_UPDATE" }).then(log => log.entries.first());
             const embedcolor = createColor;
             const logchannel = db.fetch(`logs_${oldChannel.guild.id}`);
