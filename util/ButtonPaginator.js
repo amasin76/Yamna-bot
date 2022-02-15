@@ -17,7 +17,7 @@ const paginator = async (msg, pages) => {
     const curPage = await msg.channel.send({ embeds: [pages[0]], components: [row] })
     // const filter = (b) => ['prev', 'next'].includes(b.id)
     const filter = button => button.user.id === msg.author.id
-    const col = await curPage.createMessageComponentCollector({ filter, time: 30 * 1000 })
+    const col = await curPage.createMessageComponentCollector({ filter, time: 120 * 1000 })
 
     col.on('collect', button => {
         button.deferUpdate();
@@ -33,7 +33,6 @@ const paginator = async (msg, pages) => {
         curPage.edit({ embeds: [pages[page]], components: [row] })
     })
     col.on('end', () => {
-        console.log(curPage.deleted)
         if (!curPage.deleted) {
             curPage.edit({ embeds: [pages[page]], components: [deadRow] })
         }
