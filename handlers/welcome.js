@@ -50,9 +50,11 @@ module.exports = client => {
         } catch (err) { console.log(err) }
 
         //DB
-        const inGuild = { state: true }
-        const t = await Invites(member, inGuild, invite)
-        console.log(t)
+        if (invite.inviter && type === 'normal') {
+            const inGuild = { state: true }
+            const t = await Invites(member, inGuild, invite)
+            console.log(t)
+        }
 
     })
 }
