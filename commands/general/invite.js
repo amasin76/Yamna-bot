@@ -89,39 +89,40 @@ exports.run = async (client, message, args) => {
     let count = 0, embeds = [], embed
 
     for (let i = 1; i <= pageCount; i++) {
+
         let str = ''
         for (let j = 1; j <= 6; j++) {
             count++
             str += `<@${users[j].invitedId}> [${count}]\n\`\`\`fix\n${!users[j].available ? users[j].left.residenceTime : 'in'} | Joins: x${joinCounts[users[j].invitedId]} | Residence : ${secondsToTime((Date.now() - users[j].joinedAt) / 1000)[0]}\`\`\``
         }
+
         embed = new MessageEmbed()
             .setTitle(`💚 INVITED USERS BY: ${target?.user?.username || target?.username}`)
             .setDescription(`\n${str}\n`)
-            .setFooter(`❕ Pages: Current = ${i} ,  Total = ${Math.ceil(users.length / 5)} | Recording Since 13/02/2022Page: ${i}`)
-        if (i = 1) {
-            embed.setFields(
-                {
-                    name: ':kite:Total',
-                    value: `\`\`\`js\n${total.toString()}\n\`\`\``,
-                    inline: true
-                },
-                {
-                    name: '🔋Active',
-                    value: `\`\`\`js\n${active.toString()}\n\`\`\``,
-                    inline: true
-                },
-                {
-                    name: '💔Left',
-                    value: `\`\`\`js\n${(total - active).toString()}\n\`\`\``,
-                    inline: true
-                },
-            )
-        }
+            .setFooter(`❕ Pages: ${i}/6 Total: ${Math.ceil(users.length / 5)} | Recording Since 13/02/2022`)
+
         embeds.push(embed)
     }
 
-    btPages(message, embeds)
+    embeds[0].setFields(
+        {
+            name: ':kite:Total',
+            value: `\`\`\`js\n${total.toString()}\n\`\`\``,
+            inline: true
+        },
+        {
+            name: '🔋Active',
+            value: `\`\`\`js\n${active.toString()}\n\`\`\``,
+            inline: true
+        },
+        {
+            name: '💔Left',
+            value: `\`\`\`js\n${(total - active).toString()}\n\`\`\``,
+            inline: true
+        },
+    )
 
+    btPages(message, embeds)
 }
 exports.help = {
     name: 'invite',
