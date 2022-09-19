@@ -27,23 +27,23 @@ module.exports = async (client, message) => {
             .then(m => m.delete({ timeout: 30 * 1000 }))
     }
 
-    let shareLinks = ["twitch.tv/", "younube.com/", "youtu.be/"]
-    let whiteChannel = ["746777186714779770", "717058723692019772"]
-    try {
-        if (message.author.bot) return;
-        if (message.channel.id == '749584245457944577' && message.content.toLowerCase().includes('twitch')) return;
-        if (!whiteChannel.includes(message.channel.id) && shareLinks.some(word => message.content.toLowerCase().includes(word))) {
-            await message.delete();
-            return await message.channel.send(new MessageEmbed()
-                .setColor(config.wrongcolor)
-                .setFooter(config.footertext, message.author.displayAvatarURL({ format: 'png', dynamic: false }))
-                .setTitle("⛔ Violation of Rules")
-                .setDescription(`__Channels Category__ (check <#714787304862122104>) \n\n \`Please use the correct channel for the topic you are posting about\` \n\n You can post Links in <#746777186714779770> or Clips in <#749584245457944577>`))
-                .then(msg => msg.delete({ timeout: 30 * 1000 }))
-        }
-    } catch (err) {
-        console.log(err)
-    }
+//     let shareLinks = ["twitch.tv/", "younube.com/", "youtu.be/"]
+//     let whiteChannel = ["746777186714779770", "717058723692019772"]
+//     try {
+//         if (message.author.bot) return;
+//         if (message.channel.id == '749584245457944577' && message.content.toLowerCase().includes('twitch')) return;
+//         if (!whiteChannel.includes(message.channel.id) && shareLinks.some(word => message.content.toLowerCase().includes(word))) {
+//             await message.delete();
+//             return await message.channel.send(new MessageEmbed()
+//                 .setColor(config.wrongcolor)
+//                 .setFooter(config.footertext, message.author.displayAvatarURL({ format: 'png', dynamic: false }))
+//                 .setTitle("⛔ Violation of Rules")
+//                 .setDescription(`__Channels Category__ (check <#714787304862122104>) \n\n \`Please use the correct channel for the topic you are posting about\` \n\n You can post Links in <#746777186714779770> or Clips in <#749584245457944577>`))
+//                 .then(msg => msg.delete({ timeout: 30 * 1000 }))
+//         }
+//     } catch (err) {
+//         console.log(err)
+//     }
 
     try {
         const msg = message.content.toLowerCase()
