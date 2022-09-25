@@ -50,7 +50,7 @@ let prefix = "=";
 //require("./logger.js")(client);
 require("./logger2.js")(client);
 //Handler
-["module", "Event", "nsfw", "update", "welcome"/*, "distube", "antigrif"*/].forEach(handler => {
+["module", "Event", "update", "welcome"/*, "nsfw", "distube", "antigrif"*/].forEach(handler => {
   require(`./handlers/${handler}`)(client);
 });
 //client=-=-=-=-=-=-=-=-=-=-=-=-=
