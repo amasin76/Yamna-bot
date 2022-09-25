@@ -93,7 +93,7 @@ module.exports = client => {
                 }
                 valueDrawing = Object.values(predictions.find(isDrawing))
 
-                if (valueHentai[1] >= 0.10) {
+                if (valueHentai[1] >= 0.15) {
                     await message.delete().catch(console.error)
                     await message.channel.send({
                         embeds: [new MessageEmbed()
@@ -117,7 +117,7 @@ module.exports = client => {
                     })
                         .then(msg => setTimeout(() => msg.delete(), 20 * 1000))
                 }
-                else if (valueSexy[1] >= 0.7) {
+                /*else if (valueSexy[1] >= 0.7) {
                     await message.delete().catch(console.error)
                     await message.channel.send({
                         embeds: [new MessageEmbed()
@@ -128,7 +128,7 @@ module.exports = client => {
                             .setDescription(`➖ **Sexy** = \`${(valueSexy[1] * 100).toFixed(2)}\`% \n\n (If it is a misunderstanding, please report it to the Admins)`)]
                     })
                         .then(msg => setTimeout(() => msg.delete(), 20 * 1000))
-                }
+                }*/
                 else {
                     await message.channel.send({
                         embeds: [new MessageEmbed()
